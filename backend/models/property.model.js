@@ -1,0 +1,41 @@
+import mongoose from "mongoose";
+
+const PropertySchema = mongoose.Schema({
+	name: {
+		type: String,
+		required: [true, "Name not provided"],
+		minLength: 8,
+		maxLength: 100,
+		trim: true,
+	},
+	location: {
+		type: String,
+		required: [true, "Location not provided"],
+		minLength: 5,
+		maxLength: 100,
+		trim: true,
+	},
+	type: {
+		type: String,
+		required: [true, "Type not provided"],
+		minLength: 5,
+		maxLength: 100,
+		trim: true,
+	},
+	description: {
+		type: String,
+		required: [true, "Description not provided"],
+		minLength: 5,
+		maxLength: 200,
+		trim: true,
+	},
+	owner: {
+		type: mongoose.Schema.Types.ObjectId,
+		ref: "PropertyOwnerModel",
+		index: true,
+	},
+});
+
+const PropertyModel = mongoose.model("PropertyModel", PropertySchema);
+
+export default PropertyModel;
