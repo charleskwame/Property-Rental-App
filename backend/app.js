@@ -1,9 +1,10 @@
 import express from "express";
+import { PORT } from "./config/env.js";
 
 const app = express();
 
-app.listen(5050, () => {
-	console.log("running on port");
+app.listen(PORT, () => {
+	console.log(`running on port ${PORT}`);
 });
 
 export default app;
