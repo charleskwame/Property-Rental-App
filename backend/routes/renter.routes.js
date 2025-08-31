@@ -1,17 +1,19 @@
 import Router from "express";
+import {
+	addRenter,
+	getProperties,
+	getPropertiesByID,
+	getRenter,
+} from "../controllers/renter.controller.js";
 
 const RenterRouter = Router();
 
-RenterRouter.post("/log-in", (request, response) => {
-	response.status(200).json({ message: "Success loggin in" });
-});
+RenterRouter.post("/sign-up", addRenter);
 
-RenterRouter.get("/properties", (request, response) => {
-	response.status(200).json({ message: "Success displaying properties" });
-});
+RenterRouter.post("/log-in", getRenter);
 
-RenterRouter.get("/properties/:propertyID", (request, response) => {
-	response.status(200).json({ message: "Success displaying particular properity" });
-});
+RenterRouter.get("/properties", getProperties);
+
+RenterRouter.get("/properties/:propertyID", getPropertiesByID);
 
 export default RenterRouter;

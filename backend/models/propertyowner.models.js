@@ -30,7 +30,7 @@ const PropertyOwner = new mongoose.Schema(
 			maxLength: 15,
 			unique: true,
 		},
-		propertiesOwned: [
+		propertiesowned: [
 			{
 				type: mongoose.Schema.Types.ObjectId,
 				ref: "PropertyModel",
@@ -41,6 +41,6 @@ const PropertyOwner = new mongoose.Schema(
 	{ timestamps: true },
 );
 
-const PropertyOwnerModel = mongoose.model("PropertyOwnerModel", PropertyOwner);
+const PropertyOwnerModel = mongoose.model("PropertyOwnerModel", PropertyOwner, "propertyowners");
 
 export default PropertyOwnerModel;

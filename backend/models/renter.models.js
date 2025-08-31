@@ -30,10 +30,17 @@ const RenterSchema = new mongoose.Schema(
 			maxLength: 15,
 			unique: true,
 		},
+		likedproperties: [
+			{
+				type: mongoose.Schema.Types.ObjectId,
+				ref: "PropertyModel",
+				index: true,
+			},
+		],
 	},
 	{ timestamps: true },
 );
 
-const RenterModel = mongoose.model("RenterModel", RenterSchema);
+const RenterModel = mongoose.model("RenterModel", RenterSchema, "renters");
 
 export default RenterModel;
