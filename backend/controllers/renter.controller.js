@@ -1,6 +1,9 @@
 import mongoose from "mongoose";
 import PropertyModel from "../models/property.model.js";
 import RenterModel from "../models/Renter.models.js";
+import bcrypt from "bcryptjs";
+import { JWT_EXPIRES_IN, JWT_SECRET } from "../config/env.js";
+import jwt from "jsonwebtoken";
 
 //function to add renter(sign up)
 export const addRenter = async (request, response, next) => {
@@ -8,29 +11,34 @@ export const addRenter = async (request, response, next) => {
 	session.startTransaction();
 	try {
 		const { name, email, password, phonenumber } = request.body;
-		const existingRenter = await RenterModel.findOne({ name, email });
+		const existingRenter = await RenterModel.findOne({ email });
 		if (existingRenter) {
 			return response
 				.status(400)
 				.json({ status: "Failed", message: "Renter Account Already Registered" });
 		}
 
+		const salt = await bcrypt.genSalt(10);
+		const hashedPassword = await bcrypt.hash(password, salt);
 		const renterAdded = await RenterModel.create(
 			[
 				{
 					name,
 					email,
-					password,
+					password: hashedPassword,
 					phonenumber,
 				},
 			],
 			{ session },
 		);
+		const token = jwt.sign({ userID: renterAdded[0]._id }, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
 		await session.commitTransaction();
 		session.endSession();
-		response
-			.status(200)
-			.json({ status: "Success", message: "Renter Added Success", data: renterAdded });
+		response.status(200).json({
+			status: "Success",
+			message: "Renter Added Success",
+			data: { token, renterCreated: renterAdded[0] },
+		});
 	} catch (error) {
 		await session.abortTransaction();
 		session.endSession();
@@ -42,16 +50,28 @@ export const addRenter = async (request, response, next) => {
 export const getRenter = async (request, response, next) => {
 	try {
 		const { email, password } = request.body;
-		const foundUser = await RenterModel.findOne({ email, password }).select("-password");
-		if (!foundUser) {
+		const foundRenter = await RenterModel.findOne({ email });
+		if (!foundRenter) {
 			return response
 				.status(400)
 				.json({ status: false, message: "Check Credentials, Renter Not Found" });
 		}
+		const decodedPassword = await bcrypt.compare(password, foundRenter.password);
+
+		if (!decodedPassword) {
+			return response.status(400).json({ status: false, message: "Check Password, Renter Not Found" });
+		}
+
+		const token = jwt.sign({ userID: foundRenter._id }, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
+
+		// 3. Exclude password before sending
+		// eslint-disable-next-line no-unused-vars
+		const { password: _, ...renterWithoutPassword } = foundRenter.toObject();
+
 		response.status(200).json({
 			status: true,
-			message: "User Found",
-			data: foundUser,
+			message: "User Found, Signed In",
+			data: { token, renterWithoutPassword },
 		});
 	} catch (error) {
 		next(error);

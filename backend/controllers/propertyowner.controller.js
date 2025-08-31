@@ -1,6 +1,9 @@
 import mongoose from "mongoose";
 import PropertyModel from "../models/property.model.js";
 import PropertyOwnerModel from "../models/propertyowner.models.js";
+import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
+import { JWT_SECRET, JWT_EXPIRES_IN } from "../config/env.js";
 
 //function to add owner
 export const addPropertyOwner = async (request, response, next) => {
@@ -8,29 +11,34 @@ export const addPropertyOwner = async (request, response, next) => {
 	session.startTransaction();
 	try {
 		const { name, email, password, phonenumber } = request.body;
-		const existingOwner = await PropertyOwnerModel.findOne({ email, phonenumber });
+		const existingOwner = await PropertyOwnerModel.findOne({ email });
 		if (existingOwner) {
 			return response
 				.status(400)
 				.json({ status: "Failed", message: "Owner Email / Phonenumber Already Registered" });
 		}
-
+		const salt = await bcrypt.genSalt(10);
+		const hashedPassword = await bcrypt.hash(password, salt);
 		const ownerAdded = await PropertyOwnerModel.create(
 			[
 				{
 					name,
 					email,
-					password,
+					password: hashedPassword,
 					phonenumber,
 				},
 			],
 			{ session },
 		);
+
+		const token = jwt.sign({ userID: ownerAdded[0]._id }, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
 		await session.commitTransaction();
 		session.endSession();
-		response
-			.status(200)
-			.json({ status: "Success", message: "Owner Added Success", data: ownerAdded });
+		response.status(200).json({
+			status: "Success",
+			message: "Owner Added Success",
+			data: { token, ownerCreated: ownerAdded[0] },
+		});
 	} catch (error) {
 		await session.abortTransaction();
 		session.endSession();
@@ -42,16 +50,29 @@ export const addPropertyOwner = async (request, response, next) => {
 export const getPropertyOwner = async (request, response, next) => {
 	try {
 		const { email, password } = request.body;
-		const foundOwner = await PropertyOwnerModel.findOne({ email, password }).select("-password");
+		const foundOwner = await PropertyOwnerModel.findOne({ email });
 		if (!foundOwner) {
 			return response
 				.status(400)
 				.json({ status: false, message: "Check Credentials, Property Owner Not Found" });
 		}
+		const decodedPassword = await bcrypt.compare(password, foundOwner.password);
+
+		if (!decodedPassword) {
+			return response
+				.status(400)
+				.json({ status: false, message: "Check credentials, wrong password" });
+		}
+
+		const token = jwt.sign({ userID: foundOwner._id }, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
+
+		// eslint-disable-next-line no-unused-vars
+		const { password: _, ...ownerWithoutPassword } = foundOwner.toObject();
+
 		response.status(200).json({
 			status: true,
 			message: "User Found",
-			data: foundOwner,
+			data: { token, ownerWithoutPassword },
 		});
 	} catch (error) {
 		next(error);
