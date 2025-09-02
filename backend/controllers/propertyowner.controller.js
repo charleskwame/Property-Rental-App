@@ -70,7 +70,7 @@ export const getPropertyOwner = async (request, response, next) => {
 		const { password: _, ...ownerWithoutPassword } = foundOwner.toObject();
 
 		response.status(200).json({
-			status: true,
+			status: "Success",
 			message: "User Found",
 			data: { token, ownerWithoutPassword },
 		});
@@ -125,7 +125,7 @@ export const addProperty = async (request, response, next) => {
 	const session = await mongoose.startSession();
 	session.startTransaction();
 	try {
-		const { name, location, type, description, owner } = request.body;
+		const { name, location, type, description, images, owner } = request.body;
 		const existingProperty = await PropertyModel.findOne({ name, location, type });
 		if (existingProperty) {
 			return response.status(400).json({ status: "Failed", message: "Property Already Registered" });
@@ -138,6 +138,7 @@ export const addProperty = async (request, response, next) => {
 					location,
 					type,
 					description,
+					images,
 					owner,
 				},
 			],
@@ -177,7 +178,7 @@ export const updateProperty = async (request, response, next) => {
 			});
 		}
 		response.status(200).json({
-			status: true,
+			status: "Success",
 			message: `Property with id ${propertyID} has been updated`,
 			data: existingProperty,
 		});
@@ -198,7 +199,7 @@ export const deleteProperty = async (request, response, next) => {
 			});
 		}
 		response.status(200).json({
-			status: true,
+			status: "Success",
 			message: `Property with id ${propertyID} has been deleted`,
 		});
 	} catch (error) {

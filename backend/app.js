@@ -5,18 +5,28 @@ import connectToDatabase from "./database/database.js";
 import PropertyOwnerRouter from "./routes/propertyowner.routes.js";
 import errorMiddleware from "./middleware/error.middleware.js";
 import cookieParser from "cookie-parser";
-import authenticateRenter from "./middleware/authenticaterenters.middleware.js";
-import authenticatePropertyOwner from "./middleware/authenticatepropertyowners.middleware.js";
+import cors from "cors";
+//import authenticateRenter from "./middleware/authenticaterenters.middleware.js";
+//import authenticatePropertyOwner from "./middleware/authenticatepropertyowners.middleware.js";
 
 const app = express();
+//const appcors = cors();
+
+// Allow requests from specific origin (e.g., frontend at port 3000)
+app.use(
+	cors({
+		origin: "http://localhost:3000", // or "*" to allow all
+		credentials: true, // if you're using cookies or auth headers
+	}),
+);
 
 app.use(errorMiddleware);
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
-app.use("/api/v1/renters/", authenticateRenter, RenterRouter);
-app.use("/api/v1/owners/", authenticatePropertyOwner, PropertyOwnerRouter);
+app.use("/api/v1/renters/", RenterRouter);
+app.use("/api/v1/owners/", PropertyOwnerRouter);
 
 app.listen(PORT, async () => {
 	console.log(`running on port ${PORT}`);

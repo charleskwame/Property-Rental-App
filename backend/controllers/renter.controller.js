@@ -54,12 +54,14 @@ export const getRenter = async (request, response, next) => {
 		if (!foundRenter) {
 			return response
 				.status(400)
-				.json({ status: false, message: "Check Credentials, Renter Not Found" });
+				.json({ status: "Failed", message: "Check Credentials, Renter Not Found" });
 		}
 		const decodedPassword = await bcrypt.compare(password, foundRenter.password);
 
 		if (!decodedPassword) {
-			return response.status(400).json({ status: false, message: "Check Password, Renter Not Found" });
+			return response
+				.status(400)
+				.json({ status: "Failed", message: "Check Password, Renter Not Found" });
 		}
 
 		const token = jwt.sign({ userID: foundRenter._id }, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
@@ -69,7 +71,7 @@ export const getRenter = async (request, response, next) => {
 		const { password: _, ...renterWithoutPassword } = foundRenter.toObject();
 
 		response.status(200).json({
-			status: true,
+			status: "Success",
 			message: "User Found, Signed In",
 			data: { token, renterWithoutPassword },
 		});

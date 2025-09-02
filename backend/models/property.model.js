@@ -29,6 +29,9 @@ const PropertySchema = mongoose.Schema({
 		maxLength: 200,
 		trim: true,
 	},
+	images: {
+		type: [String],
+	},
 	owner: {
 		type: mongoose.Schema.Types.ObjectId,
 		ref: "PropertyOwnerModel",
