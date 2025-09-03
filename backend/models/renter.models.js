@@ -37,6 +37,10 @@ const RenterSchema = new mongoose.Schema(
 				index: true,
 			},
 		],
+		isVerified: {
+			type: Boolean,
+			default: false,
+		},
 	},
 	{ timestamps: true },
 );

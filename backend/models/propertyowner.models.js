@@ -30,6 +30,10 @@ const PropertyOwner = new mongoose.Schema(
 			maxLength: 15,
 			unique: true,
 		},
+		isVerified: {
+			type: Boolean,
+			default: false,
+		},
 		propertiesowned: [
 			{
 				type: mongoose.Schema.Types.ObjectId,

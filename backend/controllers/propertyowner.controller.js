@@ -3,7 +3,23 @@ import PropertyModel from "../models/property.model.js";
 import PropertyOwnerModel from "../models/propertyowner.models.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import { JWT_SECRET, JWT_EXPIRES_IN } from "../config/env.js";
+import {
+	JWT_SECRET,
+	JWT_EXPIRES_IN,
+	NODEMAILER_EMAIL,
+	NODEMAILER_PASSWORD,
+} from "../config/env.js";
+import OwnerOTPModel from "../models/ownerotp.model.js";
+import nodemailer from "nodemailer";
+
+const transporter = nodemailer.createTransport({
+	host: "smtp.gmail.com",
+	secure: false,
+	auth: {
+		user: NODEMAILER_EMAIL,
+		pass: NODEMAILER_PASSWORD,
+	},
+});
 
 //function to add owner
 export const addPropertyOwner = async (request, response, next) => {
@@ -204,5 +220,62 @@ export const deleteProperty = async (request, response, next) => {
 		});
 	} catch (error) {
 		next(error);
+	}
+};
+
+// function to verify renter otp
+export const sendOwnerOTP = async (request, response) => {
+	const { userID, email } = request.body;
+	const otp = `${Math.floor(1000 + Math.random() * 9000)}`;
+
+	const mailOptions = {
+		from: NODEMAILER_EMAIL,
+		to: email,
+		subject: "Your OTP",
+		html: `<b>${otp}</b>`,
+	};
+
+	//console.log(email);
+
+	try {
+		const salt = await bcrypt.genSalt(10);
+
+		const hashedOTP = await bcrypt.hash(otp, salt);
+
+		await OwnerOTPModel.create({
+			userID: userID,
+			otp: hashedOTP,
+			createdAt: Date.now(),
+			expiresIn: Date.now() + 3600000,
+		});
+
+		await transporter.sendMail(mailOptions);
+
+		return response.status(200).json({
+			status: "Pending",
+			message: "OTP SENT",
+			data: {
+				userID: userID,
+				email: email,
+			},
+		});
+	} catch (error) {
+		throw new Error(error);
+	}
+};
+
+//function to resend renter otp
+export const resendOwnerOTP = async (request, response) => {
+	const { userID, email } = request.body;
+	//console.log(request.body);
+	try {
+		//return response.json(request.body);
+		if (!userID || !email) {
+			return response.status(400).json({ status: "Failed", message: "Empty UserID/Email" });
+		}
+		await OwnerOTPModel.deleteMany({ userID: userID });
+		await sendOwnerOTP(request, response);
+	} catch (error) {
+		return response.status(404).json({ status: "Failed", message: error.message });
 	}
 };

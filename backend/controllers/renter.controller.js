@@ -2,8 +2,25 @@ import mongoose from "mongoose";
 import PropertyModel from "../models/property.model.js";
 import RenterModel from "../models/Renter.models.js";
 import bcrypt from "bcryptjs";
-import { JWT_EXPIRES_IN, JWT_SECRET } from "../config/env.js";
+import {
+	JWT_EXPIRES_IN,
+	JWT_SECRET,
+	NODEMAILER_EMAIL,
+	NODEMAILER_PASSWORD,
+} from "../config/env.js";
 import jwt from "jsonwebtoken";
+import nodemailer from "nodemailer";
+import RenterOTPModel from "../models/renterotp.model.js";
+
+//creating nodemailer transport
+const transporter = nodemailer.createTransport({
+	host: "smtp.gmail.com",
+	secure: false,
+	auth: {
+		user: NODEMAILER_EMAIL,
+		pass: NODEMAILER_PASSWORD,
+	},
+});
 
 //function to add renter(sign up)
 export const addRenter = async (request, response, next) => {
@@ -39,6 +56,7 @@ export const addRenter = async (request, response, next) => {
 			message: "Renter Added Success",
 			data: { token, renterCreated: renterAdded[0] },
 		});
+		// verifyRenterOTP(renterAdded[0]._id, renterAdded[0].email);
 	} catch (error) {
 		await session.abortTransaction();
 		session.endSession();
@@ -122,6 +140,64 @@ export const getPropertiesByID = async (request, response, next) => {
 		next(error);
 	}
 };
+
+// function to verify renter otp
+export const sendRenterOTP = async (request, response) => {
+	const { userID, email } = request.body;
+	const otp = `${Math.floor(1000 + Math.random() * 9000)}`;
+
+	const mailOptions = {
+		from: NODEMAILER_EMAIL,
+		to: email,
+		subject: "Your OTP",
+		html: `<b>${otp}</b>`,
+	};
+
+	//console.log(email);
+
+	try {
+		const salt = await bcrypt.genSalt(10);
+
+		const hashedOTP = await bcrypt.hash(otp, salt);
+
+		await RenterOTPModel.create({
+			userID: userID,
+			otp: hashedOTP,
+			createdAt: Date.now(),
+			expiresIn: Date.now() + 3600000,
+		});
+
+		await transporter.sendMail(mailOptions);
+
+		return response.status(200).json({
+			status: "Pending",
+			message: "OTP SENT",
+			data: {
+				userID: userID,
+				email: email,
+			},
+		});
+	} catch (error) {
+		throw new Error(error);
+	}
+};
+
+//function to resend renter otp
+export const resendRenterOTP = async (request, response) => {
+	const { userID, email } = request.body;
+	//console.log(request.body);
+	try {
+		//return response.json(request.body);
+		if (!userID || !email) {
+			return response.status(400).json({ status: "Failed", message: "Empty UserID/Email" });
+		}
+		await RenterOTPModel.deleteMany({ userID: userID });
+		await sendRenterOTP(request, response);
+	} catch (error) {
+		return response.status(404).json({ status: "Failed", message: error.message });
+	}
+};
+
 //function to add property to favoriates
 
 //function to remove property from favorites
