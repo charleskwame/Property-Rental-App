@@ -5,16 +5,16 @@ export default function Home() {
 	return (
 		<div className="flex gap-3.5">
 			<button>
-				<Link href={`/signupRenter `}>Renter Sign Up</Link>
+				<Link href={`/sign-up-renter `}>Renter Sign Up</Link>
 			</button>
 			<button>
-				<Link href={`/signupOwner`}>Owner Sign Up</Link>
+				<Link href={`/sign-up-owner`}>Owner Sign Up</Link>
 			</button>
 			<button>
-				<Link href={`/loginRenter `}>Renter Log In</Link>
+				<Link href={`/login-renter `}>Renter Log In</Link>
 			</button>
 			<button>
-				<Link href={`/loginOwner`}>Owner Log In</Link>
+				<Link href={`/login-owner`}>Owner Log In</Link>
 			</button>
 		</div>
 	);

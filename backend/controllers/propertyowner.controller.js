@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import mongoose from "mongoose";
 import PropertyModel from "../models/property.model.js";
 import PropertyOwnerModel from "../models/propertyowner.models.js";
@@ -50,10 +51,12 @@ export const addPropertyOwner = async (request, response, next) => {
 		const token = jwt.sign({ userID: ownerAdded[0]._id }, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
 		await session.commitTransaction();
 		session.endSession();
+
+		const { password: _, ...ownerWithoutPassword } = ownerAdded[0].toObject();
 		response.status(200).json({
 			status: "Success",
 			message: "Owner Added Success",
-			data: { token, ownerCreated: ownerAdded[0] },
+			data: { token, ownerWithoutPassword },
 		});
 	} catch (error) {
 		await session.abortTransaction();
@@ -84,6 +87,10 @@ export const getPropertyOwner = async (request, response, next) => {
 
 		// eslint-disable-next-line no-unused-vars
 		const { password: _, ...ownerWithoutPassword } = foundOwner.toObject();
+
+		if (!ownerWithoutPassword.isVerified) {
+			return response.json({ status: "Pending Verification", data: { token, ownerWithoutPassword } });
+		}
 
 		response.status(200).json({
 			status: "Success",

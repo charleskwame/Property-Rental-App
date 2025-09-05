@@ -2,11 +2,12 @@
 
 import axios from "axios";
 import { useState } from "react";
-import API_URL from "@/config";
+import { API_URL } from "@/config";
 import { useRouter } from "next/navigation";
 
-export default function LogInRenter() {
-	const routeToPropertiesForRent = useRouter();
+export default function LogInOwner() {
+	const routeToPropertiesForOwner = useRouter();
+	const routerToVerifyOwner = useRouter();
 	const [email, setEmail] = useState<string>("");
 	const [password, setPassword] = useState<string>("");
 	const handleSubmit = async (event: React.FormEvent) => {
@@ -22,9 +23,15 @@ export default function LogInRenter() {
 					"Content-Type": "application/json",
 				},
 			});
+
+			if (request.data.status === "Pending Verification") {
+				routerToVerifyOwner.push("/send-owner-otp");
+			}
 			if (request.data.status === "Success") {
+				localStorage.setItem("Owner", JSON.stringify(request.data));
+				console.log(request.data);
 				//console.log(request.data);
-				routeToPropertiesForRent.push("/propertiesForRent");
+				routeToPropertiesForOwner.push("/properties-for-owner");
 			}
 		} catch (error) {
 			console.log(error);

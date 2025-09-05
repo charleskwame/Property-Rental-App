@@ -30,7 +30,8 @@ const PropertySchema = mongoose.Schema({
 		trim: true,
 	},
 	images: {
-		type: [String],
+		type: String,
+		required: [true, "Image not added"],
 	},
 	owner: {
 		type: mongoose.Schema.Types.ObjectId,

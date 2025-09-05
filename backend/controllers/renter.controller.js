@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import mongoose from "mongoose";
 import PropertyModel from "../models/property.model.js";
 import RenterModel from "../models/Renter.models.js";
@@ -51,10 +52,12 @@ export const addRenter = async (request, response, next) => {
 		const token = jwt.sign({ userID: renterAdded[0]._id }, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
 		await session.commitTransaction();
 		session.endSession();
+
+		const { password: _, ...renterWithoutPassword } = renterAdded[0].toObject();
 		response.status(200).json({
 			status: "Success",
 			message: "Renter Added Success",
-			data: { token, renterCreated: renterAdded[0] },
+			data: { token, renterWithoutPassword },
 		});
 		// verifyRenterOTP(renterAdded[0]._id, renterAdded[0].email);
 	} catch (error) {
@@ -87,6 +90,10 @@ export const getRenter = async (request, response, next) => {
 		// 3. Exclude password before sending
 		// eslint-disable-next-line no-unused-vars
 		const { password: _, ...renterWithoutPassword } = foundRenter.toObject();
+
+		if (!renterWithoutPassword.isVerified) {
+			return response.json({ status: "Pending Verification", data: { token, renterWithoutPassword } });
+		}
 
 		response.status(200).json({
 			status: "Success",
