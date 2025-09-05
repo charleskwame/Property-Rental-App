@@ -4,10 +4,19 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import axios from "axios";
 import { API_URL } from "@/config";
+import { useEffect } from "react";
 
 export default function SendRenterOTP() {
 	const routeToVerifyRenterOTP = useRouter();
+	const routerToGoBackToLogIn = useRouter();
 	const [email, setEmail] = useState<string>("");
+
+	useEffect(() => {
+		const storedRenterData = JSON.parse(`${localStorage.getItem("Renter")}`);
+		if (storedRenterData === null) {
+			routerToGoBackToLogIn.push("/login-renter");
+		}
+	});
 
 	setTimeout(() => {
 		const storedRenterData = JSON.parse(`${localStorage.getItem("Renter")}`);

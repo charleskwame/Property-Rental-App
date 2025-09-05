@@ -4,8 +4,10 @@ import axios from "axios";
 //import { API_URL, NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME, CLOUDINARY_URL } from "../../config/env";
 import { CldUploadWidget } from "next-cloudinary";
 import { API_URL } from "@/config";
+import { useRouter } from "next/navigation";
 
 export default function AddProperty() {
+	//const routerToGoBackToLogIn = useRouter();
 	const [propertyName, setPropertyName] = useState<string>("");
 	const [propertyLocation, setPropertyLocation] = useState<string>("");
 	const [propertyType, setPropertyType] = useState<string>("");
@@ -17,9 +19,9 @@ export default function AddProperty() {
 		event.preventDefault();
 
 		const storedOwnerData = JSON.parse(`${localStorage.getItem("Owner")}`);
-
-		const token = `Bearer ${storedOwnerData.data.token}`;
-
+		// if (storedOwnerData === null) {
+		// 	routerToGoBackToLogIn.push("/login-owner");
+		// }
 		const propertyData = {
 			name: propertyName,
 			location: propertyLocation,
@@ -30,6 +32,7 @@ export default function AddProperty() {
 		};
 
 		try {
+			const token = `Bearer ${storedOwnerData.data.token}`;
 			const request = await axios.post(`${API_URL}owners/add-properties`, propertyData, {
 				headers: {
 					"Content-Type": "application/json",

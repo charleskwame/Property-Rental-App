@@ -3,9 +3,11 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import axios from "axios";
 import { API_URL } from "@/config";
+import { useEffect } from "react";
 
 export default function VerifyOwner() {
 	const routerForPropertiesForOwner = useRouter();
+	const routerToGoBackToLogIn = useRouter();
 	const routerToVerifyOwnerOTP = useRouter();
 	const [otp, setOtp] = useState<string>("");
 
@@ -14,6 +16,12 @@ export default function VerifyOwner() {
 	// 	setEmail(storedRenterData.data.renterWithoutPassword.email);
 	// 	//console.log(storedRenterData);
 	// }, 3000);
+	useEffect(() => {
+		const storedOwnerData = JSON.parse(`${localStorage.getItem("Owner")}`);
+		if (storedOwnerData === null) {
+			routerToGoBackToLogIn.push("/login-owner");
+		}
+	});
 
 	const handleSubmit = async (event: React.FormEvent) => {
 		event.preventDefault();

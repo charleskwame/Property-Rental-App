@@ -6,15 +6,23 @@ import axios from "axios";
 import { API_URL } from "@/config";
 import { PropertyInterFace } from "@/interfaces/property.interface";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 export default function PropertiesForRent() {
+	const routerToGoBackToLogIn = useRouter();
+
 	const [propertiesFetched, setPropertiesFetched] = useState<PropertyInterFace[]>([]);
 	const [loading, setLoading] = useState<boolean>(false);
 	useEffect(() => {
 		const getProperties = async () => {
 			const storedRenterData = JSON.parse(`${localStorage.getItem("Renter")}`);
-			const token = `Bearer ${storedRenterData.data.token}`;
+
+			if (storedRenterData === null) {
+				routerToGoBackToLogIn.push("/login-renter");
+			}
+
 			try {
+				const token = `Bearer ${storedRenterData.data.token}`;
 				const request = await axios.get(`${API_URL}renters/properties`, {
 					headers: {
 						"Content-Type": "application/json",

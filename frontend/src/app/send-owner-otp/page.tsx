@@ -1,19 +1,27 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import { API_URL } from "@/config";
 
 export default function SendRenterOTP() {
 	const routeToVerifyOwnerOTP = useRouter();
+	const routerToGoBackToLogIn = useRouter();
 	const [email, setEmail] = useState<string>("");
+
+	useEffect(() => {
+		const storedOwnerData = JSON.parse(`${localStorage.getItem("Owner")}`);
+		if (storedOwnerData === null) {
+			routerToGoBackToLogIn.push("/login-owner");
+		}
+	});
 
 	setTimeout(() => {
 		const storedOwnerData = JSON.parse(`${localStorage.getItem("Owner")}`);
 		setEmail(storedOwnerData.data.ownerWithoutPassword.email);
 		//console.log(storedRenterData);
-	}, 3000);
+	}, 2000);
 
 	const handleOTPSubmission = async (event: React.FormEvent) => {
 		event.preventDefault();
