@@ -1,35 +1,34 @@
 "use client";
 
-//import { useRouter } from "next/navigation";
 import { useParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
+import { PropertyInterFace } from "@/interfaces/property.interface";
 import axios from "axios";
 import { API_URL } from "@/config";
-import { PropertyInterFace } from "@/interfaces/property.interface";
 import Image from "next/image";
 
 export default function SpecificProperty() {
-	//const pathName = usePathname();
 	const params = useParams();
-
 	const [property, setProperty] = useState<PropertyInterFace>();
 	//const propertyRouter = useRouter();
 	//const { _id } = propertyRouter.query;
 	useEffect(() => {
-		const propertyDetails = async (_id: string) => {
+		const propertyDetails = async (propertyID: string) => {
 			//event.preventDefault();
-			const storedRenterData = JSON.parse(`${localStorage.getItem("Renter")}`);
-			const token = `Bearer ${storedRenterData.data.token}`;
+			const storedOwnerData = JSON.parse(`${localStorage.getItem("Owner")}`);
+			const token = `Bearer ${storedOwnerData.data.token}`;
+			const ownerID = storedOwnerData.data.ownerWithoutPassword._id;
 			// console.log(token);
 			// console.log(_id);
 			try {
-				const request = await axios.get(`${API_URL}renters/properties/${_id}`, {
+				const request = await axios.get(`${API_URL}owners/properties/${ownerID}/${propertyID}`, {
 					headers: {
 						"Content-Type": "application/json",
 						Authorization: token,
 					},
 				});
 				setProperty(request.data.message);
+				//console.log(request.data.message);
 				//localStorage.setItem("PropertyInViewing", JSON.stringify(request.data.message));
 			} catch (error) {
 				console.log(error);

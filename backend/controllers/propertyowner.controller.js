@@ -128,7 +128,7 @@ export const getOwnedPropertiesByID = async (request, response, next) => {
 	try {
 		const ownerID = request.params.ownerID;
 		const propertyID = request.params.propertyID;
-		const specificPropertyOwned = await PropertyModel.find({ owner: ownerID, _id: propertyID });
+		const specificPropertyOwned = await PropertyModel.findOne({ owner: ownerID, _id: propertyID });
 		if (!specificPropertyOwned || specificPropertyOwned.length === 0) {
 			return response.status(400).json({
 				status: "Failed",

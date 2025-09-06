@@ -36,11 +36,11 @@ export default function AddProperty() {
 					Authorization: token,
 				},
 			});
-			console.log(propertyImageLink);
+			//console.log(propertyImageLink);
 			//loadFile(event);
-			if (request.data.status === "Success") {
-				console.log("Property Added");
-			}
+			// if (request.data.status === "Success") {
+			// 	console.log("Property Added");
+			// }
 		} catch (error) {
 			console.log(error);
 		}

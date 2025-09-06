@@ -3,10 +3,12 @@ import { PropertyInterFace } from "@/interfaces/property.interface";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 export default function MyProperties() {
 	const [loading, setLoading] = useState<boolean>(false);
 	const [propertiesLoaded, setPropertiesLoaded] = useState<PropertyInterFace[]>([]);
+	const routerToGoToSpecificPropertyPage = useRouter();
 	useEffect(() => {
 		const storedOwnerData = JSON.parse(`${localStorage.getItem("Owner")}`);
 		const token = `Bearer ${storedOwnerData.data.token}`;
@@ -32,6 +34,11 @@ export default function MyProperties() {
 
 		getMyProperties();
 	}, []);
+
+	const propertyDetails = async (event: React.MouseEvent, _id: string) => {
+		event.preventDefault();
+		routerToGoToSpecificPropertyPage.push(`/properties-for-owner/${_id}`);
+	};
 	return (
 		<>
 			{loading === false ? (
@@ -40,7 +47,10 @@ export default function MyProperties() {
 				<div>
 					{propertiesLoaded?.length > 0 ? (
 						propertiesLoaded.map((propertyLoaded) => (
-							<div key={propertyLoaded._id}>
+							<div
+								key={propertyLoaded._id}
+								onClick={(event) => propertyDetails(event, propertyLoaded._id)}
+							>
 								<h1>{propertyLoaded.name}</h1>
 								<Image
 									src={propertyLoaded.images}
