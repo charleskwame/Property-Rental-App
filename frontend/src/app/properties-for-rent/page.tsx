@@ -10,6 +10,7 @@ import { useRouter } from "next/navigation";
 
 export default function PropertiesForRent() {
 	const routerToGoBackToLogIn = useRouter();
+	const routerToGoToSpecificPropertyPage = useRouter();
 
 	const [propertiesFetched, setPropertiesFetched] = useState<PropertyInterFace[]>([]);
 	const [loading, setLoading] = useState<boolean>(false);
@@ -44,22 +45,22 @@ export default function PropertiesForRent() {
 
 	const propertyDetails = async (event: React.MouseEvent, _id: string) => {
 		event.preventDefault();
-		const storedRenterData = JSON.parse(`${localStorage.getItem("Renter")}`);
-		const token = `Bearer ${storedRenterData.data.token}`;
-		console.log(token);
-		console.log(_id);
-		try {
-			const request = await axios.get(`${API_URL}renters/properties/${_id}`, {
-				headers: {
-					"Content-Type": "application/json",
-					Authorization: token,
-				},
-			});
-			// console.log(request);
-			//console.log(_id);
-		} catch (error) {
-			console.log(error);
-		}
+		// const storedRenterData = JSON.parse(`${localStorage.getItem("Renter")}`);
+		// const token = `Bearer ${storedRenterData.data.token}`;
+		// console.log(token);
+		// console.log(_id);
+		// try {
+		// 	const request = await axios.get(`${API_URL}renters/properties/${_id}`, {
+		// 		headers: {
+		// 			"Content-Type": "application/json",
+		// 			Authorization: token,
+		// 		},
+		// 	});
+		// 	localStorage.setItem("PropertyInViewing", JSON.stringify(request.data.message));
+		// } catch (error) {
+		// 	console.log(error);
+		// }
+		routerToGoToSpecificPropertyPage.push(`/properties-for-rent/${_id}`);
 	};
 
 	return (
