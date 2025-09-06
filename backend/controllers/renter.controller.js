@@ -130,8 +130,9 @@ export const getProperties = async (request, response, next) => {
 export const getPropertiesByID = async (request, response, next) => {
 	// connecting to database
 	try {
-		const { propertyID } = request.body;
-		const property = await PropertyModel.findOne({ _id: propertyID });
+		const _id = request.params.propertyID;
+		//return response.json({ _id: `The id is ${_id}` });
+		const property = await PropertyModel.findOne({ _id });
 		if (!property) {
 			return response.status(400).json({
 				status: "Failed",
