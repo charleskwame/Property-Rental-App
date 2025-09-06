@@ -8,6 +8,7 @@ import { API_URL } from "@/config";
 export default function SendRenterOTP() {
 	const routeToVerifyOwnerOTP = useRouter();
 	const routerToGoBackToLogIn = useRouter();
+	const routerForPropertiesForOwner = useRouter();
 	const [email, setEmail] = useState<string>("");
 
 	useEffect(() => {
@@ -15,17 +16,23 @@ export default function SendRenterOTP() {
 		if (storedOwnerData === null) {
 			routerToGoBackToLogIn.push("/login-owner");
 		}
+		if (storedOwnerData.isVerified === true) {
+			routerForPropertiesForOwner.push("/properties-for-owner");
+		}
+		setTimeout(() => {
+			setEmail(storedOwnerData.email);
+		}, 2000);
 	});
 
-	setTimeout(() => {
-		const storedOwnerData = JSON.parse(`${localStorage.getItem("Owner")}`);
-		setEmail(storedOwnerData.data.ownerWithoutPassword.email);
-		//console.log(storedRenterData);
-	}, 2000);
+	// setTimeout(() => {
+	// 	const storedOwnerData = JSON.parse(`${localStorage.getItem("Owner")}`);
+	// 	//console.log(storedRenterData);
+	// }, 2000);
 
 	const handleOTPSubmission = async (event: React.FormEvent) => {
 		event.preventDefault();
 		const storedOwnerData = JSON.parse(`${localStorage.getItem("Owner")}`);
+
 		//console.log(storedRenterData);
 
 		const token = `Bearer ${storedOwnerData.data.token}`;

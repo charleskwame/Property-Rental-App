@@ -8,6 +8,7 @@ import { useEffect } from "react";
 export default function VerifyRenter() {
 	const routeToPropertiesForRent = useRouter();
 	const routeToVerifyRenterOTP = useRouter();
+	const routerForProperties = useRouter();
 	const routerToGoBackToLogIn = useRouter();
 	const [otp, setOtp] = useState<string>("");
 
@@ -15,6 +16,9 @@ export default function VerifyRenter() {
 		const storedRenterData = JSON.parse(`${localStorage.getItem("Renter")}`);
 		if (storedRenterData === null) {
 			routerToGoBackToLogIn.push("/login-renter");
+		}
+		if (storedRenterData.isVerified === true) {
+			routerForProperties.push("/properties-for-rent");
 		}
 	});
 
@@ -43,6 +47,7 @@ export default function VerifyRenter() {
 			});
 			if (request.data.status === "Success") {
 				//console.log(request.data);
+				localStorage.setItem("Renter", JSON.stringify(request.data.renterWithoutPassword));
 				routeToPropertiesForRent.push("/properties-for-rent");
 			}
 		} catch (error) {

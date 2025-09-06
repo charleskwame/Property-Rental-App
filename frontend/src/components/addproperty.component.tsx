@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 //import { API_URL, NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME, CLOUDINARY_URL } from "../../config/env";
 import { CldUploadWidget } from "next-cloudinary";
@@ -19,9 +19,6 @@ export default function AddProperty() {
 		event.preventDefault();
 
 		const storedOwnerData = JSON.parse(`${localStorage.getItem("Owner")}`);
-		// if (storedOwnerData === null) {
-		// 	routerToGoBackToLogIn.push("/login-owner");
-		// }
 		const propertyData = {
 			name: propertyName,
 			location: propertyLocation,
@@ -40,7 +37,7 @@ export default function AddProperty() {
 				},
 			});
 			console.log(propertyImageLink);
-			loadFile(event);
+			//loadFile(event);
 			if (request.data.status === "Success") {
 				console.log("Property Added");
 			}
@@ -104,8 +101,10 @@ export default function AddProperty() {
 				/>
 				<img src={propertyImage} alt="" />
 
-				<button onClick={(event) => loadFile(event)}>Add Image</button>
-				<button>Add Property</button>
+				<button type="button" onClick={(event) => loadFile(event)}>
+					Add Image
+				</button>
+				<button type="submit">Add Property</button>
 			</form>
 		</>
 	);

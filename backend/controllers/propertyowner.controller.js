@@ -106,10 +106,11 @@ export const getPropertyOwner = async (request, response, next) => {
 export const getOwnedProperties = async (request, response, next) => {
 	try {
 		const ownerID = request.params.ownerID;
+		//return response.json({ ownerID });
 		const ownedProperties = await PropertyModel.find({ owner: ownerID });
 		if (!ownedProperties || ownedProperties.length === 0) {
 			return response.status(400).json({
-				success: "Failed",
+				status: "Failed",
 				message: `No properties added by ${ownerID}`,
 			});
 		}
@@ -130,8 +131,8 @@ export const getOwnedPropertiesByID = async (request, response, next) => {
 		const specificPropertyOwned = await PropertyModel.find({ owner: ownerID, _id: propertyID });
 		if (!specificPropertyOwned || specificPropertyOwned.length === 0) {
 			return response.status(400).json({
-				success: "Failed",
-				message: `No properties with id of ${propertyID} added by ${ownerID}`,
+				status: "Failed",
+				message: specificPropertyOwned,
 			});
 		}
 		response.status(200).json({ status: "Success", message: specificPropertyOwned });

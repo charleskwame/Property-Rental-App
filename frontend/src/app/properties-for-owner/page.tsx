@@ -1,6 +1,7 @@
 "use client";
 
 import AddProperty from "@/components/addproperty.component";
+import MyProperties from "@/components/myproperties.components";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
@@ -16,6 +17,7 @@ export default function PropertiesForOwner() {
 	return (
 		<>
 			<AddProperty />
+			<MyProperties />
 		</>
 	);
 }

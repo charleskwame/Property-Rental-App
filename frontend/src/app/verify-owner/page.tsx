@@ -21,6 +21,9 @@ export default function VerifyOwner() {
 		if (storedOwnerData === null) {
 			routerToGoBackToLogIn.push("/login-owner");
 		}
+		if (storedOwnerData.isVerified === true) {
+			routerForPropertiesForOwner.push("/properties-for-owner");
+		}
 	});
 
 	const handleSubmit = async (event: React.FormEvent) => {
@@ -43,7 +46,9 @@ export default function VerifyOwner() {
 			});
 			if (request.data.status === "Success") {
 				//console.log(request.data);
+				localStorage.setItem("Owner", JSON.stringify(request.data));
 				routerForPropertiesForOwner.push("/properties-for-owner");
+				//console.log(request);
 			}
 		} catch (error) {
 			console.log(error);

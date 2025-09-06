@@ -42,6 +42,22 @@ export default function PropertiesForRent() {
 		getProperties();
 	}, []);
 
+	const propertyDetails = async (event: React.MouseEvent, _id: string) => {
+		const storedRenterData = JSON.parse(`${localStorage.getItem("Renter")}`);
+		const token = `Bearer ${storedRenterData.data.token}`;
+
+		try {
+			const request = await axios.get(`${API_URL}renters/${_id}`, {
+				headers: {
+					"Content-Type": "application/json",
+					Authorization: token,
+				},
+			});
+		} catch (error) {
+			console.log(error);
+		}
+	};
+
 	return (
 		<>
 			{!loading ? (
@@ -50,7 +66,7 @@ export default function PropertiesForRent() {
 				<div>
 					{propertiesFetched?.length > 0 ? (
 						propertiesFetched.map((property) => (
-							<div key={property._id}>
+							<div key={property._id} onClick={(event) => propertyDetails(event, property._id)}>
 								<h1>{property.name}</h1>
 								<Image src={property.images} alt={`Image of ${property.name}`} width={200} height={200} />
 							</div>

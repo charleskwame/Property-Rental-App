@@ -9,6 +9,7 @@ import { useEffect } from "react";
 export default function SendRenterOTP() {
 	const routeToVerifyRenterOTP = useRouter();
 	const routerToGoBackToLogIn = useRouter();
+	const routerForProperties = useRouter();
 	const [email, setEmail] = useState<string>("");
 
 	useEffect(() => {
@@ -16,13 +17,19 @@ export default function SendRenterOTP() {
 		if (storedRenterData === null) {
 			routerToGoBackToLogIn.push("/login-renter");
 		}
+		if (storedRenterData.isVerified === true) {
+			routerForProperties.push("/properties-for-rent");
+		}
+		setTimeout(() => {
+			setEmail(storedRenterData.email);
+		}, 2000);
 	});
 
-	setTimeout(() => {
-		const storedRenterData = JSON.parse(`${localStorage.getItem("Renter")}`);
-		setEmail(storedRenterData.data.renterWithoutPassword.email);
-		//console.log(storedRenterData);
-	}, 3000);
+	// setTimeout(() => {
+	// 	const storedRenterData = JSON.parse(`${localStorage.getItem("Renter")}`);
+	// 	setEmail(storedRenterData.data.renterWithoutPassword.email);
+	// 	//console.log(storedRenterData);
+	// }, 3000);
 
 	const handleOTPSubmission = async (event: React.FormEvent) => {
 		event.preventDefault();
