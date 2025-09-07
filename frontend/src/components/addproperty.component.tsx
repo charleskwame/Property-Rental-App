@@ -5,6 +5,7 @@ import axios from "axios";
 import { CldUploadWidget } from "next-cloudinary";
 import { API_URL } from "@/config";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 export default function AddProperty() {
 	//const routerToGoBackToLogIn = useRouter();
@@ -14,8 +15,10 @@ export default function AddProperty() {
 	const [propertyDescription, setPropertyDescription] = useState<string>("");
 	const [propertyImage, setPropertyImage] = useState<File | undefined>(undefined);
 	const [propertyImageLink, setPropertyImageLink] = useState<string>("");
+	const [propertyPrice, setPropertyPrice] = useState<number>();
 
 	const addProperty = async (event: React.FormEvent) => {
+		console.log(propertyPrice);
 		event.preventDefault();
 
 		const storedOwnerData = JSON.parse(`${localStorage.getItem("Owner")}`);
@@ -25,11 +28,13 @@ export default function AddProperty() {
 			type: propertyType,
 			description: propertyDescription,
 			images: propertyImageLink,
+			price: propertyPrice,
 			owner: storedOwnerData.data.ownerWithoutPassword._id,
 		};
 
 		try {
 			const token = `Bearer ${storedOwnerData.data.token}`;
+			console.log(token);
 			const request = await axios.post(`${API_URL}owners/add-properties`, propertyData, {
 				headers: {
 					"Content-Type": "application/json",
@@ -85,6 +90,12 @@ export default function AddProperty() {
 					value={propertyType}
 					onChange={(event) => setPropertyType(event.target.value)}
 				/>
+				<label htmlFor="">Price</label>
+				<input
+					type="number"
+					value={propertyPrice}
+					onChange={(event) => setPropertyPrice(Number(event.target.value))}
+				/>
 				<label htmlFor="">description</label>
 				<input
 					type="text"
@@ -99,7 +110,7 @@ export default function AddProperty() {
 						setPropertyImage(event.target.files?.[0]);
 					}}
 				/>
-				<img src={propertyImage} alt="" />
+				{/* <Image src={propertyImage} alt="" width={300} height={300} /> */}
 
 				<button type="button" onClick={(event) => loadFile(event)}>
 					Add Image

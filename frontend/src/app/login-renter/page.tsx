@@ -31,9 +31,9 @@ export default function LogInRenter() {
 
 			if (request.data.status === "Success") {
 				localStorage.setItem("Renter", JSON.stringify(request.data));
-				//console.log(request.data);
+				console.log(request.data);
 				//console.log(request.data.renterWithoutPassword);
-				routeToPropertiesForRent.push("/properties-for-rent");
+				routeToPropertiesForRent.push("/");
 			}
 		} catch (error) {
 			console.log(error);

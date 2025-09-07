@@ -33,6 +33,11 @@ const PropertySchema = mongoose.Schema({
 		type: String,
 		required: [true, "Image not added"],
 	},
+	price: {
+		type: String,
+		required: [true, "Price not specified"],
+		//default: "000.00",
+	},
 	owner: {
 		type: mongoose.Schema.Types.ObjectId,
 		ref: "PropertyOwnerModel",

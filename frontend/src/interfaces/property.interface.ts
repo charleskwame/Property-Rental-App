@@ -5,5 +5,6 @@ export interface PropertyInterFace {
 	type: string;
 	description: string;
 	images: string;
+	price: string;
 	owner: string;
 }

@@ -149,7 +149,7 @@ export const addProperty = async (request, response, next) => {
 	const session = await mongoose.startSession();
 	session.startTransaction();
 	try {
-		const { name, location, type, description, images, owner } = request.body;
+		const { name, location, type, description, images, price, owner } = request.body;
 		const existingProperty = await PropertyModel.findOne({ name, location, type });
 		if (existingProperty) {
 			return response.status(400).json({ status: "Failed", message: "Property Already Registered" });
@@ -163,6 +163,7 @@ export const addProperty = async (request, response, next) => {
 					type,
 					description,
 					images,
+					price,
 					owner,
 				},
 			],
@@ -184,7 +185,7 @@ export const addProperty = async (request, response, next) => {
 export const updateProperty = async (request, response, next) => {
 	try {
 		const propertyID = request.params.propertyID;
-		const { name, location, type, description } = request.body;
+		const { name, location, type, description, images, price } = request.body;
 		const existingProperty = await PropertyModel.findByIdAndUpdate(
 			propertyID,
 			{
@@ -192,6 +193,8 @@ export const updateProperty = async (request, response, next) => {
 				location,
 				type,
 				description,
+				images,
+				price,
 			},
 			{ new: true, runValidators: true },
 		);

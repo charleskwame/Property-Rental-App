@@ -97,7 +97,7 @@ export const getRenter = async (request, response, next) => {
 
 		response.status(200).json({
 			status: "Success",
-			message: "User Found, Signed In",
+			//message: "User Found, Signed In",
 			data: { token, renterWithoutPassword },
 		});
 	} catch (error) {
@@ -207,7 +207,51 @@ export const resendRenterOTP = async (request, response) => {
 };
 
 //function to add property to favoriates
+export const addPropertyToFavorites = async (request, response) => {
+	const { userID, propertyID } = request.body;
+	try {
+		if (!userID || !propertyID) {
+			return response.status(400).json({ status: "Failed", message: "Empty Property ID/User ID" });
+		}
+		const renterWithFavoritedProperty = await RenterModel.findByIdAndUpdate(
+			userID,
+			{
+				$addToSet: { likedproperties: [propertyID] },
+			},
+			{ new: true },
+		);
+
+		const { password: _, ...renterWithoutPassword } = renterWithFavoritedProperty.toObject();
+		const token = jwt.sign({ userID: renterWithoutPassword._id }, JWT_SECRET, {
+			expiresIn: JWT_EXPIRES_IN,
+		});
+		response.status(200).json({ status: "Success", data: { token, renterWithoutPassword } });
+	} catch (error) {
+		return response.status(404).json({ status: "Failed", message: error.message });
+	}
+};
 
 //function to remove property from favorites
+export const removePropertyFromFavorites = async (request, response) => {
+	const { userID, propertyID } = request.body;
+	try {
+		if (!userID || !propertyID) {
+			return response.status(400).json({ status: "Failed", message: "Empty Property ID/User ID" });
+		}
+		const renterWithoutFavoritedProperty = await RenterModel.findOneAndUpdate(
+			{ _id: userID },
+			{ $pull: { likedproperties: propertyID } },
+			{ new: true },
+		);
+
+		const { password: _, ...renterWithoutPassword } = renterWithoutFavoritedProperty.toObject();
+		const token = jwt.sign({ userID: renterWithoutPassword._id }, JWT_SECRET, {
+			expiresIn: JWT_EXPIRES_IN,
+		});
+		response.status(200).json({ status: "Success", data: { token, renterWithoutPassword } });
+	} catch (error) {
+		return response.status(404).json({ status: "Failed", message: error.message });
+	}
+};
 
 //export default getProperties;

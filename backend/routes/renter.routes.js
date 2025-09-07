@@ -1,9 +1,11 @@
 import Router from "express";
 import {
+	addPropertyToFavorites,
 	addRenter,
 	getProperties,
 	getPropertiesByID,
 	getRenter,
+	removePropertyFromFavorites,
 	resendRenterOTP,
 	sendRenterOTP,
 } from "../controllers/renter.controller.js";
@@ -23,8 +25,16 @@ RenterRouter.post("/verify-renter-otp", authenticateRenter, verifyRenterOTP);
 
 RenterRouter.post("/log-in", getRenter);
 
-RenterRouter.get("/properties", autheticateRenter, getProperties);
+RenterRouter.get("/properties", getProperties);
 
-RenterRouter.get("/properties/:propertyID", authenticateRenter, getPropertiesByID);
+RenterRouter.get("/properties/:propertyID", getPropertiesByID);
+
+RenterRouter.post("/properties/add-to-favorites", autheticateRenter, addPropertyToFavorites);
+
+RenterRouter.post(
+	"/properties/remove-from-favorites",
+	autheticateRenter,
+	removePropertyFromFavorites,
+);
 
 export default RenterRouter;
