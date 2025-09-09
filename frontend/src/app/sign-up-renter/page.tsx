@@ -4,9 +4,10 @@ import axios from "axios";
 import { useState } from "react";
 import { API_URL } from "@/config";
 import { useRouter } from "next/navigation";
+import { GoToPageFunction } from "../functions/gotoLogin.function";
 
 export default function SignUpRenter() {
-	const routeToVerifyRenterOTP = useRouter();
+	const route = useRouter();
 	const [name, setName] = useState<string>("");
 	const [email, setEmail] = useState<string>("");
 	const [password, setPassword] = useState<string>("");
@@ -31,40 +32,12 @@ export default function SignUpRenter() {
 				//setIsSendingOTP(!isSendingOTP);
 				localStorage.setItem("Renter", JSON.stringify(request.data));
 				//console.log(request.data);
-				routeToVerifyRenterOTP.push("/send-renter-otp");
+				route.push("/send-renter-otp");
 			}
 		} catch (error) {
 			console.log(error);
 		}
 	};
-
-	// const handleOTPSubmission = async (event: React.FormEvent) => {
-	// 	event.preventDefault();
-	// 	const storedRenterData = JSON.parse(`${localStorage.getItem("Renter")}`);
-	// 	//console.log(storedRenterData.data.token);
-
-	// 	const token = `Bearer ${storedRenterData.data.token}`;
-
-	// 	const formData = {
-	// 		userID: storedRenterData.data.renterWithoutPassword._id,
-	// 		email,
-	// 	};
-	// 	try {
-	// 		const request = await axios.post(`${API_URL}renters/send-renter-otp`, formData, {
-	// 			headers: {
-	// 				"Content-Type": "application/json",
-	// 				Authorization: token,
-	// 			},
-	// 		});
-	// 		//setIsSendingOTP(!isSendingOTP);
-	// 		if (request.data.status === "Pending") {
-	// 			//console.log(request.data);
-	// 			routeToVerifyRenterOTP.push("/verify-renter");
-	// 		}
-	// 	} catch (error) {
-	// 		console.log(error);
-	// 	}
-	// };
 
 	return (
 		<>
@@ -87,7 +60,10 @@ export default function SignUpRenter() {
 					value={phonenumber}
 					onChange={(event) => setPhonenumber(event?.target.value)}
 				/>
-				<button>Sign up</button>
+				<button type="submit">Sign up</button>
+				<button type="button" onClick={() => GoToPageFunction(route, "/login-renter")}>
+					Log in
+				</button>
 			</form>
 		</>
 	);

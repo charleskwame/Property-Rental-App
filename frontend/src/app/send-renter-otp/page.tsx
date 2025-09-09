@@ -5,24 +5,27 @@ import { useState } from "react";
 import axios from "axios";
 import { API_URL } from "@/config";
 import { useEffect } from "react";
+import { GoToPageFunction } from "../functions/gotoLogin.function";
 
 export default function SendRenterOTP() {
-	const routeToVerifyRenterOTP = useRouter();
-	const routerToGoBackToLogIn = useRouter();
-	const routerForProperties = useRouter();
+	//const routeToVerifyRenterOTP = useRouter();
+	const route = useRouter();
+	//const routerForProperties = useRouter();
 	const [email, setEmail] = useState<string>("");
 
 	useEffect(() => {
-		const storedRenterData = JSON.parse(`${localStorage.getItem("Renter")}`);
-		if (storedRenterData === null) {
-			routerToGoBackToLogIn.push("/login-renter");
+		if (localStorage.getItem("Renter") !== null) {
+			const storedRenterData = JSON.parse(`${localStorage.getItem("Renter")}`);
+			// if (storedRenterData === null) {
+			// }
+			if (storedRenterData.isVerified === true) {
+				route.push("/properties-for-rent");
+			}
+			setTimeout(() => {
+				setEmail(storedRenterData.email);
+			}, 2000);
 		}
-		if (storedRenterData.isVerified === true) {
-			routerForProperties.push("/properties-for-rent");
-		}
-		setTimeout(() => {
-			setEmail(storedRenterData.email);
-		}, 2000);
+		GoToPageFunction(route, "/");
 	});
 
 	// setTimeout(() => {
@@ -52,7 +55,7 @@ export default function SendRenterOTP() {
 			//setIsSendingOTP(!isSendingOTP);
 			if (request.data.status === "Pending") {
 				//console.log(request.data);
-				routeToVerifyRenterOTP.push("/verify-renter");
+				route.push("/verify-renter");
 			}
 		} catch (error) {
 			console.log(error);

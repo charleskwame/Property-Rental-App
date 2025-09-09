@@ -8,7 +8,8 @@ import { API_URL } from "@/config";
 import { PropertyInterFace } from "@/interfaces/property.interface";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { HeartIcon } from "@heroicons/react/24/outline";
+import { HeartIcon, UserCircleIcon } from "@heroicons/react/24/outline";
+import NavBar from "@/components/navbar.component";
 
 export default function PropertiesForRent() {
 	const routerToGoToSpecificPropertyPage = useRouter();
@@ -101,8 +102,8 @@ export default function PropertiesForRent() {
 					},
 				});
 				localStorage.setItem("Renter", JSON.stringify(request.data));
-				location.reload();
-				console.log(request);
+				//location.reload();
+				//console.log(request);
 			} catch (error) {
 				console.log(error);
 			}
@@ -114,60 +115,44 @@ export default function PropertiesForRent() {
 		// console.log(userID);
 	};
 
-	const removePropertyFromFavorites = async (event: React.MouseEvent, propertyID: string) => {
-		if (localStorage.getItem("Renter") !== null) {
-			const storedRenterData = JSON.parse(`${localStorage.getItem("Renter")}`);
+	// const removePropertyFromFavorites = async (event: React.MouseEvent, propertyID: string) => {
+	// 	if (localStorage.getItem("Renter") !== null) {
+	// 		const storedRenterData = JSON.parse(`${localStorage.getItem("Renter")}`);
 
-			const token = `Bearer ${storedRenterData.data.token}`;
-			const userID = storedRenterData.data.renterWithoutPassword._id;
+	// 		const token = `Bearer ${storedRenterData.data.token}`;
+	// 		const userID = storedRenterData.data.renterWithoutPassword._id;
 
-			const formData = {
-				userID: userID,
-				propertyID: propertyID,
-			};
+	// 		const formData = {
+	// 			userID: userID,
+	// 			propertyID: propertyID,
+	// 		};
 
-			try {
-				const request = await axios.post(
-					`${API_URL}renters/properties/remove-from-favorites`,
-					formData,
-					{
-						headers: {
-							"Content-Type": "application/json",
-							Authorization: token,
-						},
-					},
-				);
-				localStorage.setItem("Renter", JSON.stringify(request.data));
-				location.reload();
-				console.log(request);
-			} catch (error) {
-				console.log(error);
-			}
-		} else {
-			routerToGoToLogIn.push("/login-renter");
-		}
-
-		// console.log(token);
-		// console.log(userID);
-	};
+	// 		try {
+	// 			const request = await axios.post(
+	// 				`${API_URL}renters/properties/remove-from-favorites`,
+	// 				formData,
+	// 				{
+	// 					headers: {
+	// 						"Content-Type": "application/json",
+	// 						Authorization: token,
+	// 					},
+	// 				},
+	// 			);
+	// 			localStorage.setItem("Renter", JSON.stringify(request.data));
+	// 			location.reload();
+	// 			console.log(request);
+	// 		} catch (error) {
+	// 			console.log(error);
+	// 		}
+	// 	} else {
+	// 		routerToGoToLogIn.push("/login-renter");
+	// 	}
+	// };
 
 	return (
 		<main className="p-2">
-			<div className="flex gap-3.5 mb-5">
-				<button>
-					<Link href={`/sign-up-renter `}>Renter Sign Up</Link>
-				</button>
-				<button>
-					<Link href={`/sign-up-owner`}>Owner Sign Up</Link>
-				</button>
-				<button>
-					<Link href={`/login-renter `}>Renter Log In</Link>
-				</button>
-				<button>
-					<Link href={`/login-owner`}>Owner Log In</Link>
-				</button>
-			</div>
-			{loadingFavorites ? (
+			<NavBar />
+			{/* {loadingFavorites ? (
 				<h1>Loading Favorites...</h1>
 			) : (
 				<div>
@@ -201,11 +186,11 @@ export default function PropertiesForRent() {
 								</div>
 							))
 						) : (
-							<h1>No Favorites found</h1>
+							<h1>No Favorites</h1>
 						)}
 					</div>
 				</div>
-			)}
+			)} */}
 			{!loading ? (
 				<h1>Loading...</h1>
 			) : (

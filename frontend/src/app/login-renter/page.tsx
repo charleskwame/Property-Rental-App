@@ -1,15 +1,31 @@
 "use client";
 
 import axios from "axios";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { API_URL } from "@/config";
 import { useRouter } from "next/navigation";
+import { GoToPageFunction } from "../functions/gotoLogin.function";
+import { json } from "stream/consumers";
 
 export default function LogInRenter() {
-	const routeToPropertiesForRent = useRouter();
-	const routeToVerifyRenter = useRouter();
+	const route = useRouter();
+	//const route = useRouter();
 	const [email, setEmail] = useState<string>("");
 	const [password, setPassword] = useState<string>("");
+
+	useEffect(() => {
+		if (sessionStorage.getItem("RenterLogInStatus") !== null) {
+			const unparsedLogInStatus = sessionStorage.getItem("RenterLogInStatus");
+			if (unparsedLogInStatus !== null) {
+				const logInStatus = JSON.parse(unparsedLogInStatus);
+				console.log(logInStatus);
+				if (logInStatus.loggedin === true) {
+					GoToPageFunction(route, "/");
+				}
+			}
+		}
+	});
+
 	const handleSubmit = async (event: React.FormEvent) => {
 		event.preventDefault();
 
@@ -26,14 +42,15 @@ export default function LogInRenter() {
 			});
 
 			if (request.data.status === "Pending Verification") {
-				routeToVerifyRenter.push("/send-renter-otp");
+				route.push("/send-renter-otp");
 			}
 
 			if (request.data.status === "Success") {
 				localStorage.setItem("Renter", JSON.stringify(request.data));
-				console.log(request.data);
+				sessionStorage.setItem("RenterLogInStatus", JSON.stringify({ loggedin: true }));
+				//console.log(request.data);
 				//console.log(request.data.renterWithoutPassword);
-				routeToPropertiesForRent.push("/");
+				route.push("/");
 			}
 		} catch (error) {
 			console.log(error);
