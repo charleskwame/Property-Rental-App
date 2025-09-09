@@ -1,18 +1,21 @@
 /* eslint-disable no-unused-vars */
 import mongoose from "mongoose";
 import PropertyModel from "../models/property.model.js";
-import PropertyOwnerModel from "../models/propertyowner.models.js";
+//import RenterModel from "../models/Renter.models.js";
 import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
 import {
-	JWT_SECRET,
 	JWT_EXPIRES_IN,
+	JWT_SECRET,
 	NODEMAILER_EMAIL,
 	NODEMAILER_PASSWORD,
 } from "../config/env.js";
-import OwnerOTPModel from "../models/ownerotp.model.js";
+import jwt from "jsonwebtoken";
 import nodemailer from "nodemailer";
+//import RenterOTPModel from "../models/otp.model.js";
+import UserModel from "../models/user.model.js";
+import OTPModel from "../models/otp.model.js";
 
+//creating nodemailer transport
 const transporter = nodemailer.createTransport({
 	host: "smtp.gmail.com",
 	secure: false,
@@ -22,42 +25,42 @@ const transporter = nodemailer.createTransport({
 	},
 });
 
-//function to add owner
-export const addPropertyOwner = async (request, response, next) => {
+//function to add renter(sign up)
+export const addUser = async (request, response, next) => {
 	const session = await mongoose.startSession();
 	session.startTransaction();
 	try {
-		const { name, email, password, phonenumber } = request.body;
-		const existingOwner = await PropertyOwnerModel.findOne({ email });
-		if (existingOwner) {
-			return response
-				.status(400)
-				.json({ status: "Failed", message: "Owner Email / Phonenumber Already Registered" });
+		const { name, email, password, phonenumber, usertype } = request.body;
+		const existingUser = await UserModel.findOne({ email });
+		if (existingUser) {
+			return response.status(400).json({ status: "Failed", message: "Account Already Registered" });
 		}
+
 		const salt = await bcrypt.genSalt(10);
 		const hashedPassword = await bcrypt.hash(password, salt);
-		const ownerAdded = await PropertyOwnerModel.create(
+		const userAdded = await UserModel.create(
 			[
 				{
 					name,
 					email,
 					password: hashedPassword,
 					phonenumber,
+					usertype,
 				},
 			],
 			{ session },
 		);
-
-		const token = jwt.sign({ userID: ownerAdded[0]._id }, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
+		const token = jwt.sign({ userID: userAdded[0]._id }, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
 		await session.commitTransaction();
 		session.endSession();
 
-		const { password: _, ...ownerWithoutPassword } = ownerAdded[0].toObject();
+		const { password: _, ...userWithoutPassword } = userAdded[0].toObject();
 		response.status(200).json({
 			status: "Success",
-			message: "Owner Added Success",
-			data: { token, ownerWithoutPassword },
+			message: "Account Added Success",
+			data: { token, userWithoutPassword },
 		});
+		// verifyRenterOTP(renterAdded[0]._id, renterAdded[0].email);
 	} catch (error) {
 		await session.abortTransaction();
 		session.endSession();
@@ -65,39 +68,84 @@ export const addPropertyOwner = async (request, response, next) => {
 	}
 };
 
-// function to get property owner(log-in)
-export const getPropertyOwner = async (request, response, next) => {
+//function to log in
+export const getUser = async (request, response, next) => {
 	try {
 		const { email, password } = request.body;
-		const foundOwner = await PropertyOwnerModel.findOne({ email });
-		if (!foundOwner) {
+		const foundUser = await UserModel.findOne({ email });
+		if (!foundUser) {
 			return response
 				.status(400)
-				.json({ status: false, message: "Check Credentials, Property Owner Not Found" });
+				.json({ status: "Failed", message: "Check Credentials, User Not Found" });
 		}
-		const decodedPassword = await bcrypt.compare(password, foundOwner.password);
+		const decodedPassword = await bcrypt.compare(password, foundUser.password);
 
 		if (!decodedPassword) {
 			return response
 				.status(400)
-				.json({ status: false, message: "Check credentials, wrong password" });
+				.json({ status: "Failed", message: "Check Password, User Not Found" });
 		}
 
-		const token = jwt.sign({ userID: foundOwner._id }, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
+		const token = jwt.sign({ userID: foundUser._id }, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
 
+		// 3. Exclude password before sending
 		// eslint-disable-next-line no-unused-vars
-		const { password: _, ...ownerWithoutPassword } = foundOwner.toObject();
+		const { password: _, ...userWithoutPassword } = foundUser.toObject();
 
-		if (!ownerWithoutPassword.isVerified) {
-			return response.json({ status: "Pending Verification", data: { token, ownerWithoutPassword } });
+		if (!userWithoutPassword.isVerified) {
+			return response.json({ status: "Pending Verification", data: { token, userWithoutPassword } });
 		}
 
 		response.status(200).json({
 			status: "Success",
-			message: "User Found",
-			data: { token, ownerWithoutPassword },
+			//message: "User Found, Signed In",
+			data: { token, userWithoutPassword },
 		});
 	} catch (error) {
+		next(error);
+	}
+};
+
+// function to get all properties
+export const getProperties = async (request, response, next) => {
+	// connecting to database
+	try {
+		const properties = await PropertyModel.find();
+		if (properties.length <= 0) {
+			return response.status(400).json({
+				status: "Failed",
+				message: "No Property Found",
+			});
+		}
+		response.status(200).json({ status: "Success", message: properties });
+	} catch (error) {
+		response.status(404).json({
+			status: "Failed",
+			message: "Cannot Connect To The Database",
+		});
+		next(error);
+	}
+};
+
+// function to get one particular property
+export const getPropertiesByID = async (request, response, next) => {
+	// connecting to database
+	try {
+		const _id = request.params.propertyID;
+		//return response.json({ _id: `The id is ${_id}` });
+		const property = await PropertyModel.findOne({ _id });
+		if (!property) {
+			return response.status(400).json({
+				status: "Failed",
+				message: "No Property Found",
+			});
+		}
+		response.status(200).json({ status: "Success", message: property });
+	} catch (error) {
+		response.status(404).json({
+			status: "Failed",
+			message: "Cannot Connect To The Database",
+		});
 		next(error);
 	}
 };
@@ -235,7 +283,7 @@ export const deleteProperty = async (request, response, next) => {
 };
 
 // function to verify renter otp
-export const sendOwnerOTP = async (request, response) => {
+export const sendUserOTP = async (request, response) => {
 	const { userID, email } = request.body;
 	const otp = `${Math.floor(1000 + Math.random() * 9000)}`;
 
@@ -253,7 +301,7 @@ export const sendOwnerOTP = async (request, response) => {
 
 		const hashedOTP = await bcrypt.hash(otp, salt);
 
-		await OwnerOTPModel.create({
+		await OTPModel.create({
 			userID: userID,
 			otp: hashedOTP,
 			createdAt: Date.now(),
@@ -276,7 +324,7 @@ export const sendOwnerOTP = async (request, response) => {
 };
 
 //function to resend renter otp
-export const resendOwnerOTP = async (request, response) => {
+export const resendUserOTP = async (request, response) => {
 	const { userID, email } = request.body;
 	//console.log(request.body);
 	try {
@@ -284,9 +332,59 @@ export const resendOwnerOTP = async (request, response) => {
 		if (!userID || !email) {
 			return response.status(400).json({ status: "Failed", message: "Empty UserID/Email" });
 		}
-		await OwnerOTPModel.deleteMany({ userID: userID });
-		await sendOwnerOTP(request, response);
+		await OTPModel.deleteMany({ userID: userID });
+		await sendUserOTP(request, response);
 	} catch (error) {
 		return response.status(404).json({ status: "Failed", message: error.message });
 	}
 };
+
+//function to add property to favoriates
+export const addPropertyToFavorites = async (request, response) => {
+	const { userID, propertyID } = request.body;
+	try {
+		if (!userID || !propertyID) {
+			return response.status(400).json({ status: "Failed", message: "Empty Property ID/User ID" });
+		}
+		const renterWithFavoritedProperty = await UserModel.findByIdAndUpdate(
+			userID,
+			{
+				$addToSet: { likedproperties: [propertyID] },
+			},
+			{ new: true },
+		);
+
+		const { password: _, ...renterWithoutPassword } = renterWithFavoritedProperty.toObject();
+		const token = jwt.sign({ userID: renterWithoutPassword._id }, JWT_SECRET, {
+			expiresIn: JWT_EXPIRES_IN,
+		});
+		response.status(200).json({ status: "Success", data: { token, renterWithoutPassword } });
+	} catch (error) {
+		return response.status(404).json({ status: "Failed", message: error.message });
+	}
+};
+
+//function to remove property from favorites
+export const removePropertyFromFavorites = async (request, response) => {
+	const { userID, propertyID } = request.body;
+	try {
+		if (!userID || !propertyID) {
+			return response.status(400).json({ status: "Failed", message: "Empty Property ID/User ID" });
+		}
+		const renterWithoutFavoritedProperty = await UserModel.findOneAndUpdate(
+			{ _id: userID },
+			{ $pull: { likedproperties: propertyID } },
+			{ new: true },
+		);
+
+		const { password: _, ...renterWithoutPassword } = renterWithoutFavoritedProperty.toObject();
+		const token = jwt.sign({ userID: renterWithoutPassword._id }, JWT_SECRET, {
+			expiresIn: JWT_EXPIRES_IN,
+		});
+		response.status(200).json({ status: "Success", data: { token, renterWithoutPassword } });
+	} catch (error) {
+		return response.status(404).json({ status: "Failed", message: error.message });
+	}
+};
+
+//export default getProperties;

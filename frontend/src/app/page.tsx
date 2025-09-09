@@ -25,7 +25,7 @@ export default function PropertiesForRent() {
 	useEffect(() => {
 		const getProperties = async () => {
 			try {
-				const request = await axios.get(`${API_URL}renters/properties`, {});
+				const request = await axios.get(`${API_URL}user/properties`, {});
 
 				if (request.data.status === "Success") {
 					setLoading(!loading);
@@ -54,7 +54,7 @@ export default function PropertiesForRent() {
 				setLoadingFavorites(true); // Start loading
 
 				const requests = likedProperties.map((propertyID: string) =>
-					axios.get(`${API_URL}renters/properties/${propertyID}`),
+					axios.get(`${API_URL}user/properties/${propertyID}`),
 				);
 
 				const responses = await Promise.all(requests);
@@ -83,11 +83,11 @@ export default function PropertiesForRent() {
 	};
 
 	const addPropertyToFavorites = async (event: React.MouseEvent, propertyID: string) => {
-		if (localStorage.getItem("Renter") !== null) {
-			const storedRenterData = JSON.parse(`${localStorage.getItem("Renter")}`);
+		if (localStorage.getItem("User") !== null) {
+			const storedUserData = JSON.parse(`${localStorage.getItem("User")}`);
 
-			const token = `Bearer ${storedRenterData.data.token}`;
-			const userID = storedRenterData.data.renterWithoutPassword._id;
+			const token = `Bearer ${storedUserData.data.token}`;
+			const userID = storedUserData.data.userWithoutPassword._id;
 
 			const formData = {
 				userID: userID,
@@ -95,20 +95,20 @@ export default function PropertiesForRent() {
 			};
 
 			try {
-				const request = await axios.post(`${API_URL}renters/properties/add-to-favorites`, formData, {
+				const request = await axios.post(`${API_URL}user/properties/add-to-favorites`, formData, {
 					headers: {
 						"Content-Type": "application/json",
 						Authorization: token,
 					},
 				});
-				localStorage.setItem("Renter", JSON.stringify(request.data));
+				localStorage.setItem("User", JSON.stringify(request.data));
 				//location.reload();
 				//console.log(request);
 			} catch (error) {
 				console.log(error);
 			}
 		} else {
-			routerToGoToLogIn.push("/login-renter");
+			routerToGoToLogIn.push("/login");
 		}
 
 		// console.log(token);
@@ -145,7 +145,7 @@ export default function PropertiesForRent() {
 	// 			console.log(error);
 	// 		}
 	// 	} else {
-	// 		routerToGoToLogIn.push("/login-renter");
+	// 		routerToGoToLogIn.push("/login");
 	// 	}
 	// };
 

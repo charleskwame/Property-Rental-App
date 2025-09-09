@@ -18,15 +18,15 @@ export default function SpecificProperty() {
 	useEffect(() => {
 		const propertyDetails = async (_id: string) => {
 			//event.preventDefault();
-			const storedRenterData = JSON.parse(`${localStorage.getItem("Renter")}`);
-			const token = `Bearer ${storedRenterData.data.token}`;
+			// const storedRenterData = JSON.parse(`${localStorage.getItem("Renter")}`);
+			// const token = `Bearer ${storedRenterData.data.token}`;
 			// console.log(token);
 			// console.log(_id);
 			try {
-				const request = await axios.get(`${API_URL}renters/properties/${_id}`, {
+				const request = await axios.get(`${API_URL}user/properties/${_id}`, {
 					headers: {
 						"Content-Type": "application/json",
-						Authorization: token,
+						//Authorization: token,
 					},
 				});
 				setProperty(request.data.message);

@@ -10,29 +10,31 @@ export default function MyProperties() {
 	const [propertiesLoaded, setPropertiesLoaded] = useState<PropertyInterFace[]>([]);
 	const routerToGoToSpecificPropertyPage = useRouter();
 	useEffect(() => {
-		const storedOwnerData = JSON.parse(`${localStorage.getItem("Owner")}`);
-		const token = `Bearer ${storedOwnerData.data.token}`;
+		if (localStorage.getItem("Owner") !== null) {
+			const storedOwnerData = JSON.parse(`${localStorage.getItem("Owner")}`);
+			const token = `Bearer ${storedOwnerData.data.token}`;
 
-		const userID = storedOwnerData.data.ownerWithoutPassword._id;
-		const getMyProperties = async () => {
-			try {
-				const request = await axios.get(`${API_URL}owners/properties/${userID}`, {
-					headers: {
-						"Content-Type": "application/json",
-						Authorization: token,
-					},
-				});
-				if (request.data.status === "Success") {
-					setLoading(!loading);
-					setPropertiesLoaded(request.data.message);
+			const userID = storedOwnerData.data.ownerWithoutPassword._id;
+			const getMyProperties = async () => {
+				try {
+					const request = await axios.get(`${API_URL}owners/properties/${userID}`, {
+						headers: {
+							"Content-Type": "application/json",
+							Authorization: token,
+						},
+					});
+					if (request.data.status === "Success") {
+						setLoading(!loading);
+						setPropertiesLoaded(request.data.message);
+					}
+					//console.log(request);
+				} catch (error) {
+					console.log(error);
 				}
-				//console.log(request);
-			} catch (error) {
-				console.log(error);
-			}
-		};
+			};
 
-		getMyProperties();
+			getMyProperties();
+		}
 	}, []);
 
 	const propertyDetails = async (event: React.MouseEvent, _id: string) => {

@@ -12,6 +12,7 @@ export default function SignUpRenter() {
 	const [email, setEmail] = useState<string>("");
 	const [password, setPassword] = useState<string>("");
 	const [phonenumber, setPhonenumber] = useState<string>("");
+	const [usertype, setUsertype] = useState<string>("");
 	//const [isSendingOTP, setIsSendingOTP] = useState<boolean>(false);
 
 	const handleSubmit = async (event: React.FormEvent) => {
@@ -22,17 +23,20 @@ export default function SignUpRenter() {
 			email,
 			password,
 			phonenumber,
+			usertype,
 		};
+		console.log(formData);
+		// return;
 		try {
-			const request = await axios.post(`${API_URL}owners/sign-up`, formData, {
+			const request = await axios.post(`${API_URL}user/sign-up`, formData, {
 				headers: {
 					"Content-Type": "application/json",
 				},
 			});
 			if (request.data.status === "Success") {
 				//setIsSendingOTP(!isSendingOTP);
-				localStorage.setItem("Owner", JSON.stringify(request.data));
-				route.push("/send-owner-otp");
+				localStorage.setItem("User", JSON.stringify(request.data));
+				route.push("/send-otp");
 				//console.log(request.data);
 				//routeToAllOwnerProperties.push("/propertiesForOwner");
 			}
@@ -62,8 +66,14 @@ export default function SignUpRenter() {
 					value={phonenumber}
 					onChange={(event) => setPhonenumber(event?.target.value)}
 				/>
+				<label htmlFor="">User type</label>
+				<select name="userType" id="" onChange={(event) => setUsertype(event?.target.value)}>
+					<option>-------Select----</option>
+					<option value="renter">Renter</option>
+					<option value="owner">Owner</option>
+				</select>
 				<button type="submit">Sign up</button>
-				<button type="button" onClick={() => GoToPageFunction(route, "/login-owner")}>
+				<button type="button" onClick={() => GoToPageFunction(route, "/login")}>
 					Log In
 				</button>
 			</form>

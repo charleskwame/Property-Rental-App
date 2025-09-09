@@ -27,10 +27,10 @@ export default function NavBar() {
 	return (
 		<nav className="flex gap-3.5 mb-5">
 			<button>
-				<Link href={`/sign-up-owner`}>Rent out your property</Link>
+				<Link href={`/sign-up`}>Rent out your property</Link>
 			</button>
 			{!displayProfileIcon ? (
-				<UserCircleIcon className="size-10" onClick={() => GoToPageFunction(route, "/login-renter")} />
+				<UserCircleIcon className="size-10" onClick={() => GoToPageFunction(route, "/login")} />
 			) : (
 				<h1 className="border-2 rounded-full border-black text-center px-3 py-1 text-xl">
 					{profileIconLetter}

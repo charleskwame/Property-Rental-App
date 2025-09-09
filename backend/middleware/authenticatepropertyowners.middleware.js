@@ -1,8 +1,9 @@
-import PropertyOwnerModel from "../models/propertyowner.models.js";
+//import PropertyOwnerModel from "../models/propertyowner.models.js";
 import { JWT_SECRET } from "../config/env.js";
 import jwt from "jsonwebtoken";
+import UserModel from "../models/user.model.js";
 
-const authenticatePropertyOwner = async (request, response, next) => {
+const authenticateUser = async (request, response, next) => {
 	try {
 		let token;
 		if (request.headers.authorization && request.headers.authorization.startsWith("Bearer")) {
@@ -13,13 +14,13 @@ const authenticatePropertyOwner = async (request, response, next) => {
 		}
 		const decodedToken = jwt.verify(token, JWT_SECRET);
 
-		const confirmedOwner = await PropertyOwnerModel.findById(decodedToken.userID);
+		const confirmedUser = await UserModel.findById(decodedToken.userID);
 
-		if (!confirmedOwner) {
+		if (!confirmedUser) {
 			return response.status(401).json({ status: false, message: "User not found" });
 		}
 
-		request.user = confirmedOwner;
+		request.user = confirmedUser;
 		next();
 	} catch (error) {
 		response.status(401).json({
@@ -31,4 +32,4 @@ const authenticatePropertyOwner = async (request, response, next) => {
 	}
 };
 
-export default authenticatePropertyOwner;
+export default authenticateUser;

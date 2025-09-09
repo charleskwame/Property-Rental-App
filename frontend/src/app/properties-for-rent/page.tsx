@@ -16,15 +16,15 @@ export default function PropertiesForRent() {
 	const [loading, setLoading] = useState<boolean>(false);
 	useEffect(() => {
 		const getProperties = async () => {
-			const storedRenterData = JSON.parse(`${localStorage.getItem("Renter")}`);
+			const storedUserData = JSON.parse(`${localStorage.getItem("User")}`);
 
-			if (storedRenterData === null) {
-				routerToGoBackToLogIn.push("/login-renter");
+			if (storedUserData === null) {
+				routerToGoBackToLogIn.push("/login");
 			}
 
 			try {
-				const token = `Bearer ${storedRenterData.data.token}`;
-				const request = await axios.get(`${API_URL}renters/properties`, {
+				const token = `Bearer ${storedUserData.data.token}`;
+				const request = await axios.get(`${API_URL}user/properties`, {
 					headers: {
 						"Content-Type": "application/json",
 						Authorization: token,

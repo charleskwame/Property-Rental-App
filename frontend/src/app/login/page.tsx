@@ -5,21 +5,23 @@ import { useState, useEffect } from "react";
 import { API_URL } from "@/config";
 import { useRouter } from "next/navigation";
 import { GoToPageFunction } from "../functions/gotoLogin.function";
+//import { json } from "stream/consumers";
+import Link from "next/link";
 
-export default function LogInOwner() {
+export default function LogInRenter() {
 	const route = useRouter();
-	//const routerToVerifyOwner = useRouter();
+	//const route = useRouter();
 	const [email, setEmail] = useState<string>("");
 	const [password, setPassword] = useState<string>("");
 
 	useEffect(() => {
-		if (sessionStorage.getItem("OwnerLogInStatus") !== null) {
-			const unparsedLogInStatus = sessionStorage.getItem("OwnerLogInStatus");
+		if (sessionStorage.getItem("RenterLogInStatus") !== null) {
+			const unparsedLogInStatus = sessionStorage.getItem("RenterLogInStatus");
 			if (unparsedLogInStatus !== null) {
 				const logInStatus = JSON.parse(unparsedLogInStatus);
-				//console.log(logInStatus);
+				console.log(logInStatus);
 				if (logInStatus.loggedin === true) {
-					GoToPageFunction(route, "/properties-for-owner");
+					GoToPageFunction(route, "/");
 				}
 			}
 		}
@@ -32,23 +34,25 @@ export default function LogInOwner() {
 			email,
 			password,
 		};
+
 		try {
-			const request = await axios.post(`${API_URL}owners/log-in`, formData, {
+			const request = await axios.post(`${API_URL}user/log-in`, formData, {
 				headers: {
 					"Content-Type": "application/json",
 				},
 			});
 
 			if (request.data.status === "Pending Verification") {
-				localStorage.setItem("Owner", JSON.stringify(request.data));
-				route.push("/send-owner-otp");
+				localStorage.setItem("User", JSON.stringify(request.data));
+				route.push("/send-otp");
 			}
+
 			if (request.data.status === "Success") {
-				localStorage.setItem("Owner", JSON.stringify(request.data));
-				sessionStorage.setItem("OwnerLogInStatus", JSON.stringify({ loggedin: true }));
+				localStorage.setItem("User", JSON.stringify(request.data));
+				sessionStorage.setItem("UserLoggedIn", JSON.stringify({ loggedin: true }));
 				//console.log(request.data);
-				//console.log(request.data);
-				route.push("/properties-for-owner");
+				//console.log(request.data.renterWithoutPassword);
+				route.push("/");
 			}
 		} catch (error) {
 			console.log(error);
@@ -69,6 +73,7 @@ export default function LogInOwner() {
 
 				<button>Log in</button>
 			</form>
+			<Link href={`/sign-up`}>Sign Up</Link>
 		</>
 	);
 }

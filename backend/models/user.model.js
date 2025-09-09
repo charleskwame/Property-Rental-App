@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const PropertyOwner = new mongoose.Schema(
+const User = new mongoose.Schema(
 	{
 		name: {
 			type: String,
@@ -30,10 +30,22 @@ const PropertyOwner = new mongoose.Schema(
 			maxLength: 15,
 			unique: true,
 		},
+		usertype: {
+			type: String,
+			required: [true, "User Type Not Set"],
+			enum: ["renter", "owner"],
+		},
 		isVerified: {
 			type: Boolean,
 			default: false,
 		},
+		likedproperties: [
+			{
+				type: mongoose.Schema.Types.ObjectId,
+				ref: "PropertyModel",
+				index: true,
+			},
+		],
 		propertiesowned: [
 			{
 				type: mongoose.Schema.Types.ObjectId,
@@ -45,6 +57,6 @@ const PropertyOwner = new mongoose.Schema(
 	{ timestamps: true },
 );
 
-const PropertyOwnerModel = mongoose.model("PropertyOwnerModel", PropertyOwner, "propertyowners");
+const UserModel = mongoose.model("UserModel", User, "users");
 
-export default PropertyOwnerModel;
+export default UserModel;

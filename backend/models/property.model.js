@@ -40,7 +40,7 @@ const PropertySchema = mongoose.Schema({
 	},
 	owner: {
 		type: mongoose.Schema.Types.ObjectId,
-		ref: "PropertyOwnerModel",
+		ref: "UserModel",
 		index: true,
 	},
 });
