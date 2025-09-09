@@ -10,14 +10,14 @@ export default function MyProperties() {
 	const [propertiesLoaded, setPropertiesLoaded] = useState<PropertyInterFace[]>([]);
 	const routerToGoToSpecificPropertyPage = useRouter();
 	useEffect(() => {
-		if (localStorage.getItem("Owner") !== null) {
-			const storedOwnerData = JSON.parse(`${localStorage.getItem("Owner")}`);
-			const token = `Bearer ${storedOwnerData.data.token}`;
+		if (sessionStorage.getItem("User") !== null) {
+			const storedUserData = JSON.parse(`${sessionStorage.getItem("User")}`);
+			const token = `Bearer ${storedUserData.data.token}`;
 
-			const userID = storedOwnerData.data.ownerWithoutPassword._id;
+			const userID = storedUserData.data.userWithoutPassword._id;
 			const getMyProperties = async () => {
 				try {
-					const request = await axios.get(`${API_URL}owners/properties/${userID}`, {
+					const request = await axios.get(`${API_URL}user/properties/${userID}`, {
 						headers: {
 							"Content-Type": "application/json",
 							Authorization: token,

@@ -13,8 +13,8 @@ export default function VerifyRenter() {
 	const [otp, setOtp] = useState<string>("");
 
 	useEffect(() => {
-		if (localStorage.getItem("User") !== null) {
-			const storedUserData = JSON.parse(`${localStorage.getItem("User")}`);
+		if (sessionStorage.getItem("User") !== null) {
+			const storedUserData = JSON.parse(`${sessionStorage.getItem("User")}`);
 			// if (storedRenterData === null) {
 			// }
 			if (storedUserData.data.userWithoutPassword.isVerified === true) {
@@ -25,7 +25,7 @@ export default function VerifyRenter() {
 			// }, 2000);
 			//console.log(storedUserData);
 		}
-		// const storedRenterData = JSON.parse(`${localStorage.getItem("Renter")}`);
+		// const storedRenterData = JSON.parse(`${sessionStorage.getItem("Renter")}`);
 		// if (storedRenterData === null) {
 		// 	routerToGoBackToLogIn.push("/login");
 		// }
@@ -36,13 +36,13 @@ export default function VerifyRenter() {
 
 	//console.log(storedRenterData.data.token);
 	// setTimeout(() => {
-	// 	const storedRenterData = JSON.parse(`${localStorage.getItem("Renter")}`);
+	// 	const storedRenterData = JSON.parse(`${sessionStorage.getItem("Renter")}`);
 	// 	//setEmail(storedRenterData.data.renterWithoutPassword.email);
 	// 	//console.log(storedRenterData);
 	// }, 3000);
 
 	const handleSubmit = async (event: React.FormEvent) => {
-		const storedUserData = JSON.parse(`${localStorage.getItem("User")}`);
+		const storedUserData = JSON.parse(`${sessionStorage.getItem("User")}`);
 		event.preventDefault();
 		// console.log(storedUserData);
 		// return;
@@ -61,7 +61,7 @@ export default function VerifyRenter() {
 			});
 			if (request.data.status === "Success") {
 				//console.log(request.data);
-				localStorage.setItem("User", JSON.stringify(request.data));
+				sessionStorage.setItem("User", JSON.stringify(request.data));
 				route.push("/");
 			}
 		} catch (error) {
@@ -71,7 +71,7 @@ export default function VerifyRenter() {
 
 	const resendOTP = async (event: React.FormEvent) => {
 		event.preventDefault();
-		const storedUserData = JSON.parse(`${localStorage.getItem("User")}`);
+		const storedUserData = JSON.parse(`${sessionStorage.getItem("User")}`);
 		//console.log(storedRenterData.data.token);
 
 		const token = `Bearer ${storedUserData.data.token}`;

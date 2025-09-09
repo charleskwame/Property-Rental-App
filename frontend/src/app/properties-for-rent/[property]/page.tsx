@@ -18,7 +18,7 @@ export default function SpecificProperty() {
 	useEffect(() => {
 		const propertyDetails = async (_id: string) => {
 			//event.preventDefault();
-			// const storedRenterData = JSON.parse(`${localStorage.getItem("Renter")}`);
+			// const storedRenterData = JSON.parse(`${sessionStorage.getItem("Renter")}`);
 			// const token = `Bearer ${storedRenterData.data.token}`;
 			// console.log(token);
 			// console.log(_id);
@@ -30,7 +30,7 @@ export default function SpecificProperty() {
 					},
 				});
 				setProperty(request.data.message);
-				//localStorage.setItem("PropertyInViewing", JSON.stringify(request.data.message));
+				//sessionStorage.setItem("PropertyInViewing", JSON.stringify(request.data.message));
 			} catch (error) {
 				console.log(error);
 			}

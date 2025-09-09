@@ -9,8 +9,8 @@ export default function PropertiesForOwner() {
 	const routerToGoBackToLogIn = useRouter();
 
 	useEffect(() => {
-		const storedOwnerData = JSON.parse(`${localStorage.getItem("Owner")}`);
-		if (storedOwnerData === null) {
+		const storedUserData = JSON.parse(`${sessionStorage.getItem("User")}`);
+		if (storedUserData === null) {
 			routerToGoBackToLogIn.push("/login-owner");
 		}
 	}, []);

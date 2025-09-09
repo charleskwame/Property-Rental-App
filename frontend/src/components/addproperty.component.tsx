@@ -21,7 +21,7 @@ export default function AddProperty() {
 		console.log(propertyPrice);
 		event.preventDefault();
 
-		const storedOwnerData = JSON.parse(`${localStorage.getItem("Owner")}`);
+		const storedUserData = JSON.parse(`${sessionStorage.getItem("User")}`);
 		const propertyData = {
 			name: propertyName,
 			location: propertyLocation,
@@ -29,13 +29,13 @@ export default function AddProperty() {
 			description: propertyDescription,
 			images: propertyImageLink,
 			price: propertyPrice,
-			owner: storedOwnerData.data.ownerWithoutPassword._id,
+			owner: storedUserData.data.userWithoutPassword._id,
 		};
 
 		try {
-			const token = `Bearer ${storedOwnerData.data.token}`;
+			const token = `Bearer ${storedUserData.data.token}`;
 			console.log(token);
-			const request = await axios.post(`${API_URL}owners/add-properties`, propertyData, {
+			const request = await axios.post(`${API_URL}user/add-properties`, propertyData, {
 				headers: {
 					"Content-Type": "application/json",
 					Authorization: token,

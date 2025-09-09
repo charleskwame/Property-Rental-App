@@ -12,11 +12,11 @@ export default function NavBar() {
 	const [profileIconLetter, setProfileIconLetter] = useState<string>("");
 	useEffect(() => {
 		if (
-			JSON.parse(`${localStorage.getItem("Renter")}`) !== null &&
+			JSON.parse(`${sessionStorage.getItem("Renter")}`) !== null &&
 			sessionStorage.getItem("RenterLogInStatus") !== null &&
 			JSON.parse(`${sessionStorage.getItem("RenterLogInStatus")}`).loggedin === true
 		) {
-			const unParsedRenterData = localStorage.getItem("Renter");
+			const unParsedRenterData = sessionStorage.getItem("Renter");
 			const storedRenterData = JSON.parse(unParsedRenterData!);
 			const userName: string = storedRenterData.data.renterWithoutPassword.name;
 			setProfileIconLetter(userName.slice(0, 1));

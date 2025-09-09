@@ -14,8 +14,8 @@ export default function SendRenterOTP() {
 	const [email, setEmail] = useState<string>("");
 
 	useEffect(() => {
-		if (localStorage.getItem("User") !== null) {
-			const storedUserData = JSON.parse(`${localStorage.getItem("User")}`);
+		if (sessionStorage.getItem("User") !== null) {
+			const storedUserData = JSON.parse(`${sessionStorage.getItem("User")}`);
 			// if (storedRenterData === null) {
 			// }
 			if (storedUserData.data.userWithoutPassword.isVerified === true) {
@@ -30,14 +30,14 @@ export default function SendRenterOTP() {
 	});
 
 	// setTimeout(() => {
-	// 	const storedUserData = JSON.parse(`${localStorage.getItem("User")}`);
+	// 	const storedUserData = JSON.parse(`${sessionStorage.getItem("User")}`);
 	// 	setEmail(storedUserData.data.userWithoutPassword.email);
 	// 	//console.log(storedRenterData);
 	// }, 3000);
 
 	const handleOTPSubmission = async (event: React.FormEvent) => {
 		event.preventDefault();
-		const storedUserData = JSON.parse(`${localStorage.getItem("User")}`);
+		const storedUserData = JSON.parse(`${sessionStorage.getItem("User")}`);
 		//console.log(storedRenterData);
 
 		const token = `Bearer ${storedUserData.data.token}`;

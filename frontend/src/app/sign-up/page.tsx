@@ -35,7 +35,7 @@ export default function SignUpRenter() {
 			});
 			if (request.data.status === "Success") {
 				//setIsSendingOTP(!isSendingOTP);
-				localStorage.setItem("User", JSON.stringify(request.data));
+				sessionStorage.setItem("User", JSON.stringify(request.data));
 				route.push("/send-otp");
 				//console.log(request.data);
 				//routeToAllOwnerProperties.push("/propertiesForOwner");

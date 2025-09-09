@@ -15,7 +15,7 @@ export default function SpecificProperty() {
 	useEffect(() => {
 		const propertyDetails = async (propertyID: string) => {
 			//event.preventDefault();
-			const storedOwnerData = JSON.parse(`${localStorage.getItem("Owner")}`);
+			const storedOwnerData = JSON.parse(`${sessionStorage.getItem("Owner")}`);
 			const token = `Bearer ${storedOwnerData.data.token}`;
 			const ownerID = storedOwnerData.data.ownerWithoutPassword._id;
 			// console.log(token);
@@ -29,7 +29,7 @@ export default function SpecificProperty() {
 				});
 				setProperty(request.data.message);
 				//console.log(request.data.message);
-				//localStorage.setItem("PropertyInViewing", JSON.stringify(request.data.message));
+				//sessionStorage.setItem("PropertyInViewing", JSON.stringify(request.data.message));
 			} catch (error) {
 				console.log(error);
 			}

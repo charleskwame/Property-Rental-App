@@ -16,7 +16,7 @@ export default function PropertiesForRent() {
 	const [loading, setLoading] = useState<boolean>(false);
 	useEffect(() => {
 		const getProperties = async () => {
-			const storedUserData = JSON.parse(`${localStorage.getItem("User")}`);
+			const storedUserData = JSON.parse(`${sessionStorage.getItem("User")}`);
 
 			if (storedUserData === null) {
 				routerToGoBackToLogIn.push("/login");
@@ -45,7 +45,7 @@ export default function PropertiesForRent() {
 
 	const propertyDetails = async (event: React.MouseEvent, _id: string) => {
 		event.preventDefault();
-		// const storedRenterData = JSON.parse(`${localStorage.getItem("Renter")}`);
+		// const storedRenterData = JSON.parse(`${sessionStorage.getItem("Renter")}`);
 		// const token = `Bearer ${storedRenterData.data.token}`;
 		// console.log(token);
 		// console.log(_id);
@@ -56,7 +56,7 @@ export default function PropertiesForRent() {
 		// 			Authorization: token,
 		// 		},
 		// 	});
-		// 	localStorage.setItem("PropertyInViewing", JSON.stringify(request.data.message));
+		// 	sessionStorage.setItem("PropertyInViewing", JSON.stringify(request.data.message));
 		// } catch (error) {
 		// 	console.log(error);
 		// }

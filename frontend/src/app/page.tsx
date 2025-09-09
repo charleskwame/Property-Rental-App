@@ -38,12 +38,13 @@ export default function PropertiesForRent() {
 
 		getProperties();
 
-		const unParsedRenterData = localStorage.getItem("Renter");
+		const unParsedRenterData = sessionStorage.getItem("Renter");
+		console.log(unParsedRenterData);
 
 		if (!unParsedRenterData) return;
 
 		const storedRenterData = JSON.parse(unParsedRenterData);
-		//const storedRenterData = JSON.parse(`${localStorage.getItem("Renter")}`);
+		//const storedRenterData = JSON.parse(`${sessionStorage.getItem("Renter")}`);
 
 		const likedProperties = storedRenterData.data.renterWithoutPassword.likedproperties;
 
@@ -73,7 +74,7 @@ export default function PropertiesForRent() {
 			}
 		};
 		fetchFavoriteProperties();
-		// if (localStorage.getItem("Renter") !== null) {
+		// if (sessionStorage.getItem("Renter") !== null) {
 		// }
 	}, []);
 
@@ -83,8 +84,8 @@ export default function PropertiesForRent() {
 	};
 
 	const addPropertyToFavorites = async (event: React.MouseEvent, propertyID: string) => {
-		if (localStorage.getItem("User") !== null) {
-			const storedUserData = JSON.parse(`${localStorage.getItem("User")}`);
+		if (sessionStorage.getItem("User") !== null) {
+			const storedUserData = JSON.parse(`${sessionStorage.getItem("User")}`);
 
 			const token = `Bearer ${storedUserData.data.token}`;
 			const userID = storedUserData.data.userWithoutPassword._id;
@@ -101,7 +102,7 @@ export default function PropertiesForRent() {
 						Authorization: token,
 					},
 				});
-				localStorage.setItem("User", JSON.stringify(request.data));
+				sessionStorage.setItem("User", JSON.stringify(request.data));
 				//location.reload();
 				//console.log(request);
 			} catch (error) {
@@ -116,8 +117,8 @@ export default function PropertiesForRent() {
 	};
 
 	// const removePropertyFromFavorites = async (event: React.MouseEvent, propertyID: string) => {
-	// 	if (localStorage.getItem("Renter") !== null) {
-	// 		const storedRenterData = JSON.parse(`${localStorage.getItem("Renter")}`);
+	// 	if (sessionStorage.getItem("Renter") !== null) {
+	// 		const storedRenterData = JSON.parse(`${sessionStorage.getItem("Renter")}`);
 
 	// 		const token = `Bearer ${storedRenterData.data.token}`;
 	// 		const userID = storedRenterData.data.renterWithoutPassword._id;
@@ -138,7 +139,7 @@ export default function PropertiesForRent() {
 	// 					},
 	// 				},
 	// 			);
-	// 			localStorage.setItem("Renter", JSON.stringify(request.data));
+	// 			sessionStorage.setItem("Renter", JSON.stringify(request.data));
 	// 			location.reload();
 	// 			console.log(request);
 	// 		} catch (error) {

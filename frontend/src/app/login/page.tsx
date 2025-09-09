@@ -43,12 +43,12 @@ export default function LogInRenter() {
 			});
 
 			if (request.data.status === "Pending Verification") {
-				localStorage.setItem("User", JSON.stringify(request.data));
+				sessionStorage.setItem("User", JSON.stringify(request.data));
 				route.push("/send-otp");
 			}
 
 			if (request.data.status === "Success") {
-				localStorage.setItem("User", JSON.stringify(request.data));
+				sessionStorage.setItem("User", JSON.stringify(request.data));
 				sessionStorage.setItem("UserLoggedIn", JSON.stringify({ loggedin: true }));
 				//console.log(request.data);
 				//console.log(request.data.renterWithoutPassword);
