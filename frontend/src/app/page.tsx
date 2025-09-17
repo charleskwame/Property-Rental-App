@@ -10,6 +10,8 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { HeartIcon, UserCircleIcon } from "@heroicons/react/24/outline";
 import NavBar from "@/components/navbar.component";
+import SignUpRenter from "@/components/signup.component";
+import LoadingSpinner from "@/components/loadingspinner.component";
 
 export default function PropertiesForRent() {
 	const routerToGoToSpecificPropertyPage = useRouter();
@@ -25,13 +27,20 @@ export default function PropertiesForRent() {
 	useEffect(() => {
 		const getProperties = async () => {
 			try {
+				setLoading(true);
 				const request = await axios.get(`${API_URL}user/properties`, {});
 
-				if (request.data.status === "Success") {
-					setLoading(!loading);
+				if (request.status === 200) {
 					setPropertiesFetched(request.data.message);
+					setLoading(false);
+				}
+
+				if (request.status === 400) {
+					setPropertiesFetched([]);
+					setLoading(false);
 				}
 			} catch (error) {
+				setLoading(false);
 				console.log(error);
 			}
 		};
@@ -83,45 +92,12 @@ export default function PropertiesForRent() {
 		routerToGoToSpecificPropertyPage.push(`/properties-for-rent/${_id}`);
 	};
 
-	const addPropertyToFavorites = async (event: React.MouseEvent, propertyID: string) => {
-		if (sessionStorage.getItem("User") !== null) {
-			const storedUserData = JSON.parse(`${sessionStorage.getItem("User")}`);
+	// const addPropertyToFavorites = async (event: React.MouseEvent, propertyID: string) => {
+	// 	if (sessionStorage.getItem("User") !== null) {
+	// 		const storedUserData = JSON.parse(`${sessionStorage.getItem("User")}`);
 
-			const token = `Bearer ${storedUserData.data.token}`;
-			const userID = storedUserData.data.userWithoutPassword._id;
-
-			const formData = {
-				userID: userID,
-				propertyID: propertyID,
-			};
-
-			try {
-				const request = await axios.post(`${API_URL}user/properties/add-to-favorites`, formData, {
-					headers: {
-						"Content-Type": "application/json",
-						Authorization: token,
-					},
-				});
-				sessionStorage.setItem("User", JSON.stringify(request.data));
-				//location.reload();
-				//console.log(request);
-			} catch (error) {
-				console.log(error);
-			}
-		} else {
-			routerToGoToLogIn.push("/login");
-		}
-
-		// console.log(token);
-		// console.log(userID);
-	};
-
-	// const removePropertyFromFavorites = async (event: React.MouseEvent, propertyID: string) => {
-	// 	if (sessionStorage.getItem("Renter") !== null) {
-	// 		const storedRenterData = JSON.parse(`${sessionStorage.getItem("Renter")}`);
-
-	// 		const token = `Bearer ${storedRenterData.data.token}`;
-	// 		const userID = storedRenterData.data.renterWithoutPassword._id;
+	// 		const token = `Bearer ${storedUserData.data.token}`;
+	// 		const userID = storedUserData.data.userWithoutPassword._id;
 
 	// 		const formData = {
 	// 			userID: userID,
@@ -129,108 +105,125 @@ export default function PropertiesForRent() {
 	// 		};
 
 	// 		try {
-	// 			const request = await axios.post(
-	// 				`${API_URL}renters/properties/remove-from-favorites`,
-	// 				formData,
-	// 				{
-	// 					headers: {
-	// 						"Content-Type": "application/json",
-	// 						Authorization: token,
-	// 					},
+	// 			const request = await axios.post(`${API_URL}user/properties/add-to-favorites`, formData, {
+	// 				headers: {
+	// 					"Content-Type": "application/json",
+	// 					Authorization: token,
 	// 				},
-	// 			);
-	// 			sessionStorage.setItem("Renter", JSON.stringify(request.data));
-	// 			location.reload();
-	// 			console.log(request);
+	// 			});
+	// 			if (request.status === 200) {
+	// 				alert("Property added to favorites");
+	// 			}
+	// 			sessionStorage.setItem("User", JSON.stringify(request.data));
+	// 			//location.reload();
+	// 			//console.log(request);
 	// 		} catch (error) {
 	// 			console.log(error);
 	// 		}
 	// 	} else {
 	// 		routerToGoToLogIn.push("/login");
 	// 	}
+
+	// 	// console.log(token);
+	// 	// console.log(userID);
 	// };
 
+	// console.log(
+	// 	JSON.parse(`${sessionStorage.getItem("User")}`).data.userWithoutPassword.likedproperties,
+	// );
+
 	return (
-		<main className="p-2">
+		<main className="">
 			<NavBar />
-			{/* {loadingFavorites ? (
-				<h1>Loading Favorites...</h1>
+			{/* <LoadingSpinner /> */}
+
+			{/* <SignUpRenter open={true} /> */}
+			{loading ? (
+				<LoadingSpinner message={"Loading Properties"} />
 			) : (
-				<div>
-					<h1>Revisit your favorites</h1>
-					<div className="grid grid-cols-2 lg:grid-cols-6 gap-3">
-						{favoritePropertiesFetched?.length > 0 ? (
-							favoritePropertiesFetched.map((favoritePropertyFetched) => (
-								<div key={favoritePropertyFetched._id} className="relative">
+				// <h1>Loading...</h1>
+				<div className="px-2 mt-5">
+					<h1 className="mb-2 text-xl font-semibold text-fuchsia-800">View Listings</h1>
+					<div className="grid grid-cols-2 lg:grid-cols-6 gap-2">
+						{propertiesFetched.length > 0 ? (
+							propertiesFetched.map((propertyFetched) => (
+								<div key={propertyFetched._id} className="relative w-fit">
+									{/* {sessionStorage.getItem("User") !== null && (
 									<HeartIcon
-										className="size-7 absolute top-2 right-2 text-red-500 fill-red-500"
-										onClick={(event) => removePropertyFromFavorites(event, favoritePropertyFetched._id)}
+										className="size-7 absolute top-2 right-2 fill-gray-200 hover:fill-red-500 hover:stroke-red-500 transition-all ease-in-out duration-300"
+										onClick={(event) => addPropertyToFavorites(event, propertyFetched._id)}
 									/>
+								)} */}
 									<div
-										className="w-fit border-2 border-gray-100 rounded-3xl p-1"
+										className="rounded-3xl"
 										onClick={(event) => {
-											propertyDetails(event, favoritePropertyFetched._id);
+											propertyDetails(event, propertyFetched._id);
 										}}
 									>
 										<Image
-											className="rounded-3xl border-2 border-gray-100"
-											src={favoritePropertyFetched.images}
-											alt={`Image of ${favoritePropertyFetched.name}`}
+											className="rounded-3xl border-2 border-gray-100 aspect-square"
+											src={propertyFetched.images}
+											alt={`Image of ${propertyFetched.name}`}
 											width={200}
 											height={200}
 										/>
-										<div className="px-2 flex items-baseline justify-between py-2">
-											<h1 className="font-semibold text-sm">{favoritePropertyFetched.name}</h1>
-											<p className="text-xs">{favoritePropertyFetched.price}</p>
+										<div className="px-2">
+											<h1 className="font-semibold text-sm">{propertyFetched.name.slice(0, 20) + "..."} </h1>
+											<p className="text-xs">GHc {propertyFetched.price}</p>
 										</div>
 									</div>
 								</div>
 							))
 						) : (
-							<h1>No Favorites</h1>
-						)}
-					</div>
-				</div>
-			)} */}
-			{!loading ? (
-				<h1>Loading...</h1>
-			) : (
-				<div>
-					<h1>View Listings</h1>
-					<div className="grid grid-cols-2 lg:grid-cols-6 gap-3">
-						{propertiesFetched?.length > 0 ? (
-							propertiesFetched.map((property) => (
-								<div key={property._id} className="relative">
-									<HeartIcon
-										className="size-7 absolute top-2 right-2 fill-gray-200 hover:fill-red-500"
-										onClick={(event) => addPropertyToFavorites(event, property._id)}
-									/>
-									<div
-										className="w-fit border-2 border-gray-100 rounded-3xl p-1"
-										onClick={(event) => {
-											propertyDetails(event, property._id);
-										}}
-									>
-										<Image
-											className="rounded-3xl border-2 border-gray-100"
-											src={property.images}
-											alt={`Image of ${property.name}`}
-											width={200}
-											height={200}
-										/>
-										<div className="px-2 flex items-baseline justify-between py-2">
-											<h1 className="font-semibold text-sm">{property.name}</h1>
-											<p className="text-xs">{property.price}</p>
-										</div>
-									</div>
-								</div>
-							))
-						) : (
-							<h1>No properties found</h1>
+							<h1 className="text-center text-xl font-semibold text-fuchsia-800 mt-10">
+								No properties found
+							</h1>
 						)}
 					</div>
 				</div>
 			)}
 		</main>
 	);
+}
+
+{
+	/* {loading ? (
+	<h1>Loading...</h1>
+) : (
+	<div>
+		<h1>View Listings</h1>
+		<div className="grid grid-cols-2 lg:grid-cols-6 gap-3">
+			{!loading && propertiesFetched?.length > 0 ? (
+				propertiesFetched.map((property) => (
+					<div key={property._id} className="relative">
+						<HeartIcon
+							className="size-7 absolute top-2 right-2 fill-gray-200 hover:fill-red-500"
+							onClick={(event) => addPropertyToFavorites(event, property._id)}
+						/>
+						<div
+							className="w-fit border-2 border-gray-100 rounded-3xl p-1"
+							onClick={(event) => {
+								propertyDetails(event, property._id);
+							}}
+						>
+							<Image
+								className="rounded-3xl border-2 border-gray-100"
+								src={property.images}
+								alt={`Image of ${property.name}`}
+								width={200}
+								height={200}
+							/>
+							<div className="px-2 flex items-baseline justify-between py-2">
+								<h1 className="font-semibold text-sm">{property.name}</h1>
+								<p className="text-xs">{property.price}</p>
+							</div>
+						</div>
+					</div>
+				))
+			) : (
+				<h1>No properties found</h1>
+			)}
+		</div>
+	</div>
+)} */
 }

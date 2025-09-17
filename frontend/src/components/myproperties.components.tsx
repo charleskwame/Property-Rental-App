@@ -17,18 +17,21 @@ export default function MyProperties() {
 			const userID = storedUserData.data.userWithoutPassword._id;
 			const getMyProperties = async () => {
 				try {
-					const request = await axios.get(`${API_URL}user/properties/${userID}`, {
+					setLoading(true);
+					const request = await axios.get(`${API_URL}user/properties?ownerID=${userID}`, {
 						headers: {
 							"Content-Type": "application/json",
 							Authorization: token,
 						},
 					});
 					if (request.data.status === "Success") {
-						setLoading(!loading);
 						setPropertiesLoaded(request.data.message);
+						setLoading(false);
 					}
 					//console.log(request);
 				} catch (error) {
+					setLoading(false);
+
 					console.log(error);
 				}
 			};
@@ -43,7 +46,7 @@ export default function MyProperties() {
 	};
 	return (
 		<>
-			{loading === false ? (
+			{loading ? (
 				<h1>Loading...</h1>
 			) : (
 				<div>

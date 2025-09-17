@@ -1,1 +1,68 @@
 @import "tailwindcss";
+@import "tailwindcss-animated";
+
+@theme {
+	--color-custom-white-50: oklch(1 0 0);
+	--color-custom-white-100: oklch(0.9992 0.0011 197.14);
+	--color-custom-white-200: oklch(0.9985 0.0021 197.12);
+	--color-custom-white-300: oklch(0.9975 0.0034 174.49);
+	--color-custom-white-400: oklch(0.9967 0.0044 179.74);
+	--color-custom-white-500: oklch(0.9548 0.0045 179.73);
+	--color-custom-white-600: oklch(0.8727 0.0046 179.72);
+	--color-custom-white-700: oklch(0.7865 0.0034 197.09);
+	--color-custom-white-800: oklch(0.6989 0.0048 179.67);
+	--color-custom-white-900: oklch(0.6097 0.005 179.63);
+	--color-custom-black-50: oklch(0.6044 0.0296 97.85);
+	--color-custom-black-100: oklch(0.5244 0.0318 100.66);
+	--color-custom-black-200: oklch(0.4426 0.0329 100.81);
+	--color-custom-black-300: oklch(0.3569 0.0341 101.02);
+	--color-custom-black-400: oklch(0.2659 0.0351 101.25);
+	--color-custom-black-500: oklch(0.2027 0.0342 101.03);
+	--color-custom-black-600: oklch(0.1754 0.0287 102.42);
+	--color-custom-black-700: oklch(0.1515 0.0249 105.11);
+	--color-custom-black-800: oklch(0.1189 0.0198 109.07);
+	--color-custom-black-900: oklch(0 0 0);
+	--color-custom-orange-50: oklch(0.9801 0.1125 108.31);
+	--color-custom-orange-100: oklch(0.9241 0.1161 95.88);
+	--color-custom-orange-200: oklch(0.8695 0.1255 84.03);
+	--color-custom-orange-300: oklch(0.816 0.1377 73.49);
+	--color-custom-orange-400: oklch(0.7664 0.1535 63.6);
+	--color-custom-orange-500: oklch(0.7024 0.157 57.43);
+	--color-custom-orange-600: oklch(0.6201 0.1462 53.46);
+	--color-custom-orange-700: oklch(0.5358 0.1362 48.73);
+	--color-custom-orange-900: oklch(0.3618 0.1185 37.97);
+	--color-custom-red-50: oklch(0.8581 0.08 6.22);
+	--color-custom-red-100: oklch(0.7939 0.1149 7.73);
+	--color-custom-red-200: oklch(0.7355 0.1513 9.74);
+	--color-custom-red-300: oklch(0.6827 0.1844 11.73);
+	--color-custom-red-400: oklch(0.6406 0.2127 15.1);
+	--color-custom-red-500: oklch(0.5905 0.2121 17.93);
+	--color-custom-red-600: oklch(0.5243 0.1921 20.14);
+	--color-custom-red-700: oklch(0.4565 0.1716 22.83);
+	--color-custom-red-800: oklch(0.3875 0.1497 25.75);
+	--color-custom-red-900: oklch(0.3138 0.128763 29.2339);
+}
+
+@layer base {
+	dialog {
+		margin: auto;
+	}
+}
+
+@utilities animate-dialog {
+	.animate-pop-in {
+		@apply transition-transform duration-300 ease-out;
+		animation: pop-in 0.3s ease-out;
+	}
+
+	@keyframes pop-in {
+		0% {
+			transform: scale(0.8);
+			opacity: 0;
+		}
+		100% {
+			transform: scale(1);
+			opacity: 1;
+		}
+	}
+}

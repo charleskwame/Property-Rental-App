@@ -15,7 +15,7 @@ export default function AddProperty() {
 	const [propertyDescription, setPropertyDescription] = useState<string>("");
 	const [propertyImage, setPropertyImage] = useState<File | undefined>(undefined);
 	const [propertyImageLink, setPropertyImageLink] = useState<string>("");
-	const [propertyPrice, setPropertyPrice] = useState<number>();
+	const [propertyPrice, setPropertyPrice] = useState<string>();
 
 	const addProperty = async (event: React.FormEvent) => {
 		console.log(propertyPrice);
@@ -33,6 +33,7 @@ export default function AddProperty() {
 		};
 
 		try {
+			loadFile(event);
 			const token = `Bearer ${storedUserData.data.token}`;
 			console.log(token);
 			const request = await axios.post(`${API_URL}user/add-properties`, propertyData, {
@@ -42,10 +43,9 @@ export default function AddProperty() {
 				},
 			});
 			//console.log(propertyImageLink);
-			//loadFile(event);
-			// if (request.data.status === "Success") {
-			// 	console.log("Property Added");
-			// }
+			if (request.data.status === "Success") {
+				console.log("Property Added");
+			}
 		} catch (error) {
 			console.log(error);
 		}
@@ -62,7 +62,10 @@ export default function AddProperty() {
 				"https://api.cloudinary.com/v1_1/dmiy3wi6r/image/upload",
 				imageData,
 			);
-			setPropertyImageLink(request.data.secure_url);
+			if (request.status === 200) {
+				console.log("Image Uploaded");
+				setPropertyImageLink(request.data.secure_url);
+			}
 		} catch (error) {
 			console.log(error);
 		}
@@ -70,52 +73,79 @@ export default function AddProperty() {
 
 	return (
 		<>
-			<h1>Add new properties</h1>
-			<form action="" onSubmit={(event) => addProperty(event)}>
-				<label htmlFor="">name</label>
-				<input
-					type="text"
-					value={propertyName}
-					onChange={(event) => setPropertyName(event.target.value)}
-				/>
-				<label htmlFor="">location</label>
-				<input
-					type="text"
-					value={propertyLocation}
-					onChange={(event) => setPropertyLocation(event.target.value)}
-				/>
-				<label htmlFor="">type</label>
-				<input
-					type="text"
-					value={propertyType}
-					onChange={(event) => setPropertyType(event.target.value)}
-				/>
-				<label htmlFor="">Price</label>
-				<input
-					type="number"
-					value={propertyPrice}
-					onChange={(event) => setPropertyPrice(Number(event.target.value))}
-				/>
-				<label htmlFor="">description</label>
-				<input
-					type="text"
-					value={propertyDescription}
-					onChange={(event) => setPropertyDescription(event.target.value)}
-				/>
-				<label htmlFor="">image</label>
-				<input
-					type="file"
-					accept={`.png,.jpeg`}
-					onChange={(event) => {
-						setPropertyImage(event.target.files?.[0]);
-					}}
-				/>
-				{/* <Image src={propertyImage} alt="" width={300} height={300} /> */}
+			<form action="" onSubmit={(event) => addProperty(event)} className="text-gray-500 p-4">
+				<div>
+					<h2 className="text-xl font-bold mb-2 text-center text-fuchsia-800">Add new property</h2>
+					<div className="lg:flex items-center gap-1">
+						<input
+							id="name"
+							className="w-full border mt-1 bg-fuchsia-500/5 border-gray-500/10 outline-none rounded py-2.5 px-3 focus:border-fuchsia-800"
+							type="text"
+							placeholder="Property Name"
+							required
+							value={propertyName}
+							onChange={(event) => setPropertyName(event?.target.value)}
+						/>
 
-				<button type="button" onClick={(event) => loadFile(event)}>
-					Add Image
-				</button>
-				<button type="submit">Add Property</button>
+						<input
+							id="name"
+							className="w-full border mt-1 bg-fuchsia-500/5 border-gray-500/10 outline-none rounded py-2.5 px-3 focus:border-fuchsia-800"
+							type="text"
+							placeholder="Location of property"
+							required
+							value={propertyLocation}
+							onChange={(event) => setPropertyLocation(event?.target.value)}
+						/>
+					</div>
+					<div className="lg:flex items-center gap-1">
+						<input
+							id="name"
+							className="w-full border mt-1 bg-fuchsia-500/5 border-gray-500/10 outline-none rounded py-2.5 px-3 focus:border-fuchsia-800"
+							type="text"
+							placeholder="Type of property"
+							required
+							value={propertyType}
+							onChange={(event) => setPropertyType(event?.target.value)}
+						/>
+
+						<input
+							id="name"
+							className="w-full border mt-1 bg-fuchsia-500/5 border-gray-500/10 outline-none rounded py-2.5 px-3 focus:border-fuchsia-800"
+							type="text"
+							placeholder="000.00"
+							required
+							value={propertyPrice}
+							onChange={(event) => setPropertyPrice(event?.target.value)}
+						/>
+					</div>
+
+					<textarea
+						name="description"
+						placeholder="Describe your property"
+						className="w-full border mt-1 bg-fuchsia-500/5 border-gray-500/10 outline-none rounded py-2.5 px-3 focus:border-fuchsia-800 resize-none mb-1"
+						value={propertyDescription}
+						onChange={(event) => setPropertyDescription(event?.target.value)}
+					></textarea>
+
+					<input
+						className="w-full border mb-2 bg-fuchsia-500/5 border-gray-500/10 outline-none rounded py-2.5 px-3 focus:border-fuchsia-800"
+						placeholder="Add Image"
+						type="file"
+						accept={`image/*`}
+						onChange={(event) => {
+							setPropertyImage(event.target.files?.[0]);
+						}}
+					/>
+				</div>
+
+				<div>
+					<button
+						type="submit"
+						className="w-full bg-fuchsia-800 font-semibold hover:bg-custom-white-50 hover:text-fuchsia-800 hover:border-fuchsia-800 border transition-all py-2.5 rounded text-white cursor-pointer"
+					>
+						Add Property
+					</button>
+				</div>
 			</form>
 		</>
 	);

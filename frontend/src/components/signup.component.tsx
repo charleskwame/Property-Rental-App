@@ -6,8 +6,6 @@ import { API_URL } from "@/config";
 import { useRouter } from "next/navigation";
 import { GoToPageFunction } from "@/app/functions/gotoLogin.function";
 import { XCircleIcon } from "@heroicons/react/24/outline";
-import Logo from "../../../public/assets/logo.svg";
-import Image from "next/image";
 
 export default function SignUpRenter() {
 	const route = useRouter();
@@ -92,7 +90,6 @@ export default function SignUpRenter() {
 			if (request.data.status === "Success") {
 				sessionStorage.setItem("User", JSON.stringify(request.data));
 				sessionStorage.setItem("UserLoggedIn", JSON.stringify({ loggedin: true }));
-				route.push("/");
 				//console.log(request.data);
 				//console.log(request.data.renterWithoutPassword);
 				location.reload();
@@ -104,16 +101,18 @@ export default function SignUpRenter() {
 
 	return (
 		<>
+			{/* <dialog className="fixed w-[90%] left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 lg:max-w-1/2 rounded-2xl">
+				<XCircleIcon
+					className="size-8 absolute top-0 right-0 text-orange-400 hover:text-red-500 cursor-pointer transition-all ease-in-out duration-300"
+					onClick={() => {}}
+				/> */}
 			{openLogIn ? (
 				// sign up form
 				<form
-					className="bg-custom-white-50 text-gray-500  p-4 py-4 text-left text-sm rounded-2xl shadow-[0px_0px_10px_0px] shadow-black/10 lg:max-w-1/3 w-[90%] fixed -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2"
+					className="bg-custom-white-50 text-gray-500  p-4 py-4 text-left text-sm rounded-2xl shadow-[0px_0px_10px_0px] shadow-black/10"
 					onSubmit={(event) => handleSignUp(event)}
 				>
-					<div className="flex items-center gap-2 mb-1">
-						<Image src={Logo} alt="Rent Easy Logo" className="size-10" />
-						<h2 className="text-xl font-bold text-center text-fuchsia-800">Create an account</h2>
-					</div>
+					<h2 className="text-xl font-bold mb-2 text-center text-fuchsia-800">Create an account</h2>
 
 					<input
 						id="name"
@@ -190,14 +189,10 @@ export default function SignUpRenter() {
 				// log in form
 				<form
 					action=""
-					className="bg-custom-white-50 text-gray-500  p-4 py-4 text-left text-sm rounded-2xl shadow-[0px_0px_10px_0px] shadow-black/10 lg:max-w-1/3 w-[90%] fixed -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2"
+					className="bg-custom-white-50 text-gray-500  p-4 py-4 text-left text-sm rounded-2xl shadow-[0px_0px_10px_0px] shadow-black/10"
 					onSubmit={(event) => handleLogIn(event)}
 				>
-					<div className="flex items-center gap-2 mb-1">
-						<Image src={Logo} alt="Rent Easy Logo" className="size-10" />
-						<h2 className="text-xl font-bold text-center text-fuchsia-800">Welcome back</h2>
-					</div>
-					{/* <h2 className="text-xl font-bold mb-2 text-center text-fuchsia-800">Welcome back</h2> */}
+					<h2 className="text-xl font-bold mb-2 text-center text-fuchsia-800">Welcome back</h2>
 
 					<input
 						id="email"
