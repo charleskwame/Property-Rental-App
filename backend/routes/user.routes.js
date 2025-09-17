@@ -1,5 +1,5 @@
 import Router from "express";
-import authenticateUser from "../middleware/authenticatepropertyowners.middleware.js";
+import authenticateUser from "../middleware/authenticateusers.middleware.js";
 import { verifyOTP } from "../controllers/otp.controller.js";
 import {
 	addPropertyToFavorites,

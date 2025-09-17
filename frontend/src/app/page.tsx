@@ -39,7 +39,7 @@ export default function PropertiesForRent() {
 		getProperties();
 
 		const unParsedRenterData = sessionStorage.getItem("Renter");
-		console.log(unParsedRenterData);
+		//console.log(unParsedRenterData);
 
 		if (!unParsedRenterData) return;
 

@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { H1Icon, UserCircleIcon } from "@heroicons/react/24/outline";
+import { UserCircleIcon } from "@heroicons/react/24/outline";
 import { GoToPageFunction } from "@/app/functions/gotoLogin.function";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -10,31 +10,54 @@ export default function NavBar() {
 	const route = useRouter();
 	const [displayProfileIcon, setDisplayProfileIcon] = useState<boolean>(false);
 	const [profileIconLetter, setProfileIconLetter] = useState<string>("");
+	const [isUserTypeKnown, setIsUserTypeKnown] = useState<boolean>(false);
+	const [isUserOwner, setIsUserOwner] = useState<boolean>(false);
 	useEffect(() => {
 		if (
-			JSON.parse(`${sessionStorage.getItem("Renter")}`) !== null &&
-			sessionStorage.getItem("RenterLogInStatus") !== null &&
-			JSON.parse(`${sessionStorage.getItem("RenterLogInStatus")}`).loggedin === true
+			JSON.parse(`${sessionStorage.getItem("User")}`) !== null &&
+			sessionStorage.getItem("UserLoggedIn") !== null &&
+			JSON.parse(`${sessionStorage.getItem("UserLoggedIn")}`).loggedin === true
 		) {
-			const unParsedRenterData = sessionStorage.getItem("Renter");
-			const storedRenterData = JSON.parse(unParsedRenterData!);
-			const userName: string = storedRenterData.data.renterWithoutPassword.name;
+			const unparsedUserData = sessionStorage.getItem("User");
+			const storedUserData = JSON.parse(unparsedUserData!);
+			const userName: string = storedUserData.data.userWithoutPassword.name;
 			setProfileIconLetter(userName.slice(0, 1));
-			console.log(userName);
+			//console.log(userName);
 			setDisplayProfileIcon(true);
+
+			if (
+				storedUserData.data.userWithoutPassword.usertype === "owner" ||
+				storedUserData.data.userWithoutPassword.usertype === "renter"
+			) {
+				setIsUserTypeKnown(true);
+				if (storedUserData.data.userWithoutPassword.usertype === "owner") {
+					setIsUserOwner(true);
+				}
+			}
 		}
 	}, []);
 	return (
-		<nav className="flex gap-3.5 mb-5">
-			<button>
-				<Link href={`/sign-up`}>Rent out your property</Link>
-			</button>
-			{!displayProfileIcon ? (
-				<UserCircleIcon className="size-10" onClick={() => GoToPageFunction(route, "/login")} />
+		<nav className="">
+			{!isUserTypeKnown ? (
+				<div className="flex gap-3.5 mb-5">
+					<button>
+						<Link href={`/sign-up`}>Rent out your property</Link>
+					</button>
+					<UserCircleIcon className="size-10" onClick={() => GoToPageFunction(route, "/login")} />
+				</div>
 			) : (
-				<h1 className="border-2 rounded-full border-black text-center px-3 py-1 text-xl">
-					{profileIconLetter}
-				</h1>
+				<div>
+					<div className="flex gap-3.5 mb-5">
+						{isUserOwner ? <h1>Owner</h1> : <h1>Renter</h1>}
+						{!displayProfileIcon ? (
+							<UserCircleIcon className="size-10" onClick={() => GoToPageFunction(route, "/")} />
+						) : (
+							<h1 className="border-2 rounded-full border-black text-center px-3 py-1 text-xl">
+								{profileIconLetter}
+							</h1>
+						)}
+					</div>
+				</div>
 			)}
 		</nav>
 	);
