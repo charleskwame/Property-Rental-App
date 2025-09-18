@@ -8,6 +8,9 @@ import { GoToPageFunction } from "@/app/functions/gotoLogin.function";
 import { XCircleIcon } from "@heroicons/react/24/outline";
 import Logo from "../../../public/assets/logo.svg";
 import Image from "next/image";
+import NavBarDecorative from "@/components/navbardecorative.component";
+import { toast } from "react-toastify";
+import Toast from "@/components/toast.component";
 
 export default function SignUpRenter() {
 	const route = useRouter();
@@ -44,6 +47,7 @@ export default function SignUpRenter() {
 			});
 			if (request.data.status === "Success") {
 				//setIsSendingOTP(!isSendingOTP);
+				toast.success("Please verify your email");
 				sessionStorage.setItem("User", JSON.stringify(request.data));
 				route.push("/send-otp");
 				//console.log(request.data);
@@ -85,11 +89,13 @@ export default function SignUpRenter() {
 			});
 
 			if (request.data.status === "Pending Verification") {
+				toast.info("Please verify your email");
 				sessionStorage.setItem("User", JSON.stringify(request.data));
 				route.push("/send-otp");
 			}
 
 			if (request.data.status === "Success") {
+				toast.success("Logged in successfully");
 				sessionStorage.setItem("User", JSON.stringify(request.data));
 				sessionStorage.setItem("UserLoggedIn", JSON.stringify({ loggedin: true }));
 				route.push("/");
@@ -104,6 +110,8 @@ export default function SignUpRenter() {
 
 	return (
 		<>
+			<Toast />
+			<NavBarDecorative />
 			{openLogIn ? (
 				// sign up form
 				<form

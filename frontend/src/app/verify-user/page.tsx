@@ -6,6 +6,9 @@ import axios from "axios";
 import { API_URL } from "@/config";
 import Logo from "../../../public/assets/logo.svg";
 import Image from "next/image";
+import NavBarDecorative from "@/components/navbardecorative.component";
+import Toast from "@/components/toast.component";
+import { toast } from "react-toastify";
 
 export default function VerifyRenter() {
 	const router = useRouter();
@@ -18,6 +21,7 @@ export default function VerifyRenter() {
 		if (storedUserData) {
 			const parsed = JSON.parse(storedUserData);
 			if (parsed?.data?.userWithoutPassword?.isVerified === true) {
+				toast.success("Email Already Verified");
 				router.push("/properties-for-rent");
 			}
 		}
@@ -59,6 +63,7 @@ export default function VerifyRenter() {
 		const otp = otpDigits.join("");
 		console.log(otp);
 		if (otp.length !== 6) {
+			toast.error("Please enter a 6-digit OTP.");
 			console.error("Please enter a 6-digit OTP.");
 			return;
 		}
@@ -83,11 +88,13 @@ export default function VerifyRenter() {
 			});
 
 			if (response.data.status === "Success") {
+				toast.success("Email Verified Successfully");
 				sessionStorage.setItem("User", JSON.stringify(response.data));
 				sessionStorage.setItem("UserLoggedIn", JSON.stringify({ loggedin: true }));
 				router.push("/");
 			}
 		} catch (error) {
+			toast.error("Verification failed, please try again.");
 			console.error("Verification failed:", error);
 		}
 	};
@@ -114,60 +121,72 @@ export default function VerifyRenter() {
 			});
 
 			if (response.data.status === "Pending") {
+				toast.success("OTP resent successfully");
 				console.log("OTP resent successfully");
 			}
 		} catch (error) {
+			toast.success("Failed to resend OTP");
 			console.error("Failed to resend OTP:", error);
 		}
 	};
 
 	return (
-		<form
-			className="bg-white text-gray-500 lg:max-w-80 px-4 py-4 text-left text-sm rounded-lg transition-all shadow-[0px_0px_10px_0px] shadow-black/10 fixed w-[90%] left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
-			onSubmit={handleSubmit}
-		>
-			<div className="flex items-center gap-2 mb-1">
-				<Image src={Logo} alt="Rent Easy Logo" className="size-10" />
-				<h2 className="text-xl font-bold text-center text-fuchsia-800">OTP Verification</h2>
-			</div>
-			{/* <h2 className="text-2xl font-semibold mb-2 text-center text-fuchsia-800">OTP Verification</h2> */}
+		<>
+			<Toast />
+			<NavBarDecorative />
+			<main>
+				<form
+					className="bg-white text-gray-500 lg:max-w-80 px-4 py-4 text-left text-sm rounded-lg transition-all shadow-[0px_0px_10px_0px] shadow-black/10 fixed w-[90%] left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
+					onSubmit={handleSubmit}
+				>
+					<div className="flex items-center gap-2 mb-1">
+						<Image src={Logo} alt="Rent Easy Logo" className="size-10" />
+						<h2 className="text-xl font-bold text-center text-fuchsia-800">OTP Verification</h2>
+					</div>
+					{/* <h2 className="text-2xl font-semibold mb-2 text-center text-fuchsia-800">OTP Verification</h2> */}
 
-			<p className="text-gray-500/60">Please enter the verification code</p>
-			<p className="text-gray-500/60 mb-2">Verification code has been sent to your email</p>
+					<p className="text-gray-500/60">Please enter the verification code</p>
+					<p className="text-gray-500/60 mb-2">Verification code has been sent to your email</p>
 
-			<div className="flex items-center justify-between mb-4">
-				{otpDigits.map((digit, index) => (
-					<input
-						key={index}
-						ref={(el) => {
-							inputRefs.current[index] = el;
-						}}
-						className="otp-input w-10 h-10 border border-gray-300 outline-none rounded text-center text-lg focus:border-fuchsia-800 transition duration-300"
-						type="text"
-						maxLength={1}
-						required
-						value={digit}
-						onChange={(e) => handleChange(e.target.value, index)}
-						onKeyDown={(e) => handleKeyDown(e, index)}
-						onPaste={index === 0 ? handlePaste : undefined}
-						inputMode="numeric"
-					/>
-				))}
-			</div>
+					<div className="flex items-center justify-between mb-4">
+						{otpDigits.map((digit, index) => (
+							<input
+								key={index}
+								ref={(el) => {
+									inputRefs.current[index] = el;
+								}}
+								className="otp-input w-10 h-10 border border-gray-300 outline-none rounded text-center text-lg focus:border-fuchsia-800 transition duration-300"
+								type="text"
+								maxLength={1}
+								required
+								value={digit}
+								onChange={(e) => handleChange(e.target.value, index)}
+								onKeyDown={(e) => handleKeyDown(e, index)}
+								onPaste={index === 0 ? handlePaste : undefined}
+								inputMode="numeric"
+							/>
+						))}
+					</div>
 
-			<button
-				type="submit"
-				className="w-full bg-fuchsia-800 py-2.5 rounded text-white transition-all hover:border-fuchsia-800 hover:text-fuchsia-800 hover:bg-white font-semibold border duration-300 ease-in-out cursor-pointer"
-			>
-				Verify
-			</button>
+					<button
+						type="submit"
+						className="w-full bg-fuchsia-800 py-2.5 rounded text-white transition-all hover:border-fuchsia-800 hover:text-fuchsia-800 hover:bg-white font-semibold border duration-300 ease-in-out cursor-pointer"
+					>
+						Verify
+					</button>
 
-			<p className="text-center mt-2">
-				Didn&apos;t get OTP Code?{" "}
-				<button type="button" className="text-orange-400 underline cursor-pointer" onClick={resendOTP}>
-					Resend Code
-				</button>
-			</p>
-		</form>
+					<p className="text-center mt-2">
+						Didn&apos;t get OTP Code?{" "}
+						<button
+							type="button"
+							className="text-orange-400 underline cursor-pointer"
+							onClick={resendOTP}
+						>
+							Resend Code
+						</button>
+					</p>
+				</form>
+			</main>
+		</>
 	);
 }

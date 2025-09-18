@@ -35,7 +35,12 @@ export default function PropertiesForOwner() {
 		<>
 			<NavBar />
 
-			<button onClick={() => handleClickOpen()}>Add Property</button>
+			<button
+				onClick={() => handleClickOpen()}
+				className="bg-fuchsia-800 font-semibold hover:bg-custom-white-50 hover:text-fuchsia-800 hover:border-fuchsia-800 border transition-all py-1.5 rounded text-white cursor-pointer mx-auto block mt-3 px-5"
+			>
+				Add Property
+			</button>
 
 			<dialog
 				ref={dialogRef}

@@ -15,6 +15,8 @@ import Logo from "../../public/assets/logo.svg";
 import Image from "next/image";
 import SignUpRenter from "./signup.component";
 import { useRef } from "react";
+import Toast from "@/components/toast.component";
+import { toast } from "react-toastify";
 //import SignUpRenter from "@/app/sign-up/page";
 
 export default function NavBar() {
@@ -62,20 +64,26 @@ export default function NavBar() {
 	};
 
 	const LogOut = () => {
+		toast.success("Logged Out");
 		sessionStorage.removeItem("User");
 		sessionStorage.removeItem("UserLoggedIn");
-		alert("Logged Out");
+		//alert("Logged Out");
 		location.reload();
 		route.push("/");
 	};
 
 	return (
 		<>
-			<nav className="border-b-1 border-fuchsia-800">
+			<Toast />
+			<nav className="border-b-1 border-fuchsia-800 py-2 lg:py-0">
 				<div className="px-2">
 					<div className="flex items-center justify-between">
 						<Link href={"/"}>
-							<Image src={Logo} alt={`Logo`} className="w-10 h-10 lg:w-12 lg:h-12" />
+							<Image
+								src={Logo}
+								alt={`Logo`}
+								className={isUserOwner ? "w-8 h-8 lg:w-12 lg:h-12" : `w-10 h-10 lg:w-12 lg:h-12`}
+							/>
 						</Link>
 						{!isUserTypeKnown ? (
 							<div className="flex gap-2.5 items-center">
@@ -99,7 +107,7 @@ export default function NavBar() {
 									{!displayProfileIcon ? (
 										<UserCircleIcon className="size-10" onClick={() => GoToPageFunction(route, "/")} />
 									) : (
-										<div className="flex items-center gap-2 cursor-pointer">
+										<div className="flex items-center gap-1 lg:gap-2 cursor-pointer">
 											<Link href={"/favorites"}>
 												<div className="text-xs lg:text-base flex items-center gap-1">
 													<HeartIcon className="size-4 lg:size-6" />
@@ -132,7 +140,7 @@ export default function NavBar() {
 												<p>Log Out</p>
 											</div>
 
-											<div className="rounded-full font-bold bg-fuchsia-800 text-custom-white-50 cursor-pointer w-9 h-9 flex items-center justify-center">
+											<div className="rounded-full font-bold bg-fuchsia-800 text-custom-white-50 cursor-pointer w-7 h-7 lg:w-9 lg:h-9 flex items-center justify-center">
 												<p className="text-xs lg:text-base text-center w-fit h-fit">{profileIconLetter}</p>
 											</div>
 										</div>

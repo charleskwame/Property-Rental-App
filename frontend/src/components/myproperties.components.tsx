@@ -4,6 +4,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import LoadingSpinner from "./loadingspinner.component";
 
 export default function MyProperties() {
 	const [loading, setLoading] = useState<boolean>(false);
@@ -47,22 +48,36 @@ export default function MyProperties() {
 	return (
 		<>
 			{loading ? (
-				<h1>Loading...</h1>
+				<LoadingSpinner message={"Loading Properties"} />
 			) : (
-				<div>
+				<div className="grid grid-cols-2 lg:grid-cols-6 gap-2 mt-5 px-2">
 					{propertiesLoaded?.length > 0 ? (
 						propertiesLoaded.map((propertyLoaded) => (
-							<div
-								key={propertyLoaded._id}
-								onClick={(event) => propertyDetails(event, propertyLoaded._id)}
-							>
-								<h1>{propertyLoaded.name}</h1>
-								<Image
-									src={propertyLoaded.images}
-									width={300}
-									height={300}
-									alt={`Picture of ${propertyLoaded.name}`}
-								/>
+							<div key={propertyLoaded._id} className="relative w-fit">
+								{/* {sessionStorage.getItem("User") !== null && (
+														<HeartIcon
+															className="size-7 absolute top-2 right-2 fill-gray-200 hover:fill-red-500 hover:stroke-red-500 transition-all ease-in-out duration-300"
+															onClick={(event) => addPropertyToFavorites(event, propertyFetched._id)}
+														/>
+													)} */}
+								<div
+									className="rounded-3xl"
+									onClick={(event) => {
+										propertyDetails(event, propertyLoaded._id);
+									}}
+								>
+									<Image
+										className="rounded-3xl border-2 border-gray-100 aspect-square"
+										src={propertyLoaded.images}
+										alt={`Image of ${propertyLoaded.name}`}
+										width={200}
+										height={200}
+									/>
+									<div className="px-2">
+										<h1 className="font-semibold text-sm">{propertyLoaded.name} </h1>
+										<p className="text-xs">GHc {propertyLoaded.price}</p>
+									</div>
+								</div>
 							</div>
 						))
 					) : (

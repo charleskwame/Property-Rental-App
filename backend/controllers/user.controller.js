@@ -17,7 +17,7 @@ import OTPModel from "../models/otp.model.js";
 
 //creating nodemailer transport
 const transporter = nodemailer.createTransport({
-	host: "smtp.gmail.com",
+	service: "gmail",
 	secure: false,
 	auth: {
 		user: NODEMAILER_EMAIL,
@@ -426,6 +426,52 @@ export const getFavoritedProperties = async (request, response, next) => {
 			_id: { $in: foundUser.likedproperties },
 		});
 		response.status(200).json({ status: "Success", message: favoritedProperties });
+	} catch (error) {
+		next(error);
+	}
+};
+
+//update user details
+export const updateUserDetails = async (request, response, next) => {
+	try {
+		// const userID = request.params.userID;
+		const { userID, name, email, password } = request.body;
+		const existingUser = await UserModel.findOne({ _id: userID });
+		if (!existingUser) {
+			return response.status(400).json({
+				status: "Failed",
+				message: "No user with these details has been found. Update not done",
+			});
+		}
+
+		if (!name || !email) {
+			return response.status(400).json({ status: "Failed", message: "Empty Fields, Cannot Update" });
+		}
+
+		const updateData = {
+			name,
+			email,
+			isVerified: false,
+		};
+
+		if (password) {
+			const salt = await bcrypt.genSalt(10);
+			const hashedPassword = await bcrypt.hash(password, salt);
+			updateData.password = hashedPassword;
+		}
+
+		const updatedUser = await UserModel.findByIdAndUpdate(userID, updateData, {
+			new: true,
+			runValidators: true,
+		});
+
+		const token = jwt.sign({ userID: existingUser._id }, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
+		//const { password: _, ...userWithoutPassword } = existingUser.toObject();
+		const { password: _, ...userWithoutPassword } = updatedUser.toObject();
+		response.status(200).json({
+			status: "Pending Verification",
+			data: { token, userWithoutPassword },
+		});
 	} catch (error) {
 		next(error);
 	}

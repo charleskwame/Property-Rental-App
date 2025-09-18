@@ -17,6 +17,7 @@ import {
 	removePropertyFromFavorites,
 	getUserDetailsForOwner,
 	getFavoritedProperties,
+	updateUserDetails,
 } from "../controllers/user.controller.js";
 
 const UserRouter = Router();
@@ -37,6 +38,7 @@ UserRouter.post("/properties/remove-from-favorites", authenticateUser, removePro
 UserRouter.post("/verify-otp", authenticateUser, verifyOTP);
 UserRouter.get("/", getUserDetailsForOwner);
 UserRouter.get("/favorites/:userID", authenticateUser, getFavoritedProperties);
+UserRouter.put("/update-details/", authenticateUser, updateUserDetails);
 
 // Renter specific routes
 

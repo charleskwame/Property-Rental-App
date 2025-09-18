@@ -8,10 +8,12 @@ import axios from "axios";
 import { API_URL } from "@/config";
 import { PropertyInterFace } from "@/interfaces/property.interface";
 import { User } from "@/interfaces/user.interface";
-import Image from "next/image";
+//import Image from "next/image";
 import NavBar from "@/components/navbar.component";
 import { ArrowUpOnSquareIcon, HeartIcon } from "@heroicons/react/24/outline";
 import { useRouter } from "next/navigation";
+import Toast from "@/components/toast.component";
+import { toast } from "react-toastify";
 
 export default function SpecificProperty() {
 	//const pathName = usePathname();
@@ -79,12 +81,14 @@ export default function SpecificProperty() {
 					},
 				});
 				if (request.status === 200) {
-					alert("Property added to favorites");
+					toast.success("Property added to favorites");
+					//alert("Property added to favorites");
 				}
 				sessionStorage.setItem("User", JSON.stringify(request.data));
 				//location.reload();
 				//console.log(request);
 			} catch (error) {
+				toast.error("Failed to add property to favorites");
 				console.log(error);
 			}
 		} else {
@@ -95,10 +99,22 @@ export default function SpecificProperty() {
 		// console.log(userID);
 	};
 	//console.log(params);
+
+	const copyToClipboard = async (text: string) => {
+		try {
+			await navigator.clipboard.writeText(text);
+			toast.success("Copied link to clipboard");
+			//alert("Copied the text: " + text);
+		} catch (err) {
+			toast.error("Failed to copy text");
+			console.error("Failed to copy text: ", err);
+		}
+	};
+
 	return (
 		<>
 			<NavBar />
-
+			<Toast />
 			{property !== null ? (
 				<main className="px-2 mt-5 lg:px-40">
 					<div className="flex items-center justify-between my-2">
@@ -106,7 +122,7 @@ export default function SpecificProperty() {
 
 						<div className="flex items-center justify-between">
 							<div
-								onClick={() => console.log(location.href)}
+								onClick={() => copyToClipboard(location.href)}
 								className="cursor-pointer flex items-center gap-1 hover:bg-fuchsia-800/15 hover:text-fuchsia-800 transition-all ease-in-out duration-300 px-2 py-1 rounded-lg"
 							>
 								<ArrowUpOnSquareIcon className="size-5" />

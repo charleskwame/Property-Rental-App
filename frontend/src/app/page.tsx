@@ -144,7 +144,7 @@ export default function PropertiesForRent() {
 				// <h1>Loading...</h1>
 				<div className="px-2 mt-5">
 					<h1 className="mb-2 text-xl font-semibold text-fuchsia-800">View Listings</h1>
-					<div className="grid grid-cols-2 lg:grid-cols-6 gap-2">
+					<div className="grid grid-cols-2 lg:grid-cols-6 gap-1">
 						{propertiesFetched.length > 0 ? (
 							propertiesFetched.map((propertyFetched) => (
 								<div key={propertyFetched._id} className="relative w-fit">
@@ -168,7 +168,7 @@ export default function PropertiesForRent() {
 											height={200}
 										/>
 										<div className="px-2">
-											<h1 className="font-semibold text-sm">{propertyFetched.name.slice(0, 20) + "..."} </h1>
+											<h1 className="font-semibold text-sm">{propertyFetched.name} </h1>
 											<p className="text-xs">GHc {propertyFetched.price}</p>
 										</div>
 									</div>
