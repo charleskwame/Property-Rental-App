@@ -8,11 +8,11 @@ type ToastProps = {
 export default function Toast() {
 	return (
 		<ToastContainer
-			position="top-center"
 			autoClose={5000}
 			hideProgressBar={false}
 			newestOnTop={false}
 			closeOnClick={true}
+			limit={1}
 			rtl={false}
 			pauseOnFocusLoss
 			draggable

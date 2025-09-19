@@ -17,7 +17,7 @@ export default function PropertiesForOwner() {
 	useEffect(() => {
 		const storedUserData = JSON.parse(`${sessionStorage.getItem("User")}`);
 		if (storedUserData === null) {
-			routerToGoBackToLogIn.push("/login-owner");
+			routerToGoBackToLogIn.push("/login");
 		}
 	}, []);
 
@@ -45,7 +45,7 @@ export default function PropertiesForOwner() {
 			<dialog
 				ref={dialogRef}
 				open={dialogOpen}
-				className="lg:w-fit rounded-2xl backdrop:bg-fuchsia-800/15 animate-fade w-[90%]"
+				className="lg:max-w-1/2 rounded-2xl backdrop:bg-fuchsia-800/15 animate-fade w-[90%]"
 			>
 				<XCircleIcon
 					className="size-8 absolute top-0 right-0 text-orange-400 hover:text-red-500 cursor-pointer transition-all ease-in-out duration-300"

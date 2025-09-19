@@ -43,7 +43,7 @@ export default function MyProperties() {
 
 	const propertyDetails = async (event: React.MouseEvent, _id: string) => {
 		event.preventDefault();
-		routerToGoToSpecificPropertyPage.push(`/properties-for-owner/${_id}`);
+		routerToGoToSpecificPropertyPage.push(`/properties-for-rent/${_id}`);
 	};
 	return (
 		<>
@@ -54,12 +54,6 @@ export default function MyProperties() {
 					{propertiesLoaded?.length > 0 ? (
 						propertiesLoaded.map((propertyLoaded) => (
 							<div key={propertyLoaded._id} className="relative w-fit">
-								{/* {sessionStorage.getItem("User") !== null && (
-														<HeartIcon
-															className="size-7 absolute top-2 right-2 fill-gray-200 hover:fill-red-500 hover:stroke-red-500 transition-all ease-in-out duration-300"
-															onClick={(event) => addPropertyToFavorites(event, propertyFetched._id)}
-														/>
-													)} */}
 								<div
 									className="rounded-3xl"
 									onClick={(event) => {
@@ -68,7 +62,7 @@ export default function MyProperties() {
 								>
 									<Image
 										className="rounded-3xl border-2 border-gray-100 aspect-square"
-										src={propertyLoaded.images}
+										src={propertyLoaded.images[0]}
 										alt={`Image of ${propertyLoaded.name}`}
 										width={200}
 										height={200}

@@ -139,11 +139,11 @@ export default function SpecificProperty() {
 					</div>
 					<div key={property?._id} className="">
 						<div className="flex items-center justify-center">
-							{property?.images && property.images.trim() !== "" && (
+							{property?.images && (
 								<div className="lg:flex items-start justify-center gap-1">
 									<div className="lg:w-[60%]">
 										<img
-											src={property.images}
+											src={property.images[0]}
 											alt={`Image of ${property.name}`}
 											// fill={true}
 											className="rounded-lg lg:rounded-r-none"
@@ -151,28 +151,28 @@ export default function SpecificProperty() {
 									</div>
 									<div className="grid mt-1 lg:mt-0 grid-cols-4 lg:grid-cols-2 gap-1 lg:w-[40%]">
 										<img
-											src={property.images}
+											src={property.images[0]}
 											alt={`Image of ${property.name}`}
 											// fill={true}
 
 											className="rounded-l-lg lg:rounded-none"
 										/>
 										<img
-											src={property.images}
+											src={property.images[1]}
 											alt={`Image of ${property.name}`}
 											// fill={true}
 
 											className="lg:rounded-r-lg rounded-none"
 										/>
 										<img
-											src={property.images}
+											src={property.images[2]}
 											alt={`Image of ${property.name}`}
 											// fill={true}
 
 											className="rounded-none"
 										/>
 										<img
-											src={property.images}
+											src={property.images[3]}
 											alt={`Image of ${property.name}`}
 											// fill={true}
 

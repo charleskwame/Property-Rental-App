@@ -30,7 +30,7 @@ const PropertySchema = mongoose.Schema({
 		trim: true,
 	},
 	images: {
-		type: String,
+		type: [String],
 		required: [true, "Image not added"],
 	},
 	price: {

@@ -162,7 +162,7 @@ export default function PropertiesForRent() {
 									>
 										<Image
 											className="rounded-3xl border-2 border-gray-100 aspect-square"
-											src={propertyFetched.images}
+											src={propertyFetched.images[0]}
 											alt={`Image of ${propertyFetched.name}`}
 											width={200}
 											height={200}

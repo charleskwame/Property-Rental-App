@@ -13,7 +13,7 @@ const User = new mongoose.Schema(
 			type: String,
 			required: [true, "Email not provided"],
 			minLength: 8,
-			maxLenth: 50,
+			maxLength: 50,
 			trim: true,
 			unique: true,
 		},

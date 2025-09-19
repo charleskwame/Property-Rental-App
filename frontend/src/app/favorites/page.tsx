@@ -113,7 +113,7 @@ export default function FavoriteProperties() {
 									>
 										<Image
 											className="rounded-3xl border-2 border-gray-100 aspect-square"
-											src={property.images}
+											src={property.images[0]}
 											alt={`Image of ${property.name}`}
 											width={200}
 											height={200}

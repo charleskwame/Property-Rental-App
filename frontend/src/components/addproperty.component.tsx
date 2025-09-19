@@ -6,34 +6,46 @@ import { CldUploadWidget } from "next-cloudinary";
 import { API_URL } from "@/config";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { useForm, SubmitHandler, set } from "react-hook-form";
+import propertyTypeOptions from "@/propertytypes";
+
+type PropertyInputs = {
+	name?: string;
+	location?: string;
+	type?: string | undefined;
+	description?: string;
+	images?: string[];
+	price?: string;
+	owner?: string;
+};
 
 export default function AddProperty() {
 	//const routerToGoBackToLogIn = useRouter();
-	const [propertyName, setPropertyName] = useState<string>("");
-	const [propertyLocation, setPropertyLocation] = useState<string>("");
-	const [propertyType, setPropertyType] = useState<string>("");
-	const [propertyDescription, setPropertyDescription] = useState<string>("");
-	const [propertyImage, setPropertyImage] = useState<File | undefined>(undefined);
-	const [propertyImageLink, setPropertyImageLink] = useState<string>("");
-	const [propertyPrice, setPropertyPrice] = useState<string>();
+	// const [propertyName, setPropertyName] = useState<string>("");
+	// const [propertyLocation, setPropertyLocation] = useState<string>("");
+	// const [propertyType, setPropertyType] = useState<string>("");
+	// const [propertyDescription, setPropertyDescription] = useState<string>("");
+	const [propertyImages, setPropertyImages] = useState<File[]>([]);
+	// const [propertyImageLinks, setPropertyImageLinks] = useState<string[]>([]);
+	// const [propertyPrice, setPropertyPrice] = useState<string>();
 
-	const addProperty = async (event: React.FormEvent) => {
-		console.log(propertyPrice);
-		event.preventDefault();
+	const {
+		register,
+		handleSubmit,
+		formState: { errors },
+	} = useForm<PropertyInputs>();
+
+	const addProperty = async (propertyData: PropertyInputs) => {
+		const uploadedImages = await loadFiles(); // ← now gets the result directly
+		propertyData.images = uploadedImages;
+
+		console.log("Final property data:", propertyData);
 
 		const storedUserData = JSON.parse(`${sessionStorage.getItem("User")}`);
-		const propertyData = {
-			name: propertyName,
-			location: propertyLocation,
-			type: propertyType,
-			description: propertyDescription,
-			images: propertyImageLink,
-			price: propertyPrice,
-			owner: storedUserData.data.userWithoutPassword._id,
-		};
+
+		console.log(propertyData);
 
 		try {
-			loadFile(event);
 			const token = `Bearer ${storedUserData.data.token}`;
 			console.log(token);
 			const request = await axios.post(`${API_URL}user/add-properties`, propertyData, {
@@ -45,103 +57,188 @@ export default function AddProperty() {
 			//console.log(propertyImageLink);
 			if (request.data.status === "Success") {
 				console.log("Property Added");
+				console.log(request.data);
 			}
 		} catch (error) {
 			console.log(error);
 		}
 	};
 
-	const loadFile = async (event: React.FormEvent) => {
-		event.preventDefault();
-		const imageData = new FormData();
+	const loadFiles = async (): Promise<string[]> => {
+		if (propertyImages.length === 0) return [];
 
-		imageData.append("file", propertyImage!);
-		imageData.append("upload_preset", "rentalpropertyupload");
-		try {
-			const request = await axios.post(
+		const uploadedUrls: string[] = [];
+
+		for (const image of propertyImages) {
+			const imageData = new FormData();
+			imageData.append("file", image);
+			imageData.append("upload_preset", "rentalpropertyupload");
+
+			const response = await axios.post(
 				"https://api.cloudinary.com/v1_1/dmiy3wi6r/image/upload",
 				imageData,
 			);
-			if (request.status === 200) {
-				console.log("Image Uploaded");
-				setPropertyImageLink(request.data.secure_url);
+
+			if (response.status === 200) {
+				uploadedUrls.push(response.data.secure_url);
 			}
-		} catch (error) {
-			console.log(error);
 		}
+
+		return uploadedUrls;
+	};
+
+	const loadImages = (event: React.ChangeEvent<HTMLInputElement>) => {
+		const files = event.target.files;
+		if (!files || files.length === 0) return;
+
+		const imageFiles = Array.from(files).filter((file) => file.type.startsWith("image/"));
+
+		setPropertyImages(imageFiles);
 	};
 
 	return (
 		<>
-			<form action="" onSubmit={(event) => addProperty(event)} className="text-gray-500 p-4">
+			<form action="" onSubmit={handleSubmit(addProperty)} className="text-gray-500 p-3">
 				<div>
-					<h2 className="text-xl font-bold mb-2 text-center text-fuchsia-800">Add new property</h2>
+					<h2 className="text-lg font-bold mb-2 text-center text-fuchsia-800">Add new property</h2>
 					<div className="lg:flex items-center gap-1">
-						<input
-							id="name"
-							className="w-full border mt-1 bg-fuchsia-500/5 border-gray-500/10 outline-none rounded py-2.5 px-3 focus:border-fuchsia-800"
-							type="text"
-							placeholder="Property Name"
-							required
-							value={propertyName}
-							onChange={(event) => setPropertyName(event?.target.value)}
-						/>
+						<div className="lg:w-1/2">
+							<label htmlFor="name" className="text-xs">
+								Property Name
+								{errors.name && <span className="text-red-500 text-xs"> ({errors.name.message}) </span>}
+							</label>
+							<input
+								id="name"
+								className="w-full border bg-fuchsia-500/5 border-gray-500/10 outline-none rounded py-2 text-xs px-3 focus:border-fuchsia-800"
+								type="text"
+								placeholder="Property Name"
+								{...register("name", {
+									required: { value: true, message: "Name is required" },
+									pattern: { value: /^[a-zA-Z\s]+$/, message: "Only characters are allowed" },
+									minLength: { value: 3, message: "Minimum 3 characters" },
+									maxLength: { value: 50, message: "Maximum 50 characters" },
+								})}
+							/>
+						</div>
 
-						<input
-							id="name"
-							className="w-full border mt-1 bg-fuchsia-500/5 border-gray-500/10 outline-none rounded py-2.5 px-3 focus:border-fuchsia-800"
-							type="text"
-							placeholder="Location of property"
-							required
-							value={propertyLocation}
-							onChange={(event) => setPropertyLocation(event?.target.value)}
-						/>
+						<div className="lg:w-1/2">
+							<label htmlFor="location" className="text-xs">
+								Property Location
+								{errors.location && (
+									<span className="text-red-500 text-xs"> ({errors.location.message}) </span>
+								)}
+							</label>
+							<input
+								id="location"
+								className="w-full border bg-fuchsia-500/5 border-gray-500/10 outline-none rounded py-2 text-xs px-3 focus:border-fuchsia-800"
+								type="text"
+								placeholder="Location of property"
+								{...register("location", {
+									required: { value: true, message: "Location is required" },
+									pattern: { value: /^[a-zA-Z\s]+$/, message: "Only characters are allowed" },
+									minLength: { value: 3, message: "Minimum 3 characters" },
+									maxLength: { value: 50, message: "Maximum 50 characters" },
+								})}
+							/>
+						</div>
 					</div>
 					<div className="lg:flex items-center gap-1">
-						<input
-							id="name"
-							className="w-full border mt-1 bg-fuchsia-500/5 border-gray-500/10 outline-none rounded py-2.5 px-3 focus:border-fuchsia-800"
-							type="text"
-							placeholder="Type of property"
-							required
-							value={propertyType}
-							onChange={(event) => setPropertyType(event?.target.value)}
-						/>
+						<div className="lg:w-1/2">
+							<label htmlFor="name" className="text-xs">
+								Property Type
+								{errors.type && <span className="text-red-500 text-xs"> ({errors.type.message}) </span>}
+							</label>
+							<select
+								id="propertyType"
+								className="w-full border bg-fuchsia-500/5 border-gray-500/10 outline-none rounded py-2 text-xs px-3 focus:border-fuchsia-800 scroll-smooth"
+								{...register("type", {
+									required: { value: true, message: "Type is required" },
+								})}
+							>
+								<option value="">Select property type</option>
+								{propertyTypeOptions.map((propertyOption) => {
+									return (
+										<option key={propertyOption.label} value={propertyOption.value}>
+											{propertyOption.label}
+										</option>
+									);
+								})}
+							</select>
+						</div>
 
-						<input
-							id="name"
-							className="w-full border mt-1 bg-fuchsia-500/5 border-gray-500/10 outline-none rounded py-2.5 px-3 focus:border-fuchsia-800"
-							type="text"
-							placeholder="000.00"
-							required
-							value={propertyPrice}
-							onChange={(event) => setPropertyPrice(event?.target.value)}
-						/>
+						<div className="lg:w-1/2">
+							<label htmlFor="price" className="text-xs">
+								Property Price
+								{errors.price && <span className="text-red-500 text-xs"> ({errors.price.message}) </span>}
+							</label>
+							<input
+								id="price"
+								className="w-full border bg-fuchsia-500/5 border-gray-500/10 outline-none rounded py-2 text-xs px-3 focus:border-fuchsia-800"
+								type="text"
+								placeholder="000.00"
+								{...register("price", {
+									required: { value: true, message: "Price is required" },
+									pattern: { value: /^\d+(\.\d{1,2})?$/, message: "Numbers only" },
+									minLength: { value: 1, message: "Minimum 1 characters" },
+									maxLength: { value: 10, message: "Maximum 10 characters" },
+								})}
+							/>
+						</div>
 					</div>
 
+					<label htmlFor="description" className="text-xs mt-2">
+						Property Description
+						{errors.description && (
+							<span className="text-red-500 text-xs"> ({errors.description.message}) </span>
+						)}
+					</label>
 					<textarea
-						name="description"
 						placeholder="Describe your property"
-						className="w-full border mt-1 bg-fuchsia-500/5 border-gray-500/10 outline-none rounded py-2.5 px-3 focus:border-fuchsia-800 resize-none mb-1"
-						value={propertyDescription}
-						onChange={(event) => setPropertyDescription(event?.target.value)}
+						className="w-full border bg-fuchsia-500/5 border-gray-500/10 outline-none rounded py-2 text-xs px-3 focus:border-fuchsia-800 resize-none mb-1"
+						{...register("description", {
+							required: { value: true, message: "Description is required" },
+						})}
 					></textarea>
 
-					<input
-						className="w-full border mb-2 bg-fuchsia-500/5 border-gray-500/10 outline-none rounded py-2.5 px-3 focus:border-fuchsia-800"
-						placeholder="Add Image"
-						type="file"
-						accept={`image/*`}
-						onChange={(event) => {
-							setPropertyImage(event.target.files?.[0]);
-						}}
-					/>
+					<div className="">
+						<label htmlFor="images" className="text-xs">
+							Add Property Images (max: 4)
+						</label>
+						<input
+							className="w-full border bg-fuchsia-500/5 border-gray-500/10 outline-none rounded py-2 text-xs px-3 focus:border-fuchsia-800 resize-none"
+							type="file"
+							multiple
+							accept="image/*"
+							{...register("images", {
+								required: "At least one image is required",
+								validate: {
+									isImage: (value) => {
+										if (!value || typeof value === "string") return "Only image files are allowed";
+
+										const files = Array.from(value as unknown as FileList);
+										const allImages = files.every((file) => file.type.startsWith("image/"));
+
+										return allImages || "Only image files are allowed";
+									},
+								},
+
+								// validate: {
+								// 	isImage: (files) =>
+								// 		Array.from(files || []).every((file) => file.type.startsWith("image/")) ||
+								// 		"Only image files are allowed",
+								// },
+							})}
+							onChange={(event) => {
+								loadImages(event);
+							}}
+						/>
+					</div>
 				</div>
 
 				<div>
 					<button
 						type="submit"
-						className="w-full bg-fuchsia-800 font-semibold hover:bg-custom-white-50 hover:text-fuchsia-800 hover:border-fuchsia-800 border transition-all py-2.5 rounded text-white cursor-pointer"
+						className="w-full bg-fuchsia-800 font-semibold hover:bg-custom-white-50 hover:text-fuchsia-800 hover:border-fuchsia-800 border transition-all py-2 rounded text-white cursor-pointer text-xs mt-2"
 					>
 						Add Property
 					</button>

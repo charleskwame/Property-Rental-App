@@ -15,25 +15,22 @@ export default function SpecificProperty() {
 	useEffect(() => {
 		const propertyDetails = async (propertyID: string) => {
 			//event.preventDefault();
-			const storedOwnerData = JSON.parse(`${sessionStorage.getItem("Owner")}`);
-			const token = `Bearer ${storedOwnerData.data.token}`;
-			const ownerID = storedOwnerData.data.ownerWithoutPassword._id;
+			const storedUserData = JSON.parse(`${sessionStorage.getItem("User")}`);
+			const token = `Bearer ${storedUserData.data.token}`;
+			const ownerID = storedUserData.data.userWithoutPassword._id;
 			// console.log(token);
 			// console.log(_id);
 			try {
-				const request = await axios.get(`${API_URL}owners/properties/${ownerID}/${propertyID}`, {
+				const request = await axios.get(`${API_URL}user/properties/${ownerID}/${propertyID}`, {
 					headers: {
 						"Content-Type": "application/json",
 						Authorization: token,
 					},
 				});
 				setProperty(request.data.message);
-				//console.log(request.data.message);
-				//sessionStorage.setItem("PropertyInViewing", JSON.stringify(request.data.message));
 			} catch (error) {
 				console.log(error);
 			}
-			//routerToGoToSpecificPropertyPage.push(`/properties-for-rent/${_id}`);
 		};
 
 		propertyDetails(`${params.property}`);
@@ -47,8 +44,8 @@ export default function SpecificProperty() {
 					<h1>{property?.description}</h1>
 					<h1>{property?.type}</h1>
 					<h1>{property?.location}</h1>
-					{property?.images && property.images.trim() !== "" && (
-						<Image src={property.images} alt={`Image of ${property.name}`} width={300} height={300} />
+					{property?.images && (
+						<Image src={property.images[0]} alt={`Image of ${property.name}`} width={300} height={300} />
 					)}
 					{/* <Image src={property?.images} alt={`Image of ${property?.name}`} width={300} height={300} /> */}
 				</div>

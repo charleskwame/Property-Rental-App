@@ -4,7 +4,7 @@ export interface PropertyInterFace {
 	location: string;
 	type: string;
 	description: string;
-	images: string;
+	images: string[];
 	price: string;
 	owner: string;
 }
