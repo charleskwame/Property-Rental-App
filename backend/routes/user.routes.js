@@ -18,6 +18,7 @@ import {
 	getUserDetailsForOwner,
 	getFavoritedProperties,
 	updateUserDetails,
+	sendReservationEmail,
 } from "../controllers/user.controller.js";
 
 const UserRouter = Router();
@@ -39,6 +40,7 @@ UserRouter.post("/verify-otp", authenticateUser, verifyOTP);
 UserRouter.get("/", getUserDetailsForOwner);
 UserRouter.get("/favorites/:userID", authenticateUser, getFavoritedProperties);
 UserRouter.put("/update-details/", authenticateUser, updateUserDetails);
+UserRouter.post("/send-reservation-email", authenticateUser, sendReservationEmail);
 
 // Renter specific routes
 

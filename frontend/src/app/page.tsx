@@ -92,46 +92,6 @@ export default function PropertiesForRent() {
 		routerToGoToSpecificPropertyPage.push(`/properties-for-rent/${_id}`);
 	};
 
-	// const addPropertyToFavorites = async (event: React.MouseEvent, propertyID: string) => {
-	// 	if (sessionStorage.getItem("User") !== null) {
-	// 		const storedUserData = JSON.parse(`${sessionStorage.getItem("User")}`);
-
-	// 		const token = `Bearer ${storedUserData.data.token}`;
-	// 		const userID = storedUserData.data.userWithoutPassword._id;
-
-	// 		const formData = {
-	// 			userID: userID,
-	// 			propertyID: propertyID,
-	// 		};
-
-	// 		try {
-	// 			const request = await axios.post(`${API_URL}user/properties/add-to-favorites`, formData, {
-	// 				headers: {
-	// 					"Content-Type": "application/json",
-	// 					Authorization: token,
-	// 				},
-	// 			});
-	// 			if (request.status === 200) {
-	// 				alert("Property added to favorites");
-	// 			}
-	// 			sessionStorage.setItem("User", JSON.stringify(request.data));
-	// 			//location.reload();
-	// 			//console.log(request);
-	// 		} catch (error) {
-	// 			console.log(error);
-	// 		}
-	// 	} else {
-	// 		routerToGoToLogIn.push("/login");
-	// 	}
-
-	// 	// console.log(token);
-	// 	// console.log(userID);
-	// };
-
-	// console.log(
-	// 	JSON.parse(`${sessionStorage.getItem("User")}`).data.userWithoutPassword.likedproperties,
-	// );
-
 	return (
 		<main className="">
 			<NavBar />
@@ -144,22 +104,15 @@ export default function PropertiesForRent() {
 				// <h1>Loading...</h1>
 				<div className="px-2 mt-5">
 					<h1 className="mb-2 text-xl font-semibold text-fuchsia-800">View Listings</h1>
-					<div className="grid grid-cols-2 lg:grid-cols-6 gap-1">
+					<div className={propertiesFetched.length > 0 ? `grid grid-cols-2 lg:grid-cols-6 gap-1` : ""}>
 						{propertiesFetched.length > 0 ? (
 							propertiesFetched.map((propertyFetched) => (
 								<div key={propertyFetched._id} className="relative w-fit">
-									{/* {sessionStorage.getItem("User") !== null && (
-									<HeartIcon
-										className="size-7 absolute top-2 right-2 fill-gray-200 hover:fill-red-500 hover:stroke-red-500 transition-all ease-in-out duration-300"
-										onClick={(event) => addPropertyToFavorites(event, propertyFetched._id)}
-									/>
-								)} */}
 									<div
 										className="rounded-3xl"
 										onClick={(event) => {
 											propertyDetails(event, propertyFetched._id);
-										}}
-									>
+										}}>
 										<Image
 											className="rounded-3xl border-2 border-gray-100 aspect-square"
 											src={propertyFetched.images[0]}
@@ -227,3 +180,52 @@ export default function PropertiesForRent() {
 	</div>
 )} */
 }
+
+{
+	/* {sessionStorage.getItem("User") !== null && (
+                                        <HeartIcon
+                                            className="size-7 absolute top-2 right-2 fill-gray-200 hover:fill-red-500 hover:stroke-red-500 transition-all ease-in-out duration-300"
+                                            onClick={(event) => addPropertyToFavorites(event, propertyFetched._id)}
+                                        />
+                                    )} */
+}
+
+// const addPropertyToFavorites = async (event: React.MouseEvent, propertyID: string) => {
+// 	if (sessionStorage.getItem("User") !== null) {
+// 		const storedUserData = JSON.parse(`${sessionStorage.getItem("User")}`);
+
+// 		const token = `Bearer ${storedUserData.data.token}`;
+// 		const userID = storedUserData.data.userWithoutPassword._id;
+
+// 		const formData = {
+// 			userID: userID,
+// 			propertyID: propertyID,
+// 		};
+
+// 		try {
+// 			const request = await axios.post(`${API_URL}user/properties/add-to-favorites`, formData, {
+// 				headers: {
+// 					"Content-Type": "application/json",
+// 					Authorization: token,
+// 				},
+// 			});
+// 			if (request.status === 200) {
+// 				alert("Property added to favorites");
+// 			}
+// 			sessionStorage.setItem("User", JSON.stringify(request.data));
+// 			//location.reload();
+// 			//console.log(request);
+// 		} catch (error) {
+// 			console.log(error);
+// 		}
+// 	} else {
+// 		routerToGoToLogIn.push("/login");
+// 	}
+
+// 	// console.log(token);
+// 	// console.log(userID);
+// };
+
+// console.log(
+// 	JSON.parse(`${sessionStorage.getItem("User")}`).data.userWithoutPassword.likedproperties,
+// );

@@ -14,6 +14,14 @@ import { ArrowUpOnSquareIcon, HeartIcon } from "@heroicons/react/24/outline";
 import { useRouter } from "next/navigation";
 import Toast from "@/components/toast.component";
 import { toast } from "react-toastify";
+import { useForm, SubmitHandler } from "react-hook-form";
+
+type ReservationDetails = {
+	date?: string;
+	time?: string;
+	propertyID?: string;
+	userID?: string;
+};
 
 export default function SpecificProperty() {
 	//const pathName = usePathname();
@@ -22,9 +30,19 @@ export default function SpecificProperty() {
 
 	const [property, setProperty] = useState<PropertyInterFace>();
 	const [user, setUser] = useState<User>();
+	const [selectedImage, setSelectedImage] = useState<string>();
+	const [isSelectedImage, setIsSelectedImage] = useState<boolean>(false);
+
 	//const routerToGoToSpecificPropertyPage = useRouter();
 	//const propertyRouter = useRouter();
 	//const { _id } = propertyRouter.query;
+
+	const {
+		register,
+		handleSubmit,
+		formState: { errors },
+	} = useForm();
+
 	useEffect(() => {
 		const propertyDetails = async (_id: string) => {
 			//event.preventDefault();
@@ -111,6 +129,42 @@ export default function SpecificProperty() {
 		}
 	};
 
+	const changeMainImage = (image: string) => {
+		setSelectedImage(image);
+		setIsSelectedImage(true);
+	};
+
+	const sendViewingRequestEmail = async (reservationData: ReservationDetails) => {
+		// event.preventDefault();
+		if (sessionStorage.getItem("User") !== null) {
+			const storedUserData = JSON.parse(`${sessionStorage.getItem("User")}`);
+
+			reservationData.propertyID = property?._id;
+			reservationData.userID = storedUserData.data.userWithoutPassword._id;
+			// const token = `Bearer ${user?.token}`;
+			const token = `Bearer ${storedUserData.data.token}`;
+
+			// console.log(reservationData);
+			try {
+				const request = await axios.post(`${API_URL}user/send-reservation-email`, reservationData, {
+					headers: {
+						"Content-Type": "application/json",
+						Authorization: token,
+					},
+				});
+				if (request.status === 200) {
+					toast.success("Viewing request sent");
+					//alert("Viewing request sent");
+				}
+			} catch (error) {
+				toast.error("Failed to send viewing request");
+				console.log(error);
+			}
+		} else {
+			routerToGoToLogIn.push("/login");
+		}
+	};
+
 	return (
 		<>
 			<NavBar />
@@ -123,15 +177,13 @@ export default function SpecificProperty() {
 						<div className="flex items-center justify-between">
 							<div
 								onClick={() => copyToClipboard(location.href)}
-								className="cursor-pointer flex items-center gap-1 hover:bg-fuchsia-800/15 hover:text-fuchsia-800 transition-all ease-in-out duration-300 px-2 py-1 rounded-lg"
-							>
+								className="cursor-pointer flex items-center gap-1 hover:bg-fuchsia-800/15 hover:text-fuchsia-800 transition-all ease-in-out duration-300 px-2 py-1 rounded-lg">
 								<ArrowUpOnSquareIcon className="size-5" />
 								<p>Share</p>
 							</div>
 							<div
 								onClick={(event) => addPropertyToFavorites(event, property!._id)}
-								className="cursor-pointer flex items-center gap-1 hover:bg-fuchsia-800/15 hover:text-fuchsia-800 transition-all ease-in-out duration-300 px-2 py-1 rounded-lg"
-							>
+								className="cursor-pointer flex items-center gap-1 hover:bg-fuchsia-800/15 hover:text-fuchsia-800 transition-all ease-in-out duration-300 px-2 py-1 rounded-lg">
 								<HeartIcon className="size-5" />
 								<p>Favorite</p>
 							</div>
@@ -142,42 +194,32 @@ export default function SpecificProperty() {
 							{property?.images && (
 								<div className="lg:flex items-start justify-center gap-1">
 									<div className="lg:w-[60%]">
+										{/* main image bigger */}
 										<img
-											src={property.images[0]}
+											src={selectedImage ? selectedImage : property.images[0]}
 											alt={`Image of ${property.name}`}
 											// fill={true}
-											className="rounded-lg lg:rounded-r-none"
+											className="rounded-lg"
 										/>
 									</div>
 									<div className="grid mt-1 lg:mt-0 grid-cols-4 lg:grid-cols-2 gap-1 lg:w-[40%]">
-										<img
-											src={property.images[0]}
-											alt={`Image of ${property.name}`}
-											// fill={true}
-
-											className="rounded-l-lg lg:rounded-none"
-										/>
-										<img
-											src={property.images[1]}
-											alt={`Image of ${property.name}`}
-											// fill={true}
-
-											className="lg:rounded-r-lg rounded-none"
-										/>
-										<img
-											src={property.images[2]}
-											alt={`Image of ${property.name}`}
-											// fill={true}
-
-											className="rounded-none"
-										/>
-										<img
-											src={property.images[3]}
-											alt={`Image of ${property.name}`}
-											// fill={true}
-
-											className="rounded-r-lg"
-										/>
+										{property.images.map((image, index) => {
+											return (
+												// smaller image thumbnails
+												<img
+													key={index}
+													src={image}
+													alt={`Image of ${property.name}`}
+													onClick={() => changeMainImage(image)}
+													// className="rounded-lg"
+													className={
+														selectedImage === image
+															? `rounded-lg border-1 border-fuchsia-800 opacity-50`
+															: `rounded-lg`
+													}
+												/>
+											);
+										})}
 									</div>
 								</div>
 							)}
@@ -196,16 +238,7 @@ export default function SpecificProperty() {
 								</div>
 								<div>
 									{/* <h1 className="font-semibold">Description</h1> */}
-									<p className="text-sm text-black/50">
-										{property?.description} Lorem ipsum dolor sit amet consectetur adipisicing elit. Dicta
-										placeat suscipit similique asperiores blanditiis odio sunt eius? Impedit dolore, dolorum
-										sequi doloremque laudantium repudiandae eaque esse quaerat molestiae, dolor voluptate!
-										Incidunt perferendis commodi ex perspiciatis ea consequuntur accusantium blanditiis nihil
-										deserunt dignissimos, iste nobis magni amet aliquid, quibusdam similique, quasi illum.
-										Quibusdam, fuga ex minus ducimus eligendi nobis sed voluptatem! At, laborum sed esse natus
-										dolor quidem incidunt porro, necessitatibus eius enim quisquam excepturi vitae maxime
-										sequi facere assumenda! Ipsa blanditiis sit modi fugit, enim ea officia iure libero odit.
-									</p>
+									<p className="text-sm text-black/50">{property?.description}</p>
 								</div>
 							</div>
 							<div className="bg-custom-white-50 text-gray-500  p-2 py-2 text-left text-sm rounded-lg shadow-[0px_0px_10px_0px] shadow-black/10 lg:w-[30%] h-fit">
@@ -216,9 +249,61 @@ export default function SpecificProperty() {
 								{/* <h1 className="font-semibold">Owner</h1> */}
 								<p className="text-sm text-black/50">Posted by {user?.name}</p>
 
-								<button className="w-full mt-3 bg-fuchsia-800 font-semibold hover:bg-custom-white-50 hover:text-fuchsia-800 hover:border-fuchsia-800 border transition-all py-2.5 rounded text-white cursor-pointer">
-									Reserve Viewing
-								</button>
+								<form action="" onSubmit={handleSubmit(sendViewingRequestEmail)}>
+									<div className="mt-3 grid gap-2">
+										<h1 className="font-semibold text-xs">Select Date and Time for Vieweing</h1>
+										<div className="flex items-start justify-between">
+											<div className="grid">
+												<input
+													type="date"
+													//name="date"
+													id=""
+													className="border rounded-lg border-fuchsia-800/10 p-2"
+													{...register("date", {
+														required: {
+															value: true,
+															message: "Date is required",
+														},
+													})}
+													//onChange={(event) => console.log(event.target.value)}
+												/>
+												<span className="text-red-500 text-xs">
+													{errors.date ? `(${errors.date!.message})` : ""}
+												</span>
+											</div>
+											<div className="grid">
+												<input
+													type="time"
+													//name="time"
+													id=""
+													className="border rounded-lg border-fuchsia-800/10 p-2"
+													{...register("time", {
+														required: {
+															value: true,
+															message: "Time is required",
+														},
+														min: {
+															value: "08:00",
+															message: "Min time - 8:00 am",
+														},
+														max: {
+															value: "18:00",
+															message: "Max time - 6:00 pm",
+														},
+													})}
+													placeholder="12:00 am"
+													//onChange={(event) => console.log(event.target.value)}
+												/>
+												<span className="text-red-500 text-xs container">
+													{errors.time ? `(${errors.time!.message})` : ""}
+												</span>
+											</div>
+										</div>
+									</div>
+									<button className="w-full mt-3 bg-fuchsia-800 font-semibold hover:bg-custom-white-50 hover:text-fuchsia-800 hover:border-fuchsia-800 border transition-all py-2.5 rounded text-white cursor-pointer">
+										Reserve Viewing
+									</button>
+								</form>
 							</div>
 
 							{/* <div>

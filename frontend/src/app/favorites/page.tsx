@@ -97,7 +97,7 @@ export default function FavoriteProperties() {
 			) : (
 				<div className="px-2 mt-5">
 					<h1 className="mb-2 text-xl font-semibold text-fuchsia-800">Favorites</h1>
-					<div className="grid grid-cols-2 lg:grid-cols-6 gap-2">
+					<div className={propertiesLoaded.length > 0 ? `grid grid-cols-2 lg:grid-cols-6 gap-2` : ""}>
 						{propertiesLoaded.length > 0 ? (
 							propertiesLoaded.map((property) => (
 								<div key={property._id} className="relative w-fit">
@@ -109,8 +109,7 @@ export default function FavoriteProperties() {
 										className="rounded-3xl"
 										onClick={(event) => {
 											propertyDetails(event, property._id);
-										}}
-									>
+										}}>
 										<Image
 											className="rounded-3xl border-2 border-gray-100 aspect-square"
 											src={property.images[0]}
@@ -125,8 +124,7 @@ export default function FavoriteProperties() {
 
 										<button
 											className="border border-red-500 text-red-500 w-full py-1 rounded-lg hover:bg-red-500 hover:text-white transition-all ease-in-out duration-300 mt-2 cursor-pointer"
-											onClick={(event) => removePropertyFromFavorites(event, property._id)}
-										>
+											onClick={(event) => removePropertyFromFavorites(event, property._id)}>
 											Remove Favorite
 										</button>
 									</div>
@@ -134,7 +132,7 @@ export default function FavoriteProperties() {
 							))
 						) : (
 							<h1 className="text-center text-xl font-semibold text-fuchsia-800 mt-10">
-								No properties found
+								No favorite properties found
 							</h1>
 						)}
 					</div>

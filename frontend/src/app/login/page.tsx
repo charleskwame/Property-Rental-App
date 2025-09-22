@@ -104,15 +104,15 @@ export default function SignUpRenter() {
 			{openLogIn ? (
 				// sign up form
 				<form
-					className="bg-custom-white-50 text-gray-500  p-3 text-left text-sm rounded-2xl shadow-[0px_0px_10px_0px] shadow-black/10 lg:max-w-1/3 w-[90%] fixed -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2"
+					className="bg-custom-white-50 text-gray-500  p-3 text-left text-sm rounded-2xl border border-fuchsia-800/10 lg:max-w-1/3 w-[90%] fixed -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2"
 					onSubmit={handleSubmit(handleSignUp)}
 				>
 					<div className="flex items-center gap-2 mb-1">
-						<Image src={Logo} alt="Rent Easy Logo" className="size-10" />
-						<h2 className="text-xl font-bold text-center text-fuchsia-800">Create an account</h2>
+						<Image src={Logo} alt="Rent Easy Logo" className="size-8" />
+						<h2 className="font-bold text-fuchsia-800 text-xl">Create an account</h2>
 					</div>
 
-					<div className="mt-1">
+					<div className="">
 						<label htmlFor="" className="text-xs">
 							User name
 							{errors.name && <span className="text-red-500 text-xs"> ({errors.name.message}) </span>}
@@ -173,7 +173,7 @@ export default function SignUpRenter() {
 							})}
 						/>
 					</div>
-
+					{/* 
 					<div className="mt-1">
 						<label htmlFor="" className="text-xs">
 							Phone Number
@@ -193,18 +193,18 @@ export default function SignUpRenter() {
 								maxLength: { value: 10, message: "Maximum 10 characters" },
 							})}
 						/>
-					</div>
+					</div> */}
 
 					<div className="mt-1">
 						<label htmlFor="" className="text-xs">
-							User Type
+							Registering as
 							{errors.usertype && (
 								<span className="text-red-500 text-xs"> ({errors.usertype.message})</span>
 							)}
 						</label>
 						<select
 							id="usertype"
-							className="w-full border mt-1uchsia-500/5 border-gray-500/10 outline-none rounded py-2.5 px-3 text-xs focus:border-fuchsia-800 mb-3"
+							className="w-full border border-fuchsia-800/10 outline-none rounded py-2.5 px-3 text-xs focus:border-fuchsia-800"
 							{...register("usertype", {
 								required: { value: true, message: "Usertype is required" },
 								pattern: { value: /^(renter|owner)$/, message: "Invalid usertype" },
@@ -214,18 +214,18 @@ export default function SignUpRenter() {
 						>
 							<option value="">Select Type</option>
 							<option value="renter">Renter</option>
-							<option value="owner">Owner</option>
+							<option value="owner">Property Owner</option>
 						</select>
 					</div>
 
 					<button
 						type="submit"
-						className="w-full bg-fuchsia-800 font-semibold hover:bg-custom-white-50 hover:text-fuchsia-800 hover:border-fuchsia-800 border transition-all py-2.5 rounded text-white cursor-pointer"
+						className="w-full bg-fuchsia-800 font-semibold hover:bg-custom-white-50 hover:text-fuchsia-800 hover:border-fuchsia-800 border transition-all py-2.5 rounded text-white cursor-pointer mt-2"
 					>
 						Create Account
 					</button>
 
-					<p className="text-center mt-2">
+					<p className="text-center mt-2 text-xs">
 						Already have an account?{" "}
 						<button
 							type="button"
@@ -240,7 +240,7 @@ export default function SignUpRenter() {
 				// log in form
 				<form
 					action=""
-					className="bg-custom-white-50 text-gray-500  p-3 text-left text-sm rounded-2xl shadow-[0px_0px_10px_0px] shadow-black/10 lg:max-w-1/3 w-[90%] fixed -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2"
+					className="bg-custom-white-50 text-gray-500  p-3 text-left text-sm rounded-2xl border border-fuchsia-800/10 lg:max-w-1/3 w-[90%] fixed -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2"
 					onSubmit={handleSubmit(handleLogIn)}
 				>
 					<div className="flex items-center gap-2 mb-1">

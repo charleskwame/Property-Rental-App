@@ -30,7 +30,7 @@ export const addUser = async (request, response, next) => {
 	const session = await mongoose.startSession();
 	session.startTransaction();
 	try {
-		const { name, email, password, phonenumber, usertype } = request.body;
+		const { name, email, password, usertype } = request.body;
 		const existingUser = await UserModel.findOne({ email });
 		if (existingUser) {
 			return response.status(400).json({ status: "Failed", message: "Account Already Registered" });
@@ -44,7 +44,7 @@ export const addUser = async (request, response, next) => {
 					name,
 					email,
 					password: hashedPassword,
-					phonenumber,
+					// phonenumber,
 					usertype,
 				},
 			],
@@ -474,6 +474,39 @@ export const updateUserDetails = async (request, response, next) => {
 		});
 	} catch (error) {
 		next(error);
+	}
+};
+
+export const sendReservationEmail = async (request, response) => {
+	const { date, time, propertyID, userID } = request.body;
+	const property = await PropertyModel.findOne({ _id: propertyID });
+	const user = await UserModel.findOne({ _id: userID });
+	const propertyOwner = await UserModel.findOne({ _id: property.owner });
+	//return response.json({ property, user, propertyOwner });
+	const mailList = [user.email, propertyOwner.email];
+	const mailOptionsToPropertyOwner = {
+		from: NODEMAILER_EMAIL,
+		to: mailList[1],
+		// bcc: mailList,
+		subject: "Viewing Request",
+		html: `<p>Viewing Request from ${user.name} to ${propertyOwner.name} for ${property.name} on ${date} at ${time}</p>`,
+	};
+	const mailOptionsToRenter = {
+		from: NODEMAILER_EMAIL,
+		to: mailList[0],
+		// bcc: mailList,
+		subject: "Copy of Viewing Request",
+		html: `<p>This is a copy of the viewing request sent to ${propertyOwner.name} from The Rent Easy Team on behalf of ${user.name} for property ${property.name} viewing on ${date} at ${time}</p>`,
+	};
+	try {
+		await transporter.sendMail(mailOptionsToPropertyOwner);
+		await transporter.sendMail(mailOptionsToRenter);
+		return response.status(200).json({
+			status: "Success",
+			message: "Email Sent",
+		});
+	} catch (error) {
+		throw new Error(error);
 	}
 };
 

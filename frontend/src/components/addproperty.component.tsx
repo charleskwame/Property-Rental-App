@@ -8,6 +8,8 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { useForm, SubmitHandler, set } from "react-hook-form";
 import propertyTypeOptions from "@/propertytypes";
+import { toast } from "react-toastify";
+import { Locations } from "@/lib/cities";
 
 type PropertyInputs = {
 	name?: string;
@@ -18,7 +20,6 @@ type PropertyInputs = {
 	price?: string;
 	owner?: string;
 };
-
 export default function AddProperty() {
 	//const routerToGoBackToLogIn = useRouter();
 	// const [propertyName, setPropertyName] = useState<string>("");
@@ -36,14 +37,17 @@ export default function AddProperty() {
 	} = useForm<PropertyInputs>();
 
 	const addProperty = async (propertyData: PropertyInputs) => {
-		const uploadedImages = await loadFiles(); // ← now gets the result directly
+		// console.log(propertyData);
+		// return;
+		const uploadedImages = await uploadFilesToCloudinary(); // ← now gets the result directly
 		propertyData.images = uploadedImages;
 
-		console.log("Final property data:", propertyData);
+		propertyData.owner = JSON.parse(`${sessionStorage.getItem("User")}`).data.userWithoutPassword._id;
+		//console.log("Final property data:", propertyData);
 
 		const storedUserData = JSON.parse(`${sessionStorage.getItem("User")}`);
 
-		console.log(propertyData);
+		//console.log(propertyData);
 
 		try {
 			const token = `Bearer ${storedUserData.data.token}`;
@@ -54,17 +58,26 @@ export default function AddProperty() {
 					Authorization: token,
 				},
 			});
+			toast.info("Adding property");
 			//console.log(propertyImageLink);
 			if (request.data.status === "Success") {
-				console.log("Property Added");
-				console.log(request.data);
+				toast.success("Property Added");
+				location.reload();
+				// console.log("Property Added");
+				// console.log(request.data);
+			} else {
+				toast.error("Failed to add property");
+				location.reload();
+				// console.log("Failed to add property");
 			}
 		} catch (error) {
 			console.log(error);
+			toast.error("Failed to add property");
+			location.reload();
 		}
 	};
 
-	const loadFiles = async (): Promise<string[]> => {
+	const uploadFilesToCloudinary = async (): Promise<string[]> => {
 		if (propertyImages.length === 0) return [];
 
 		const uploadedUrls: string[] = [];
@@ -78,9 +91,13 @@ export default function AddProperty() {
 				"https://api.cloudinary.com/v1_1/dmiy3wi6r/image/upload",
 				imageData,
 			);
-
+			toast.info("Uploading images");
 			if (response.status === 200) {
 				uploadedUrls.push(response.data.secure_url);
+				toast.success("Images uploaded successfully");
+			} else {
+				toast.error("Failed to upload images");
+				console.error("Failed to upload images:", response.data);
 			}
 		}
 
@@ -94,6 +111,29 @@ export default function AddProperty() {
 		const imageFiles = Array.from(files).filter((file) => file.type.startsWith("image/"));
 
 		setPropertyImages(imageFiles);
+	};
+
+	const numberofFilesSelected = (event: React.ChangeEvent<HTMLInputElement>) => {
+		event.preventDefault();
+		if (event.target.files && event.target.files.length > 4) {
+			toast.error("Maximum 4 files allowed, Please try again");
+			// alert("Maximum 4 files allowed, Please try again");
+			event.target.value = "";
+			setPropertyImages([]);
+		}
+	};
+
+	const fileSizeCheck = (event: React.ChangeEvent<HTMLInputElement>) => {
+		event.preventDefault();
+		for (const file of event.target.files!) {
+			if (file.size > 1 * 1024 * 1024) {
+				// alert("One or More files filesize exceeds 1MB");
+				toast.error("One or More files filesize exceeds 1MB");
+				event.target.value = "";
+				setPropertyImages([]);
+				return;
+			}
+		}
 	};
 
 	return (
@@ -128,18 +168,25 @@ export default function AddProperty() {
 									<span className="text-red-500 text-xs"> ({errors.location.message}) </span>
 								)}
 							</label>
-							<input
-								id="location"
-								className="w-full border bg-fuchsia-500/5 border-gray-500/10 outline-none rounded py-2 text-xs px-3 focus:border-fuchsia-800"
-								type="text"
-								placeholder="Location of property"
+							<select
+								className="w-full border bg-fuchsia-500/5 border-gray-500/10 outline-none rounded py-2 text-xs px-3 focus:border-fuchsia-800 scroll-smooth"
 								{...register("location", {
 									required: { value: true, message: "Location is required" },
-									pattern: { value: /^[a-zA-Z\s]+$/, message: "Only characters are allowed" },
-									minLength: { value: 3, message: "Minimum 3 characters" },
-									maxLength: { value: 50, message: "Maximum 50 characters" },
-								})}
-							/>
+								})}>
+								<option value="">Select Location</option>
+								{Locations.map((location) => (
+									<optgroup
+										key={location.region}
+										label={`${location.region}` + " Region"}
+										className="bg-fuchsia-800/5">
+										{location.cities.map((city) => (
+											<option key={city} value={city}>
+												{city}
+											</option>
+										))}
+									</optgroup>
+								))}
+							</select>
 						</div>
 					</div>
 					<div className="lg:flex items-center gap-1">
@@ -153,8 +200,7 @@ export default function AddProperty() {
 								className="w-full border bg-fuchsia-500/5 border-gray-500/10 outline-none rounded py-2 text-xs px-3 focus:border-fuchsia-800 scroll-smooth"
 								{...register("type", {
 									required: { value: true, message: "Type is required" },
-								})}
-							>
+								})}>
 								<option value="">Select property type</option>
 								{propertyTypeOptions.map((propertyOption) => {
 									return (
@@ -175,7 +221,7 @@ export default function AddProperty() {
 								id="price"
 								className="w-full border bg-fuchsia-500/5 border-gray-500/10 outline-none rounded py-2 text-xs px-3 focus:border-fuchsia-800"
 								type="text"
-								placeholder="000.00"
+								placeholder="000"
 								{...register("price", {
 									required: { value: true, message: "Price is required" },
 									pattern: { value: /^\d+(\.\d{1,2})?$/, message: "Numbers only" },
@@ -197,12 +243,12 @@ export default function AddProperty() {
 						className="w-full border bg-fuchsia-500/5 border-gray-500/10 outline-none rounded py-2 text-xs px-3 focus:border-fuchsia-800 resize-none mb-1"
 						{...register("description", {
 							required: { value: true, message: "Description is required" },
-						})}
-					></textarea>
+						})}></textarea>
 
 					<div className="">
 						<label htmlFor="images" className="text-xs">
-							Add Property Images (max: 4)
+							Add Property Images (max number: 4, max size: 1MB)
+							{errors.images && <span className="text-red-500 text-xs"> ({errors.images.message}) </span>}
 						</label>
 						<input
 							className="w-full border bg-fuchsia-500/5 border-gray-500/10 outline-none rounded py-2 text-xs px-3 focus:border-fuchsia-800 resize-none"
@@ -221,14 +267,10 @@ export default function AddProperty() {
 										return allImages || "Only image files are allowed";
 									},
 								},
-
-								// validate: {
-								// 	isImage: (files) =>
-								// 		Array.from(files || []).every((file) => file.type.startsWith("image/")) ||
-								// 		"Only image files are allowed",
-								// },
 							})}
 							onChange={(event) => {
+								numberofFilesSelected(event);
+								fileSizeCheck(event);
 								loadImages(event);
 							}}
 						/>
@@ -238,8 +280,7 @@ export default function AddProperty() {
 				<div>
 					<button
 						type="submit"
-						className="w-full bg-fuchsia-800 font-semibold hover:bg-custom-white-50 hover:text-fuchsia-800 hover:border-fuchsia-800 border transition-all py-2 rounded text-white cursor-pointer text-xs mt-2"
-					>
+						className="w-full bg-fuchsia-800 font-semibold hover:bg-custom-white-50 hover:text-fuchsia-800 hover:border-fuchsia-800 border transition-all py-2 rounded text-white cursor-pointer text-xs mt-2">
 						Add Property
 					</button>
 				</div>

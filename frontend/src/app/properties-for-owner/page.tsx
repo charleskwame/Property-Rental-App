@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { useRef } from "react";
 import { useState } from "react";
-import { XCircleIcon } from "@heroicons/react/24/outline";
+import { XCircleIcon, PlusCircleIcon } from "@heroicons/react/24/outline";
 
 export default function PropertiesForOwner() {
 	const routerToGoBackToLogIn = useRouter();
@@ -37,9 +37,10 @@ export default function PropertiesForOwner() {
 
 			<button
 				onClick={() => handleClickOpen()}
-				className="bg-fuchsia-800 font-semibold hover:bg-custom-white-50 hover:text-fuchsia-800 hover:border-fuchsia-800 border transition-all py-1.5 rounded text-white cursor-pointer mx-auto block mt-3 px-5"
+				className="bg-fuchsia-800 font-semibold hover:bg-custom-white-50 hover:text-fuchsia-800 hover:border-fuchsia-800 border transition-all py-1.5 rounded text-white cursor-pointer flex items-center mt-3 px-3 gap-1 mx-auto"
 			>
-				Add Property
+				<span>Add Property</span>
+				<PlusCircleIcon className="size-6" />
 			</button>
 
 			<dialog

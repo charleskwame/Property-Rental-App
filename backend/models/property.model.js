@@ -42,6 +42,7 @@ const PropertySchema = mongoose.Schema({
 		type: mongoose.Schema.Types.ObjectId,
 		ref: "UserModel",
 		index: true,
+		required: [true, "Owner not specified"],
 	},
 });
 
