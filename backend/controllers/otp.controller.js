@@ -9,6 +9,20 @@ import jwt from "jsonwebtoken";
 import { JWT_SECRET, JWT_EXPIRES_IN } from "../config/env.js";
 import UserModel from "../models/user.model.js";
 import OTPModel from "../models/otp.model.js";
+//import { createTransport } from "nodemailer";
+import { NODEMAILER_EMAIL, NODEMAILER_PASSWORD } from "../config/env.js";
+import nodemailer from "nodemailer";
+import { verificationSuccessTemplate } from "../emailtemplates/verificationsuccess.template.js";
+
+//creating nodemailer transport
+const transporter = nodemailer.createTransport({
+	service: "gmail",
+	secure: false,
+	auth: {
+		user: NODEMAILER_EMAIL,
+		pass: NODEMAILER_PASSWORD,
+	},
+});
 
 export const verifyOTP = async (request, response) => {
 	try {
@@ -53,6 +67,17 @@ export const verifyOTP = async (request, response) => {
 		const token = jwt.sign({ userID: updatedUser._id }, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
 
 		const { password: _, ...userWithoutPassword } = updatedUser.toObject();
+
+		const emailTemplate = verificationSuccessTemplate(updatedUser.name);
+
+		const mailOptions = {
+			from: NODEMAILER_EMAIL,
+			to: updatedUser.email,
+			subject: `Email Successfully Verified`,
+			html: emailTemplate,
+		};
+
+		await transporter.sendMail(mailOptions);
 
 		response.status(200).json({
 			status: "Success",

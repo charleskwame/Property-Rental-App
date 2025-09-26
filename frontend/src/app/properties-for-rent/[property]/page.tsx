@@ -10,11 +10,18 @@ import { PropertyInterFace } from "@/interfaces/property.interface";
 import { User } from "@/interfaces/user.interface";
 //import Image from "next/image";
 import NavBar from "@/components/navbar.component";
-import { ArrowUpOnSquareIcon, HeartIcon } from "@heroicons/react/24/outline";
+import {
+	ArrowUpOnSquareIcon,
+	HeartIcon,
+	HomeModernIcon,
+	BookOpenIcon,
+} from "@heroicons/react/24/outline";
 import { useRouter } from "next/navigation";
 import Toast from "@/components/toast.component";
 import { toast } from "react-toastify";
 import { useForm, SubmitHandler } from "react-hook-form";
+import ImageGallerySkeletonLoader from "@/components/imagegalleryskeleton.component";
+import { MapPin } from "lucide-react";
 
 type ReservationDetails = {
 	date?: string;
@@ -172,7 +179,10 @@ export default function SpecificProperty() {
 			{property !== null ? (
 				<main className="px-2 mt-5 lg:px-40">
 					<div className="flex items-center justify-between my-2">
-						<h1 className="font-semibold lg:text-xl">{property?.name}</h1>
+						<h1 className="font-semibold lg:text-xl text-fuchsia-800 flex items-center gap-1">
+							<HomeModernIcon className="size-6" />
+							{property?.name}
+						</h1>
 
 						<div className="flex items-center justify-between">
 							<div
@@ -191,7 +201,7 @@ export default function SpecificProperty() {
 					</div>
 					<div key={property?._id} className="">
 						<div className="flex items-center justify-center">
-							{property?.images && (
+							{property?.images ? (
 								<div className="lg:flex items-start justify-center gap-1">
 									<div className="lg:w-[60%]">
 										{/* main image bigger */}
@@ -200,6 +210,7 @@ export default function SpecificProperty() {
 											alt={`Image of ${property.name}`}
 											// fill={true}
 											className="rounded-lg"
+											loading="lazy"
 										/>
 									</div>
 									<div className="grid mt-1 lg:mt-0 grid-cols-4 lg:grid-cols-2 gap-1 lg:w-[40%]">
@@ -214,14 +225,16 @@ export default function SpecificProperty() {
 													// className="rounded-lg"
 													className={
 														selectedImage === image
-															? `rounded-lg border-1 border-fuchsia-800 opacity-50`
-															: `rounded-lg`
+															? `rounded-lg border-1 border-fuchsia-800 opacity-50 cursor-pointer`
+															: `rounded-lg cursor-pointer`
 													}
 												/>
 											);
 										})}
 									</div>
 								</div>
+							) : (
+								<ImageGallerySkeletonLoader />
 							)}
 						</div>
 						<div className="flex flex-col-reverse  lg:flex-row justify-between mt-2 gap-2 mb-5">
@@ -229,15 +242,19 @@ export default function SpecificProperty() {
 								<div className="flex items-center justify-between mb-2">
 									<div className="flex items-center justify-between">
 										{/* <h1 className="font-semibold">Property Type</h1> */}
-										<p className="text-sm text-black/50">Property Type: {property?.type}</p>
+										<p className="text-sm font-semibold text-fuchsia-800 first-letter:uppercase">
+											{property?.type}
+										</p>
 									</div>
 									<div className="flex items-center justify-between">
 										{/* <h1 className="font-semibold">Property Location</h1> */}
-										<p className="text-sm text-black/50">Located at {property?.location}</p>
+										<p className="text-sm text-fuchsia-800 font-semibold flex items-center gap-1">
+											<MapPin className="size-4" /> {property?.location}
+										</p>
 									</div>
 								</div>
 								<div>
-									{/* <h1 className="font-semibold">Description</h1> */}
+									<h1 className="font-semibold">Property Information</h1>
 									<p className="text-sm text-black/50">{property?.description}</p>
 								</div>
 							</div>
@@ -258,7 +275,7 @@ export default function SpecificProperty() {
 													type="date"
 													//name="date"
 													id=""
-													className="border rounded-lg border-fuchsia-800/10 p-2"
+													className="border rounded-lg border-fuchsia-800/10 p-2 text-fuchsia-800 font-semibold text-xs"
 													{...register("date", {
 														required: {
 															value: true,
@@ -276,7 +293,7 @@ export default function SpecificProperty() {
 													type="time"
 													//name="time"
 													id=""
-													className="border rounded-lg border-fuchsia-800/10 p-2"
+													className="border rounded-lg border-fuchsia-800/10 p-2 text-fuchsia-800 font-semibold text-xs"
 													{...register("time", {
 														required: {
 															value: true,
@@ -291,7 +308,7 @@ export default function SpecificProperty() {
 															message: "Max time - 6:00 pm",
 														},
 													})}
-													placeholder="12:00 am"
+
 													//onChange={(event) => console.log(event.target.value)}
 												/>
 												<span className="text-red-500 text-xs container">
@@ -300,7 +317,8 @@ export default function SpecificProperty() {
 											</div>
 										</div>
 									</div>
-									<button className="w-full mt-3 bg-fuchsia-800 font-semibold hover:bg-custom-white-50 hover:text-fuchsia-800 hover:border-fuchsia-800 border transition-all py-2.5 rounded text-white cursor-pointer">
+									<button className="w-full mt-3 bg-fuchsia-800 font-semibold hover:bg-custom-white-50 hover:text-fuchsia-800 hover:border-fuchsia-800 border-2 border-transparent transition-all py-2.5 rounded text-white cursor-pointer flex items-center justify-center gap-1 text-sm">
+										<BookOpenIcon className="size-5" />
 										Reserve Viewing
 									</button>
 								</form>

@@ -8,7 +8,7 @@ import { API_URL } from "@/config";
 import { PropertyInterFace } from "@/interfaces/property.interface";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { HeartIcon, UserCircleIcon } from "@heroicons/react/24/outline";
+import { HeartIcon, UserCircleIcon, MapPinIcon, HomeModernIcon } from "@heroicons/react/24/outline";
 import NavBar from "@/components/navbar.component";
 import SignUpRenter from "@/components/signup.component";
 import LoadingSpinner from "@/components/loadingspinner.component";
@@ -103,26 +103,40 @@ export default function PropertiesForRent() {
 			) : (
 				// <h1>Loading...</h1>
 				<div className="px-2 mt-5">
-					<h1 className="mb-2 text-xl font-semibold text-fuchsia-800">View Listings</h1>
-					<div className={propertiesFetched.length > 0 ? `grid grid-cols-2 lg:grid-cols-6 gap-1` : ""}>
+					<h1 className="mb-2 text-xl font-semibold text-fuchsia-800">Current Listings</h1>
+					<div className={propertiesFetched.length > 0 ? `grid grid-cols-2 lg:grid-cols-5 gap-1` : ""}>
 						{propertiesFetched.length > 0 ? (
 							propertiesFetched.map((propertyFetched) => (
-								<div key={propertyFetched._id} className="relative w-fit">
+								<div
+									key={propertyFetched._id}
+									className="relative w-fit cursor-pointer border-1 rounded-xl">
 									<div
-										className="rounded-3xl"
+										className="rounded-xl"
 										onClick={(event) => {
 											propertyDetails(event, propertyFetched._id);
 										}}>
 										<Image
-											className="rounded-3xl border-2 border-gray-100 aspect-square"
+											className=" border-2 border-gray-100 object-cover rounded-t-xl"
 											src={propertyFetched.images[0]}
 											alt={`Image of ${propertyFetched.name}`}
-											width={200}
+											//fill
+											width={400}
 											height={200}
 										/>
-										<div className="px-2">
-											<h1 className="font-semibold text-sm">{propertyFetched.name} </h1>
-											<p className="text-xs">GHc {propertyFetched.price}</p>
+										<div className="p-1 border rounded-b-xl grid gap-1">
+											<h1 className="font-semibold text-sm flex items-center gap-1 text-fuchsia-800">
+												<HomeModernIcon className="size-4" />
+												{propertyFetched.name}
+											</h1>
+											<div className="flex items-center justify-between">
+												<p className="text-xs flex items-center gap-1">
+													<MapPinIcon className="size-3" />
+													{propertyFetched.location}
+												</p>
+												<p className="text-xs font-semibold text-fuchsia-800">
+													GHc{propertyFetched.price} <small className="text-black">/month</small>
+												</p>
+											</div>
 										</div>
 									</div>
 								</div>

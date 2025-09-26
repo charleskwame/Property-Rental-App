@@ -7,6 +7,8 @@ import {
 	HeartIcon,
 	Cog8ToothIcon,
 	ArrowLeftEndOnRectangleIcon,
+	BookmarkIcon,
+	HomeModernIcon,
 } from "@heroicons/react/24/outline";
 import { GoToPageFunction } from "@/app/functions/gotoLogin.function";
 import { useRouter } from "next/navigation";
@@ -109,35 +111,44 @@ export default function NavBar() {
 									) : (
 										<div className="flex items-center gap-1 lg:gap-2 cursor-pointer">
 											<Link href={"/favorites"}>
-												<div className="text-xs lg:text-base flex items-center gap-1">
-													<HeartIcon className="size-4 lg:size-6" />
-													<p>Favorites</p>
-												</div>
+												<p className="text-xs lg:text-sm font-semibold flex items-center hover:text-fuchsia-800 transition-all duration-300 ease-in-out gap-1">
+													Saved
+													<span>
+														<BookmarkIcon className="size-4" />
+													</span>
+												</p>
 											</Link>
 
 											{isUserOwner && (
 												<Link href={"/properties-for-owner"}>
-													<div className="text-xs lg:text-base flex items-center gap-1">
-														<Cog8ToothIcon className="size-4 lg:size-6" />
-														<p>Properties</p>
-													</div>
+													<p className="text-xs lg:text-sm font-semibold flex items-center hover:text-fuchsia-800 transition-all duration-300 ease-in-out gap-1">
+														Properties
+														<span>
+															<HomeModernIcon className="size-4" />
+														</span>
+													</p>
 												</Link>
 											)}
 											<Link href={"/settings"}>
-												<div className="text-xs lg:text-base flex items-center gap-1">
-													<Cog8ToothIcon className="size-4 lg:size-6" />
-													<p>Settings</p>
-												</div>
+												<p className="text-xs lg:text-sm font-semibold flex items-center hover:text-fuchsia-800 transition-all duration-300 ease-in-out gap-1">
+													Settings
+													<span>
+														<Cog8ToothIcon className="size-4" />
+													</span>
+												</p>
 											</Link>
 
 											<div
 												className="text-xs lg:text-base flex items-center gap-1"
 												onClick={() => {
 													LogOut();
-												}}
-											>
-												<ArrowLeftEndOnRectangleIcon className="size-4 lg:size-6" />
-												<p>Log Out</p>
+												}}>
+												<p className="text-xs lg:text-sm font-semibold flex items-center hover:text-fuchsia-800 transition-all duration-300 ease-in-out">
+													Log Out
+													<span>
+														<ArrowLeftEndOnRectangleIcon className="size-4" />
+													</span>
+												</p>
 											</div>
 
 											<div className="rounded-full font-bold bg-fuchsia-800 text-custom-white-50 cursor-pointer w-7 h-7 lg:w-9 lg:h-9 flex items-center justify-center">

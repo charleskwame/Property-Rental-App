@@ -30,7 +30,7 @@ UserRouter.get("/properties/:propertyID", getPropertiesByID);
 UserRouter.get("/properties/:ownerID", authenticateUser, getOwnedProperties);
 UserRouter.get("/properties/:ownerID/:propertyID", authenticateUser, getOwnedPropertiesByID);
 UserRouter.post("/add-properties", authenticateUser, addProperty);
-UserRouter.put("/properties/:ownerID/:propertyID", authenticateUser, updateProperty);
+UserRouter.put("/properties/update/:propertyID", authenticateUser, updateProperty);
 UserRouter.delete("/properties/:ownerID/:propertyID", authenticateUser, deleteProperty);
 UserRouter.post("/send-otp", authenticateUser, sendUserOTP);
 UserRouter.post("/resend-otp", authenticateUser, resendUserOTP);

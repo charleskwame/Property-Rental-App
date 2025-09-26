@@ -9,6 +9,7 @@ const authenticateUser = async (request, response, next) => {
 		if (request.headers.authorization && request.headers.authorization.startsWith("Bearer")) {
 			token = request.headers.authorization.split(" ")[1];
 		}
+		//return response.json({ status: true, message: ` the token is ${token}` });
 		if (!token) {
 			return response.status(401).json({ status: false, message: "No token found" });
 		}

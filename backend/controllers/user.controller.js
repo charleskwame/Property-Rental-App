@@ -14,6 +14,7 @@ import nodemailer from "nodemailer";
 //import RenterOTPModel from "../models/otp.model.js";
 import UserModel from "../models/user.model.js";
 import OTPModel from "../models/otp.model.js";
+import { otpEmailTemplate } from "../emailtemplates/otpverification.template.js";
 
 //creating nodemailer transport
 const transporter = nodemailer.createTransport({
@@ -233,15 +234,17 @@ export const addProperty = async (request, response, next) => {
 export const updateProperty = async (request, response, next) => {
 	try {
 		const propertyID = request.params.propertyID;
-		const { name, location, type, description, images, price } = request.body;
+		const { name, type, description, price } = request.body;
+		// const { name, location, type, description, price } = request.body;
+		// const { name, location, type, description, images, price } = request.body;
 		const existingProperty = await PropertyModel.findByIdAndUpdate(
 			propertyID,
 			{
 				name,
-				location,
+				//location,
 				type,
 				description,
-				images,
+				// images,
 				price,
 			},
 			{ new: true, runValidators: true },
@@ -287,14 +290,18 @@ export const sendUserOTP = async (request, response) => {
 	const { userID, email } = request.body;
 	const otp = `${Math.floor(100000 + Math.random() * 900000)}`;
 
+	const userToVerify = await UserModel.findOne({ email: email });
+
+	const emailTemplate = otpEmailTemplate(otp, userToVerify.name);
+
 	const mailOptions = {
 		from: NODEMAILER_EMAIL,
 		to: email,
-		subject: "Your OTP",
-		html: `<b>${otp}</b>`,
+		subject: `Welcome To Rent Easy, Verify Your Email`,
+		html: emailTemplate,
 	};
 
-	//console.log(email);
+	// console.log(emailTemplate);
 
 	try {
 		const salt = await bcrypt.genSalt(10);

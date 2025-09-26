@@ -280,7 +280,7 @@ export default function AddProperty() {
 				<div>
 					<button
 						type="submit"
-						className="w-full bg-fuchsia-800 font-semibold hover:bg-custom-white-50 hover:text-fuchsia-800 hover:border-fuchsia-800 border transition-all py-2 rounded text-white cursor-pointer text-xs mt-2">
+						className="w-full bg-fuchsia-800 font-semibold hover:bg-custom-white-50 hover:text-fuchsia-800 border-fuchsia-800 transition-all py-2 rounded text-white cursor-pointer text-xs mt-2 border-2">
 						Add Property
 					</button>
 				</div>

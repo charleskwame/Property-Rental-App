@@ -8,11 +8,11 @@ type ToastProps = {
 export default function Toast() {
 	return (
 		<ToastContainer
-			autoClose={5000}
-			hideProgressBar={false}
+			autoClose={1000}
+			hideProgressBar={true}
 			newestOnTop={false}
 			closeOnClick={true}
-			limit={1}
+			limit={2}
 			rtl={false}
 			pauseOnFocusLoss
 			draggable

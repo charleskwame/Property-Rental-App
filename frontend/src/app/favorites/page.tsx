@@ -7,7 +7,7 @@ import { PropertyInterFace } from "@/interfaces/property.interface";
 import NavBar from "@/components/navbar.component";
 import LoadingSpinner from "@/components/loadingspinner.component";
 import Image from "next/image";
-import { HeartIcon } from "@heroicons/react/24/outline";
+import { BookmarkIcon, HeartIcon, HomeModernIcon, MapPinIcon } from "@heroicons/react/24/outline";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import Toast from "@/components/toast.component";
@@ -96,43 +96,57 @@ export default function FavoriteProperties() {
 				<LoadingSpinner message={`Loading Favorites`} />
 			) : (
 				<div className="px-2 mt-5">
-					<h1 className="mb-2 text-xl font-semibold text-fuchsia-800">Favorites</h1>
-					<div className={propertiesLoaded.length > 0 ? `grid grid-cols-2 lg:grid-cols-6 gap-2` : ""}>
+					<h1 className="mb-2 text-xl font-semibold text-fuchsia-800 flex items-center gap-1">
+						<BookmarkIcon className="size-5 fill-fuchsia-800" />
+						Saved Listings
+					</h1>
+					<div className={propertiesLoaded.length > 0 ? `grid grid-cols-2 lg:grid-cols-5 gap-2` : ""}>
 						{propertiesLoaded.length > 0 ? (
 							propertiesLoaded.map((property) => (
-								<div key={property._id} className="relative w-fit">
+								<div key={property._id} className="relative w-fit cursor-pointer border-1 rounded-xl">
+									{/* <div className="">
+									</div> */}
+									{/* <p className="text-xs ">
+										Remove
+									</p> */}
 									<HeartIcon
-										className="size-7 absolute top-2 right-2 fill-red-500 stroke-red-500 cursor-pointer"
+										className="size-8 fill-fuchsia-800 stroke-fuchsia-800 cursor-pointer flex items-center absolute top-1 right-1 gap-1 border-2 border-fuchsia-800 p-1 bg-fuchsia-800/20 text-fuchsia-800 font-semibold rounded-lg hover:bg-fuchsia-800 hover:fill-white hover:stroke-white transtion-all duration-300 ease-in-out"
 										onClick={(event) => removePropertyFromFavorites(event, property._id)}
 									/>
 									<div
-										className="rounded-3xl"
+										className="rounded-xl"
 										onClick={(event) => {
 											propertyDetails(event, property._id);
 										}}>
 										<Image
-											className="rounded-3xl border-2 border-gray-100 aspect-square"
+											className=" border-2 border-gray-100 object-cover rounded-t-xl"
 											src={property.images[0]}
 											alt={`Image of ${property.name}`}
-											width={200}
+											//fill
+											width={400}
 											height={200}
 										/>
-										<div className="px-2">
-											<h1 className="font-semibold text-sm">{property.name}</h1>
-											<p className="text-xs">GHc {property.price}</p>
+										<div className="p-1 border rounded-b-xl grid gap-1">
+											<h1 className="font-semibold text-sm flex items-center gap-1 text-fuchsia-800">
+												<HomeModernIcon className="size-4" />
+												{property.name}
+											</h1>
+											<div className="flex items-center justify-between">
+												<p className="text-xs flex items-center gap-1">
+													<MapPinIcon className="size-3" />
+													{property.location}
+												</p>
+												<p className="text-xs font-semibold text-fuchsia-800">
+													GHc{property.price} <small className="text-black">/month</small>
+												</p>
+											</div>
 										</div>
-
-										<button
-											className="border border-red-500 text-red-500 w-full py-1 rounded-lg hover:bg-red-500 hover:text-white transition-all ease-in-out duration-300 mt-2 cursor-pointer"
-											onClick={(event) => removePropertyFromFavorites(event, property._id)}>
-											Remove Favorite
-										</button>
 									</div>
 								</div>
 							))
 						) : (
 							<h1 className="text-center text-xl font-semibold text-fuchsia-800 mt-10">
-								No favorite properties found
+								You have not saved any listings to your account
 							</h1>
 						)}
 					</div>
@@ -141,3 +155,29 @@ export default function FavoriteProperties() {
 		</>
 	);
 }
+
+// <div key={property._id} className="relative w-fit cursor-pointer">
+// 	<div
+// 		className="rounded-3xl"
+// 		onClick={(event) => {
+// 			propertyDetails(event, property._id);
+// 		}}>
+// 		<Image
+// 			className="rounded-3xl border-2 border-gray-100 aspect-square"
+// 			src={property.images[0]}
+// 			alt={`Image of ${property.name}`}
+// 			width={200}
+// 			height={200}
+// 		/>
+// 		<div className="px-2">
+// 			<h1 className="font-semibold text-sm">{property.name}</h1>
+// 			<p className="text-xs">GHc {property.price}</p>
+// 		</div>
+
+// 		<button
+// 			className="border border-red-500 text-red-500 w-full py-1 rounded-lg hover:bg-red-500 hover:text-white transition-all ease-in-out duration-300 mt-2 cursor-pointer"
+// 			onClick={(event) => removePropertyFromFavorites(event, property._id)}>
+// 			Remove Favorite
+// 		</button>
+// 	</div>
+// </div>
