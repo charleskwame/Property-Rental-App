@@ -517,4 +517,110 @@ export const sendReservationEmail = async (request, response) => {
 	}
 };
 
+// export const filterProperties = async (request, response, next) => {
+// 	try {
+// 		// const { type, location } = request.query;
+// 		const type = request.query.type;
+// 		const location = request.query.location;
+// 		console.log({ type, location });
+// 		const matchingTypes = await PropertyModel.find({ type, location });
+// 		if (matchingTypes.length <= 0) {
+// 			return response.status(401).json({
+// 				status: "Failed",
+// 				message: `No ${type} properties found`,
+// 				data: [],
+// 			});
+// 		}
+// 		response.status(200).json({
+// 			status: "Success",
+// 			message: `Results for ${type} properties located at ${location}`,
+// 			data: matchingTypes,
+// 		});
+// 		// if (type !== "" && location === "") {
+// 		// }
+
+// 		if (type === "" && location !== "") {
+// 			const matchingLocations = await PropertyModel.find().where("location").equals(location);
+// 			if (!matchingLocations) {
+// 				return response.status(401).json({
+// 					status: "Failed",
+// 					message: `No property found in ${location}`,
+// 					data: [],
+// 				});
+// 			}
+// 			response.status(200).json({
+// 				status: "Success",
+// 				message: `Results for ${location} properties`,
+// 				data: matchingLocations,
+// 			});
+// 		}
+// 		//return response.json({ matchingTypes });
+// 		// if (!location) {
+// 		// 	// filter by type
+// 		// }
+// 		// if (!type) {
+// 		// 	// filter by location
+// 		// }
+// 		// if (type === "" && location === "") {
+// 		// 	return response.status(401).json({ status: "Success", message: "No filters applied" });
+// 		// }
+// 		// const matchingTypeAndLocation = await PropertyModel.find({ type: type, location: location });
+// 		// if (!matchingTypeAndLocation) {
+// 		// 	return response
+// 		// 		.status(401)
+// 		// 		.json({ status: "Failed", message: `No ${type} properties in ${location} found`, data: [] });
+// 		// }
+// 		// response.status(200).json({
+// 		// 	status: "Success",
+// 		// 	message: `Results for ${type} properties in ${location}`,
+// 		// 	data: matchingTypeAndLocation,
+// 		// });
+// 	} catch (error) {
+// 		next(error);
+// 	}
+// };
+
+export const filterProperties = async (request, response, next) => {
+	try {
+		const { type, location } = request.query;
+		let filter = {};
+
+		// Build dynamic filter based on query
+		if (type) filter.type = type;
+		if (location) filter.location = location;
+
+		// No filters provided
+		if (Object.keys(filter).length === 0) {
+			const results = await PropertyModel.find();
+			return response.status(200).json({
+				status: "Success",
+				message: `No filters applied. \n Please provide 'type' or 'location' to filter by.`,
+				data: results,
+			});
+		}
+
+		// Fetch properties with filters
+		const results = await PropertyModel.find(filter);
+
+		if (results.length === 0) {
+			return response.status(404).json({
+				status: "Failed",
+				message: `No properties found for the provided filters.`,
+				data: [],
+			});
+		}
+
+		// Success
+		response.status(200).json({
+			status: "Success",
+			message: `Found ${results.length} properties${type ? ` of type '${type}'` : ""}${
+				location ? ` in '${location}'` : ""
+			}.`,
+			data: results,
+		});
+	} catch (error) {
+		next(error);
+	}
+};
+
 //export default getProperties;

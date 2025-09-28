@@ -1,19 +1,40 @@
 "use client";
 import Link from "next/link";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useState } from "react";
-import axios from "axios";
+import axios, { isAxiosError } from "axios";
 import { API_URL } from "@/config";
 import { PropertyInterFace } from "@/interfaces/property.interface";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { HeartIcon, UserCircleIcon, MapPinIcon, HomeModernIcon } from "@heroicons/react/24/outline";
+import {
+	HeartIcon,
+	UserCircleIcon,
+	MapPinIcon,
+	HomeModernIcon,
+	XCircleIcon,
+} from "@heroicons/react/24/outline";
 import NavBar from "@/components/navbar.component";
 import SignUpRenter from "@/components/signup.component";
 import LoadingSpinner from "@/components/loadingspinner.component";
+import { useForm } from "react-hook-form";
+import propertyTypeOptions from "@/propertytypes";
+import { Locations } from "@/lib/cities";
+import { FilterIcon } from "lucide-react";
+
+type FilterInputs = {
+	type?: string;
+	location?: string;
+};
 
 export default function PropertiesForRent() {
+	const {
+		register,
+		handleSubmit,
+		formState: { errors },
+	} = useForm<FilterInputs>();
+
 	const routerToGoToSpecificPropertyPage = useRouter();
 	const routerToGoToLogIn = useRouter();
 	const routerToRefreshPage = useRouter();
@@ -24,6 +45,9 @@ export default function PropertiesForRent() {
 	const [favoritePropertiesFetched, setFavoritePropertiesFetched] = useState<PropertyInterFace[]>(
 		[],
 	);
+	const [apiResponseMessage, setApiResponseMessage] = useState<string>("");
+	const filterDialog = useRef(null);
+	const [openFilterDialog, setOpenFilterDialog] = useState<boolean>(false);
 	useEffect(() => {
 		const getProperties = async () => {
 			try {
@@ -38,6 +62,7 @@ export default function PropertiesForRent() {
 				if (request.status === 400) {
 					setPropertiesFetched([]);
 					setLoading(false);
+					setApiResponseMessage("No properties listed");
 				}
 			} catch (error) {
 				setLoading(false);
@@ -47,42 +72,42 @@ export default function PropertiesForRent() {
 
 		getProperties();
 
-		const unParsedRenterData = sessionStorage.getItem("Renter");
+		//const unParsedRenterData = sessionStorage.getItem("Renter");
 		//console.log(unParsedRenterData);
 
-		if (!unParsedRenterData) return;
+		//if (!unParsedRenterData) return;
 
-		const storedRenterData = JSON.parse(unParsedRenterData);
+		//const storedRenterData = JSON.parse(unParsedRenterData);
 		//const storedRenterData = JSON.parse(`${sessionStorage.getItem("Renter")}`);
 
-		const likedProperties = storedRenterData.data.renterWithoutPassword.likedproperties;
+		//const likedProperties = storedRenterData.data.renterWithoutPassword.likedproperties;
 
-		const fetchFavoriteProperties = async () => {
-			if (likedProperties.length === 0) return;
+		// const fetchFavoriteProperties = async () => {
+		// 	if (likedProperties.length === 0) return;
 
-			try {
-				setLoadingFavorites(true); // Start loading
+		// 	try {
+		// 		setLoadingFavorites(true); // Start loading
 
-				const requests = likedProperties.map((propertyID: string) =>
-					axios.get(`${API_URL}user/properties/${propertyID}`),
-				);
+		// 		const requests = likedProperties.map((propertyID: string) =>
+		// 			axios.get(`${API_URL}user/properties/${propertyID}`),
+		// 		);
 
-				const responses = await Promise.all(requests);
+		// 		const responses = await Promise.all(requests);
 
-				// Filter out only successful responses
-				const successfulData = responses
-					.filter((response) => response.data.status === "Success")
-					.map((response) => response.data.message);
+		// 		// Filter out only successful responses
+		// 		const successfulData = responses
+		// 			.filter((response) => response.data.status === "Success")
+		// 			.map((response) => response.data.message);
 
-				//console.log(successfulData);
-				setFavoritePropertiesFetched(successfulData);
-				setLoadingFavorites(false); // Stop loading
-			} catch (error) {
-				console.error("Failed to fetch some favorite properties", error);
-				setLoadingFavorites(false);
-			}
-		};
-		fetchFavoriteProperties();
+		// 		//console.log(successfulData);
+		// 		setFavoritePropertiesFetched(successfulData);
+		// 		setLoadingFavorites(false); // Stop loading
+		// 	} catch (error) {
+		// 		console.error("Failed to fetch some favorite properties", error);
+		// 		setLoadingFavorites(false);
+		// 	}
+		// };
+		// fetchFavoriteProperties();
 		// if (sessionStorage.getItem("Renter") !== null) {
 		// }
 	}, []);
@@ -90,6 +115,39 @@ export default function PropertiesForRent() {
 	const propertyDetails = async (event: React.MouseEvent, _id: string) => {
 		event.preventDefault();
 		routerToGoToSpecificPropertyPage.push(`/properties-for-rent/${_id}`);
+	};
+
+	const handleOpenFilterDialog = () => {
+		setOpenFilterDialog(true);
+		(filterDialog.current as HTMLDialogElement | null)?.showModal();
+	};
+
+	const handleCloseFilterDialog = () => {
+		setOpenFilterDialog(false);
+		(filterDialog.current as HTMLDialogElement | null)?.close();
+	};
+
+	const setFilters = async (filterData: FilterInputs) => {
+		try {
+			const request = await axios.post(
+				`${API_URL}user/properties/filter?type=${filterData.type}&location=${filterData.location}`,
+			);
+			if (request.status === 200) {
+				setPropertiesFetched(request.data.data);
+			}
+			//console.log(request);
+			//handleCloseFilterDialog();
+		} catch (error) {
+			if (axios.isAxiosError(error) && error.response) {
+				const { status, data } = error.response;
+				if (status === 400 || status === 404) {
+					setPropertiesFetched([]);
+					setApiResponseMessage(data.message);
+				}
+			}
+			console.log(error);
+			//handleCloseFilterDialog();
+		}
 	};
 
 	return (
@@ -102,9 +160,90 @@ export default function PropertiesForRent() {
 				<LoadingSpinner message={"Loading Properties"} />
 			) : (
 				// <h1>Loading...</h1>
-				<div className="px-2 mt-5">
-					<h1 className="mb-2 text-xl font-semibold text-fuchsia-800">Current Listings</h1>
-					<div className={propertiesFetched.length > 0 ? `grid grid-cols-2 lg:grid-cols-5 gap-1` : ""}>
+				<div className="px-2 mt-3">
+					<div className={openFilterDialog ? "mb-0" : "mb-3"}>
+						<div className="flex items-center justify-between">
+							<h1 className="text-xl font-semibold text-fuchsia-800">Current Listings</h1>
+
+							<button
+								className="flex items-center gap-1 text-sm font-semibold border-2 px-3 py-1 rounded-lg bg-fuchsia-800 text-white border-fuchsia-800 cursor-pointer hover:text-fuchsia-800 hover:bg-fuchsia-800/10 transition-all duration-300 ease-in-out"
+								onClick={() => handleOpenFilterDialog()}>
+								Filter Listings
+								<FilterIcon className="size-4" />
+							</button>
+						</div>
+						{/* filter dialog */}
+						<div
+							// ref={filterDialog}
+							// open={openFilterDialog}
+							className={
+								openFilterDialog
+									? `p-3 rounded-lg animate-jump-in w-[95%] md:w-fit border-1 mt-2 mx-auto fixed bg-white left-1/2 -translate-x-1/2 duration-500`
+									: `hidden`
+							}>
+							<XCircleIcon
+								className="size-6 absolute -top-[6%] -right-[2%] md:-top-[15%] md:-right-[2%] fill-red-500 stroke-white cursor-pointer hover:fill-white hover:stroke-red-500 transition-all duration-300 ease-in-out"
+								onClick={() => handleCloseFilterDialog()}
+							/>
+							<form onSubmit={handleSubmit(setFilters)} className="">
+								{/* type filter */}
+								<div className="md:flex items-center md:justify-center grid gap-2">
+									<div className="flex gap-1">
+										<select
+											id="propertyType"
+											className="w-full md:w-2/4 border bg-fuchsia-500/5 border-gray-500/10 outline-none rounded py-2 text-xs px-3 focus:border-fuchsia-800 scroll-smooth"
+											{...register("type", {
+												// required: { value: true, message: "Type is required" },
+											})}>
+											<option value="">Property type</option>
+											{propertyTypeOptions.map((propertyOption) => {
+												return (
+													<option key={propertyOption.label} value={propertyOption.value}>
+														{propertyOption.label}
+													</option>
+												);
+											})}
+										</select>
+										{/* <hr className="w-5 h-[2px] bg-fuchsia-800/20" />
+							<p>or</p>
+							<hr className="w-5 h-[2px] bg-fuchsia-800/20" /> */}
+										{/* location filter */}
+										<select
+											className="w-full md:w-2/4 border bg-fuchsia-500/5 border-gray-500/10 outline-none rounded py-2 text-xs px-3 focus:border-fuchsia-800 scroll-smooth"
+											{...register("location", {
+												// required: { value: true, message: "Location is required" },
+											})}>
+											<option value="">Location</option>
+											{Locations.map((location) => (
+												<optgroup
+													key={location.region}
+													label={`${location.region}` + " Region"}
+													className="bg-fuchsia-800/5">
+													{location.cities.map((city) => (
+														<option key={city} value={city}>
+															{city}
+														</option>
+													))}
+												</optgroup>
+											))}
+										</select>
+									</div>
+									<button className="bg-fuchsia-800 font-semibold hover:bg-custom-white-50 hover:text-fuchsia-800 border-fuchsia-800 border-1 transition-all py-1 rounded text-white cursor-pointer px-3 text-center">
+										Apply Filters
+									</button>
+								</div>
+							</form>
+						</div>
+					</div>
+					<div
+						className={
+							propertiesFetched.length > 0
+								? `grid grid-cols-2 lg:grid-cols-5 gap-1${
+										openFilterDialog &&
+										"transition-all ease-in-out duration-300 translate-y-[120px] md:translate-y-20"
+								  }`
+								: ""
+						}>
 						{propertiesFetched.length > 0 ? (
 							propertiesFetched.map((propertyFetched) => (
 								<div
@@ -142,8 +281,12 @@ export default function PropertiesForRent() {
 								</div>
 							))
 						) : (
-							<h1 className="text-center text-xl font-semibold text-fuchsia-800 mt-10">
-								No properties found
+							<h1
+								className={`text-center text-xs lg:text-lg font-semibold text-fuchsia-800 mt-10 ${
+									openFilterDialog &&
+									"transition-all ease-in-out duration-300 translate-y-32 md:translate-y-20"
+								}`}>
+								{apiResponseMessage}
 							</h1>
 						)}
 					</div>

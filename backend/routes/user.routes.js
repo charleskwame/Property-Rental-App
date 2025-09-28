@@ -19,6 +19,7 @@ import {
 	getFavoritedProperties,
 	updateUserDetails,
 	sendReservationEmail,
+	filterProperties,
 } from "../controllers/user.controller.js";
 
 const UserRouter = Router();
@@ -30,6 +31,7 @@ UserRouter.get("/properties/:propertyID", getPropertiesByID);
 UserRouter.get("/properties/:ownerID", authenticateUser, getOwnedProperties);
 UserRouter.get("/properties/:ownerID/:propertyID", authenticateUser, getOwnedPropertiesByID);
 UserRouter.post("/add-properties", authenticateUser, addProperty);
+UserRouter.post("/properties/filter", filterProperties);
 UserRouter.put("/properties/update/:propertyID", authenticateUser, updateProperty);
 UserRouter.delete("/properties/:ownerID/:propertyID", authenticateUser, deleteProperty);
 UserRouter.post("/send-otp", authenticateUser, sendUserOTP);
