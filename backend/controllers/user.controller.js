@@ -15,6 +15,7 @@ import nodemailer from "nodemailer";
 import UserModel from "../models/user.model.js";
 import OTPModel from "../models/otp.model.js";
 import { otpEmailTemplate } from "../emailtemplates/otpverification.template.js";
+import ReservationsModel from "../models/reservations.model.js";
 
 //creating nodemailer transport
 const transporter = nodemailer.createTransport({
@@ -397,8 +398,8 @@ export const removePropertyFromFavorites = async (request, response) => {
 // function to get owner email, name and phone number
 export const getUserDetailsForOwner = async (request, response, next) => {
 	try {
-		const ownerID = request.params.ownerID;
-		const foundUser = await UserModel.findOne({ ownerID });
+		const userID = request.params.userID;
+		const foundUser = await UserModel.findOne({ userID });
 		if (!foundUser) {
 			return response
 				.status(400)
@@ -506,6 +507,21 @@ export const sendReservationEmail = async (request, response) => {
 		html: `<p>This is a copy of the viewing request sent to ${propertyOwner.name} from The Rent Easy Team on behalf of ${user.name} for property ${property.name} viewing on ${date} at ${time}</p>`,
 	};
 	try {
+		const reservation = await ReservationsModel.create({
+			madeBy: { clientID: user._id, clientName: user.name },
+			propertyToView: { propertyID: property._id, propertyName: property.name },
+			propertyOwner: { propertyOwnerID: propertyOwner._id, propertyOwnerName: propertyOwner.name },
+			date: date,
+			time: time,
+			status: "Pending",
+		});
+		if (!reservation) {
+			return response.status(400).json({
+				status: "Failed",
+				message: "Reservation not created",
+			});
+		}
+		await PropertyModel.updateOne({ _id: propertyID }, { $pull: { viewingTimes: time } });
 		await transporter.sendMail(mailOptionsToPropertyOwner);
 		await transporter.sendMail(mailOptionsToRenter);
 		return response.status(200).json({
@@ -516,69 +532,6 @@ export const sendReservationEmail = async (request, response) => {
 		throw new Error(error);
 	}
 };
-
-// export const filterProperties = async (request, response, next) => {
-// 	try {
-// 		// const { type, location } = request.query;
-// 		const type = request.query.type;
-// 		const location = request.query.location;
-// 		console.log({ type, location });
-// 		const matchingTypes = await PropertyModel.find({ type, location });
-// 		if (matchingTypes.length <= 0) {
-// 			return response.status(401).json({
-// 				status: "Failed",
-// 				message: `No ${type} properties found`,
-// 				data: [],
-// 			});
-// 		}
-// 		response.status(200).json({
-// 			status: "Success",
-// 			message: `Results for ${type} properties located at ${location}`,
-// 			data: matchingTypes,
-// 		});
-// 		// if (type !== "" && location === "") {
-// 		// }
-
-// 		if (type === "" && location !== "") {
-// 			const matchingLocations = await PropertyModel.find().where("location").equals(location);
-// 			if (!matchingLocations) {
-// 				return response.status(401).json({
-// 					status: "Failed",
-// 					message: `No property found in ${location}`,
-// 					data: [],
-// 				});
-// 			}
-// 			response.status(200).json({
-// 				status: "Success",
-// 				message: `Results for ${location} properties`,
-// 				data: matchingLocations,
-// 			});
-// 		}
-// 		//return response.json({ matchingTypes });
-// 		// if (!location) {
-// 		// 	// filter by type
-// 		// }
-// 		// if (!type) {
-// 		// 	// filter by location
-// 		// }
-// 		// if (type === "" && location === "") {
-// 		// 	return response.status(401).json({ status: "Success", message: "No filters applied" });
-// 		// }
-// 		// const matchingTypeAndLocation = await PropertyModel.find({ type: type, location: location });
-// 		// if (!matchingTypeAndLocation) {
-// 		// 	return response
-// 		// 		.status(401)
-// 		// 		.json({ status: "Failed", message: `No ${type} properties in ${location} found`, data: [] });
-// 		// }
-// 		// response.status(200).json({
-// 		// 	status: "Success",
-// 		// 	message: `Results for ${type} properties in ${location}`,
-// 		// 	data: matchingTypeAndLocation,
-// 		// });
-// 	} catch (error) {
-// 		next(error);
-// 	}
-// };
 
 export const filterProperties = async (request, response, next) => {
 	try {
@@ -617,6 +570,67 @@ export const filterProperties = async (request, response, next) => {
 				location ? ` in '${location}'` : ""
 			}.`,
 			data: results,
+		});
+	} catch (error) {
+		next(error);
+	}
+};
+
+export const getReservationsForOwner = async (request, response, next) => {
+	try {
+		const ownerID = request.params.ownerID;
+		const reservations = await ReservationsModel.find({
+			"propertyOwner.propertyOwnerID": ownerID,
+		});
+
+		if (!reservations) {
+			return response.status(400).json({
+				status: "Failed",
+				message: "No reservations found",
+			});
+		}
+		response.status(200).json({ status: "Success", message: reservations });
+	} catch (error) {
+		next(error);
+	}
+};
+
+export const updateReservationStatus = async (request, response, next) => {
+	try {
+		const { reservationID, status } = request.body;
+		const existingReservation = await ReservationsModel.findByIdAndUpdate(
+			reservationID,
+			{ status },
+			{
+				new: true,
+				runValidators: true,
+			},
+		);
+		const user = await UserModel.findOne(existingReservation.madeBy.clientID);
+		const propertyOwner = await UserModel.findOne(existingReservation.propertyOwner.propertyOwnerID);
+
+		const mailList = [user.email, propertyOwner.email];
+		const mailOptionsToPropertyOwner = {
+			from: NODEMAILER_EMAIL,
+			to: mailList[0],
+			// bcc: mailList,
+			subject: "update on viewing Request",
+			html:
+				existingReservation.status === "Accepted"
+					? `<p>Your request to view ${existingReservation.propertyToView.propertyName} has been ${existingReservation.status}. The time for viewing is ${existingReservation.time}.</p>`
+					: `<p>Your request to view ${existingReservation.propertyToView.propertyName} has been ${existingReservation.status}</p>`,
+		};
+		const mailOptionsToRenter = {
+			from: NODEMAILER_EMAIL,
+			to: mailList[1],
+			// bcc: mailList,
+			subject: "Copy of update on Viewing Request",
+			html: `<p>You have ${existingReservation.status} the viewing request from ${user.name}. The time for viewing is ${existingReservation.time} on ${existingReservation.date}</p>`,
+		};
+		await transporter.sendMail(mailOptionsToPropertyOwner);
+		await transporter.sendMail(mailOptionsToRenter);
+		return response.json({
+			message: "All done",
 		});
 	} catch (error) {
 		next(error);

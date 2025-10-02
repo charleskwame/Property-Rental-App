@@ -7,4 +7,5 @@ export interface PropertyInterFace {
 	images: string[];
 	price: string;
 	owner: string;
+	viewingTimes: string[];
 }

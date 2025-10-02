@@ -114,7 +114,7 @@ export default function NavBar() {
 												<p className="text-xs lg:text-sm font-semibold flex items-center hover:text-fuchsia-800 transition-all duration-300 ease-in-out gap-1">
 													Saved
 													<span>
-														<BookmarkIcon className="size-4" />
+														<BookmarkIcon className="size-4 stroke-2" />
 													</span>
 												</p>
 											</Link>
@@ -122,9 +122,9 @@ export default function NavBar() {
 											{isUserOwner && (
 												<Link href={"/properties-for-owner"}>
 													<p className="text-xs lg:text-sm font-semibold flex items-center hover:text-fuchsia-800 transition-all duration-300 ease-in-out gap-1">
-														Properties
+														Dashboard
 														<span>
-															<HomeModernIcon className="size-4" />
+															<HomeModernIcon className="size-4 stroke-2" />
 														</span>
 													</p>
 												</Link>
@@ -133,7 +133,7 @@ export default function NavBar() {
 												<p className="text-xs lg:text-sm font-semibold flex items-center hover:text-fuchsia-800 transition-all duration-300 ease-in-out gap-1">
 													Settings
 													<span>
-														<Cog8ToothIcon className="size-4" />
+														<Cog8ToothIcon className="size-4 stroke-2" />
 													</span>
 												</p>
 											</Link>
@@ -146,7 +146,7 @@ export default function NavBar() {
 												<p className="text-xs lg:text-sm font-semibold flex items-center hover:text-fuchsia-800 transition-all duration-300 ease-in-out">
 													Log Out
 													<span>
-														<ArrowLeftEndOnRectangleIcon className="size-4" />
+														<ArrowLeftEndOnRectangleIcon className="size-4 stroke-2" />
 													</span>
 												</p>
 											</div>

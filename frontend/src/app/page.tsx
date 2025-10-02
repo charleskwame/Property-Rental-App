@@ -162,11 +162,13 @@ export default function PropertiesForRent() {
 				// <h1>Loading...</h1>
 				<div className="px-2 mt-3">
 					<div className={openFilterDialog ? "mb-0" : "mb-3"}>
-						<div className="flex items-center justify-between">
-							<h1 className="text-xl font-semibold text-fuchsia-800">Current Listings</h1>
+						<div className="flex justify-between">
+							<h1 className="text-sm md:text-base font-bold text-fuchsia-800 self-end">
+								Current Listings
+							</h1>
 
 							<button
-								className="flex items-center gap-1 text-sm font-semibold border-2 px-3 py-1 rounded-lg bg-fuchsia-800 text-white border-fuchsia-800 cursor-pointer hover:text-fuchsia-800 hover:bg-fuchsia-800/10 transition-all duration-300 ease-in-out"
+								className="flex items-center gap-1 text-xs font-semibold border-2 px-2 py-1 rounded-lg bg-fuchsia-800 text-white border-fuchsia-800 cursor-pointer hover:text-fuchsia-800 hover:bg-fuchsia-800/10 transition-all duration-300 ease-in-out"
 								onClick={() => handleOpenFilterDialog()}>
 								Filter Listings
 								<FilterIcon className="size-4" />
@@ -178,7 +180,7 @@ export default function PropertiesForRent() {
 							// open={openFilterDialog}
 							className={
 								openFilterDialog
-									? `p-3 rounded-lg animate-jump-in w-[95%] md:w-fit border-1 mt-2 mx-auto fixed bg-white left-1/2 -translate-x-1/2 duration-500`
+									? `p-1 rounded-lg animate-jump-in w-[95%] md:w-fit border-1 mt-2 mx-auto fixed bg-white left-1/2 -translate-x-1/2 duration-500`
 									: `hidden`
 							}>
 							<XCircleIcon
@@ -186,6 +188,9 @@ export default function PropertiesForRent() {
 								onClick={() => handleCloseFilterDialog()}
 							/>
 							<form onSubmit={handleSubmit(setFilters)} className="">
+								<p className="text-xs font-semibold mb-1 text-fuchsia-800">
+									Filter your search to find the perfect property
+								</p>
 								{/* type filter */}
 								<div className="md:flex items-center md:justify-center grid gap-2">
 									<div className="flex gap-1">
@@ -195,7 +200,7 @@ export default function PropertiesForRent() {
 											{...register("type", {
 												// required: { value: true, message: "Type is required" },
 											})}>
-											<option value="">Property type</option>
+											<option value="">All Types</option>
 											{propertyTypeOptions.map((propertyOption) => {
 												return (
 													<option key={propertyOption.label} value={propertyOption.value}>
@@ -213,7 +218,7 @@ export default function PropertiesForRent() {
 											{...register("location", {
 												// required: { value: true, message: "Location is required" },
 											})}>
-											<option value="">Location</option>
+											<option value="">All Locations</option>
 											{Locations.map((location) => (
 												<optgroup
 													key={location.region}
@@ -228,7 +233,7 @@ export default function PropertiesForRent() {
 											))}
 										</select>
 									</div>
-									<button className="bg-fuchsia-800 font-semibold hover:bg-custom-white-50 hover:text-fuchsia-800 border-fuchsia-800 border-1 transition-all py-1 rounded text-white cursor-pointer px-3 text-center">
+									<button className="bg-fuchsia-800 font-semibold hover:bg-custom-white-50 hover:text-fuchsia-800 border-fuchsia-800 border-2 transition-all py-1 rounded text-white cursor-pointer px-3 text-center text-sm">
 										Apply Filters
 									</button>
 								</div>
@@ -238,7 +243,7 @@ export default function PropertiesForRent() {
 					<div
 						className={
 							propertiesFetched.length > 0
-								? `grid grid-cols-2 lg:grid-cols-5 gap-1${
+								? `grid grid-cols-2 lg:grid-cols-5 gap-1 ${
 										openFilterDialog &&
 										"transition-all ease-in-out duration-300 translate-y-[120px] md:translate-y-20"
 								  }`
@@ -246,9 +251,50 @@ export default function PropertiesForRent() {
 						}>
 						{propertiesFetched.length > 0 ? (
 							propertiesFetched.map((propertyFetched) => (
+								// <div
+								// 	key={propertyFetched._id}
+								// 	className="relative w-[400px] h-[360px] md:w-fit md:h-fit cursor-pointer border rounded-xl flex flex-col overflow-hidden">
+								// 	<div
+								// 		className="flex flex-col h-full"
+								// 		onClick={(event) => propertyDetails(event, propertyFetched._id)}>
+								// 		{/* Image Section */}
+								// 		<Image
+								// 			className="object-cover rounded-t-xl"
+								// 			src={propertyFetched.images[0]}
+								// 			alt={`Image of ${propertyFetched.name}`}
+								// 			width={400}
+								// 			height={180}
+								// 		/>
+
+								// 		{/* Content Area (flex column to push bottom section down) */}
+								// 		<div className="flex flex-col justify-between flex-grow p-1">
+								// 			{/* Title */}
+								// 			<h1 className="font-semibold text-xs md:text-sm flex items-center gap-1 text-fuchsia-800">
+								// 				<HomeModernIcon className="size-4" />
+								// 				{propertyFetched.name}
+								// 			</h1>
+
+								// 			{/* Spacer or optional description could go here */}
+								// 			<div className="flex-grow" />
+
+								// 			{/* Location and Price pinned to bottom */}
+								// 			<div className="flex items-center justify-between pt-2">
+								// 				<p className="text-[10px] md:text-xs flex items-center gap-1">
+								// 					<MapPinIcon className="size-3" />
+								// 					{propertyFetched.location}
+								// 				</p>
+								// 				<p className="text-xs font-semibold text-fuchsia-800">
+								// 					GHc{propertyFetched.price}
+								// 					<small className="text-black text-[10px]">/m</small>
+								// 				</p>
+								// 			</div>
+								// 		</div>
+								// 	</div>
+								// </div>
+
 								<div
 									key={propertyFetched._id}
-									className="relative w-fit cursor-pointer border-1 rounded-xl">
+									className="relative w-fit cursor-pointer border-1 rounded-xl flex flex-col h-full justify-between">
 									<div
 										className="rounded-xl"
 										onClick={(event) => {
@@ -262,19 +308,21 @@ export default function PropertiesForRent() {
 											width={400}
 											height={200}
 										/>
-										<div className="p-1 border rounded-b-xl grid gap-1">
-											<h1 className="font-semibold text-sm flex items-center gap-1 text-fuchsia-800">
-												<HomeModernIcon className="size-4" />
-												{propertyFetched.name}
-											</h1>
-											<div className="flex items-center justify-between">
-												<p className="text-xs flex items-center gap-1">
-													<MapPinIcon className="size-3" />
-													{propertyFetched.location}
-												</p>
-												<p className="text-xs font-semibold text-fuchsia-800">
-													GHc{propertyFetched.price} <small className="text-black">/month</small>
-												</p>
+										<div className="flex-grow">
+											<div className="p-1 flex flex-col gap-1">
+												<h1 className="font-semibold text-xs md:text-sm flex items-center gap-1 text-fuchsia-800">
+													<HomeModernIcon className="size-4" />
+													{propertyFetched.name}
+												</h1>
+												<div className="flex items-center justify-between">
+													<p className="text-[10px] md:text-xs flex items-center gap-1 w-fit">
+														<MapPinIcon className="size-3" />
+														{propertyFetched.location}
+													</p>
+													<p className="text-xs font-semibold text-fuchsia-800 w-fit">
+														GHc{propertyFetched.price} <small className="text-black text-[10px]">/m</small>
+													</p>
+												</div>
 											</div>
 										</div>
 									</div>

@@ -65,7 +65,7 @@ export default function SpecificProperty() {
 					},
 				});
 				if (request.status === 200) {
-					const requestOwner = await axios.get(`${API_URL}user?ownerID=${request.data.message.owner}`, {
+					const requestOwner = await axios.get(`${API_URL}user?userID=${request.data.message.owner}`, {
 						headers: {
 							"Content-Type": "application/json",
 						},
@@ -209,7 +209,7 @@ export default function SpecificProperty() {
 											src={selectedImage ? selectedImage : property.images[0]}
 											alt={`Image of ${property.name}`}
 											// fill={true}
-											className="rounded-lg"
+											className="rounded-lg w-full"
 											loading="lazy"
 										/>
 									</div>
@@ -289,7 +289,7 @@ export default function SpecificProperty() {
 												</span>
 											</div>
 											<div className="grid">
-												<input
+												{/* <input
 													type="time"
 													//name="time"
 													id=""
@@ -311,9 +311,35 @@ export default function SpecificProperty() {
 
 													//onChange={(event) => console.log(event.target.value)}
 												/>
-												<span className="text-red-500 text-xs container">
-													{errors.time ? `(${errors.time!.message})` : ""}
-												</span>
+
+												{/* <select className="border rounded-lg border-fuchsia-800/10 p-2 text-fuchsia-800 font-semibold text-xs"> */}
+												{property?.viewingTimes ? (
+													<>
+														<select
+															className="border rounded-lg border-fuchsia-800/10 p-2 text-fuchsia-800 font-semibold text-xs"
+															{...register("time", {
+																required: {
+																	value: true,
+																	message: "Time is required",
+																},
+															})}>
+															<option value="" className="w-56">
+																Select Time
+															</option>
+															{property?.viewingTimes.map((time) => {
+																return (
+																	<option key={time} className="font-semibold">
+																		{time}
+																	</option>
+																);
+															})}
+														</select>
+														<span className="text-red-500 text-xs container">
+															{errors.time ? `(${errors.time!.message})` : ""}
+														</span>
+													</>
+												) : null}
+												{/* </select> */}
 											</div>
 										</div>
 									</div>

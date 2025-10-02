@@ -20,6 +20,8 @@ import {
 	updateUserDetails,
 	sendReservationEmail,
 	filterProperties,
+	getReservationsForOwner,
+	updateReservationStatus,
 } from "../controllers/user.controller.js";
 
 const UserRouter = Router();
@@ -39,10 +41,12 @@ UserRouter.post("/resend-otp", authenticateUser, resendUserOTP);
 UserRouter.post("/properties/add-to-favorites", authenticateUser, addPropertyToFavorites);
 UserRouter.post("/properties/remove-from-favorites", authenticateUser, removePropertyFromFavorites);
 UserRouter.post("/verify-otp", authenticateUser, verifyOTP);
-UserRouter.get("/", getUserDetailsForOwner);
+UserRouter.get("/", getUserDetailsForOwner); //make this more secure it returns all owners
 UserRouter.get("/favorites/:userID", authenticateUser, getFavoritedProperties);
 UserRouter.put("/update-details/", authenticateUser, updateUserDetails);
 UserRouter.post("/send-reservation-email", authenticateUser, sendReservationEmail);
+UserRouter.get("/reservation/:ownerID", authenticateUser, getReservationsForOwner);
+UserRouter.put("/reservation/update-reservation-status", authenticateUser, updateReservationStatus);
 
 // Renter specific routes
 

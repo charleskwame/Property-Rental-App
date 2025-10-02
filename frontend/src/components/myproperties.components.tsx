@@ -270,139 +270,6 @@ export default function MyProperties() {
 										<TrashIcon className="size-6" />
 									</button>
 								</div> */}
-								{/* Delete dialog */}
-								<dialog
-									ref={dialogRef}
-									open={openDeleteDialog}
-									className="lg:max-w-fit mx-auto rounded-2xl backdrop:bg-fuchsia-800/15 animate-fade w-[90%] border border-fuchsia-800/10 p-4">
-									<form className="grid gap-2">
-										<label
-											htmlFor=""
-											className="text-fuchsia-800 text-sm text-center font-semibold flex items-center justify-center gap-2">
-											<TrashIcon className="size-6" />
-											Delete Property {propertyToBeDeleted?.name}?
-										</label>
-										<div className="flex items-center justify-center gap-2">
-											<button
-												type="button"
-												onClick={() => closeDeleteDialogFunction()}
-												className="border-2 bg-fuchsia-800/20 px-5 py-1 text-fuchsia-800 hover:bg-fuchsia-800 hover:text-white rounded-md transition-all ease-in-out duration-300 flex items-center gap-2 border-fuchsia-800 cursor-pointer text-sm font-semibold">
-												Cancel
-												<XCircleIcon className="size-6" />
-											</button>
-											<button
-												onClick={(event) =>
-													deleteProperty(event, propertyToBeDeleted!._id, propertyToBeDeleted!.owner)
-												}
-												className="border-2 bg-red-500/20 px-5 py-1 text-red-500 hover:bg-red-500 hover:text-white rounded-md transition-all ease-in-out duration-300 flex items-center gap-2 border-red-500 cursor-pointer text-sm font-semibold">
-												Delete
-												<CheckCircleIcon className="size-6" />
-											</button>
-										</div>
-										<p className="text-xs text-red-500 font-bold text-center">This action cannot be undone</p>
-									</form>
-								</dialog>
-								{/* update property */}
-								<dialog
-									ref={updateDialogRef}
-									open={openUpdateDialog}
-									className="lg:max-w-1/3 rounded-2xl backdrop:bg-fuchsia-800/15 animate-fade w-[90%]">
-									<form
-										action=""
-										className="grid text-gray-500 p-3 gap-1"
-										onSubmit={handleSubmit(handleUpdate)}>
-										<h2 className="text-lg font-bold mb-2 text-center text-fuchsia-800">
-											Update property details
-										</h2>
-										<div className="grid">
-											<label htmlFor="name" className="text-xs">
-												Property Name
-												{errors.name && <span className="text-red-500 text-xs"> ({errors.name.message}) </span>}
-											</label>
-											<input
-												type="text"
-												defaultValue={propertyLoaded?.name}
-												className="w-full border bg-fuchsia-500/5 border-gray-500/10 outline-none rounded py-2 text-xs px-3 focus:border-fuchsia-800"
-												{...register("name", {
-													required: { value: true, message: "Name is required" },
-													pattern: { value: /^[a-zA-Z\s]+$/, message: "Only characters are allowed" },
-													minLength: { value: 3, message: "Minimum 3 characters" },
-													maxLength: { value: 50, message: "Maximum 50 characters" },
-												})}
-											/>
-										</div>
-										<div className="grid">
-											<label htmlFor="name" className="text-xs">
-												Property Type
-												{errors.type && <span className="text-red-500 text-xs"> ({errors.type.message}) </span>}
-											</label>
-											<select
-												id="propertyType"
-												defaultValue={propertyLoaded?.type}
-												className="w-full border bg-fuchsia-500/5 border-gray-500/10 outline-none rounded py-2 text-xs px-3 focus:border-fuchsia-800 scroll-smooth"
-												{...register("type", {
-													required: { value: true, message: "Type is required" },
-												})}>
-												<option value="">Select property type</option>
-												{propertyTypeOptions.map((propertyOption) => {
-													return (
-														<option key={propertyOption.label} value={propertyOption.value}>
-															{propertyOption.label}
-														</option>
-													);
-												})}
-											</select>
-										</div>
-										<div className="grid">
-											<label htmlFor="description" className="text-xs">
-												Property Description
-												{errors.description && (
-													<span className="text-red-500 text-xs"> ({errors.description.message}) </span>
-												)}
-											</label>
-											<textarea
-												className="w-full border bg-fuchsia-500/5 border-gray-500/10 outline-none rounded py-2 text-xs px-3 focus:border-fuchsia-800 resize-none"
-												defaultValue={propertyLoaded?.description}
-												{...register("description", {
-													required: { value: true, message: "Description is required" },
-												})}></textarea>
-										</div>
-										<div className="grid">
-											<label htmlFor="price" className="text-xs">
-												Property Price
-												{errors.price && (
-													<span className="text-red-500 text-xs"> ({errors.price.message}) </span>
-												)}
-											</label>
-											<input
-												type="text"
-												className="w-full border bg-fuchsia-500/5 border-gray-500/10 outline-none rounded py-2 text-xs px-3 focus:border-fuchsia-800"
-												defaultValue={propertyLoaded?.price}
-												{...register("price", {
-													required: { value: true, message: "Price is required" },
-													pattern: { value: /^\d+(\.\d{1,2})?$/, message: "Numbers only" },
-													minLength: { value: 1, message: "Minimum 1 characters" },
-													maxLength: { value: 10, message: "Maximum 10 characters" },
-												})}
-											/>
-										</div>
-										<div className="flex items-center justify-center gap-2 mt-2">
-											<button
-												type="button"
-												onClick={() => closeUpdateDialogFunction()}
-												className="border-2 bg-fuchsia-800/20 px-5 py-1 text-fuchsia-800 hover:bg-fuchsia-800 hover:text-white rounded-md transition-all ease-in-out duration-300 flex items-center gap-2 border-fuchsia-800 cursor-pointer text-sm font-semibold w-full">
-												Cancel Update
-												<XCircleIcon className="size-6" />
-											</button>
-											<button
-												type="submit"
-												className="border-2 bg-red-500/20 px-5 py-1 text-red-500 hover:bg-red-500 hover:text-white rounded-md transition-all ease-in-out duration-300 flex items-center gap-2 border-red-500 cursor-pointer text-sm font-semibold w-full">
-												Update Details
-												<CheckCircleIcon className="size-6" />
-											</button>
-										</div>
-									</form>
-								</dialog>
 							</>
 						))
 					) : (
@@ -412,6 +279,134 @@ export default function MyProperties() {
 					)}
 				</div>
 			)}
+			{/* Delete dialog */}
+			<dialog
+				ref={dialogRef}
+				open={openDeleteDialog}
+				className="lg:max-w-fit mx-auto rounded-2xl backdrop:bg-fuchsia-800/15 animate-fade w-[90%] border border-fuchsia-800/10 p-4">
+				<form className="grid gap-2">
+					<label
+						htmlFor=""
+						className="text-fuchsia-800 text-sm text-center font-semibold flex items-center justify-center gap-2">
+						<TrashIcon className="size-6" />
+						Delete Property {propertyToBeDeleted?.name}?
+					</label>
+					<div className="flex items-center justify-center gap-2">
+						<button
+							type="button"
+							onClick={() => closeDeleteDialogFunction()}
+							className="border-2 bg-fuchsia-800/20 px-5 py-1 text-fuchsia-800 hover:bg-fuchsia-800 hover:text-white rounded-md transition-all ease-in-out duration-300 flex items-center gap-2 border-fuchsia-800 cursor-pointer text-sm font-semibold">
+							Cancel
+							<XCircleIcon className="size-6" />
+						</button>
+						<button
+							onClick={(event) =>
+								deleteProperty(event, propertyToBeDeleted!._id, propertyToBeDeleted!.owner)
+							}
+							className="border-2 bg-red-500/20 px-5 py-1 text-red-500 hover:bg-red-500 hover:text-white rounded-md transition-all ease-in-out duration-300 flex items-center gap-2 border-red-500 cursor-pointer text-sm font-semibold">
+							Delete
+							<CheckCircleIcon className="size-6" />
+						</button>
+					</div>
+					<p className="text-xs text-red-500 font-bold text-center">This action cannot be undone</p>
+				</form>
+			</dialog>
+			{/* update property */}
+			<dialog
+				ref={updateDialogRef}
+				open={openUpdateDialog}
+				className="lg:max-w-1/3 rounded-2xl backdrop:bg-fuchsia-800/15 animate-fade w-[90%]">
+				<form action="" className="grid text-gray-500 p-3 gap-1" onSubmit={handleSubmit(handleUpdate)}>
+					<h2 className="text-lg font-bold mb-2 text-center text-fuchsia-800">
+						Update property details
+					</h2>
+					<div className="grid">
+						<label htmlFor="name" className="text-xs">
+							Property Name
+							{errors.name && <span className="text-red-500 text-xs"> ({errors.name.message}) </span>}
+						</label>
+						<input
+							type="text"
+							defaultValue={propertyToBeUpdated?.name}
+							className="w-full border bg-fuchsia-500/5 border-gray-500/10 outline-none rounded py-2 text-xs px-3 focus:border-fuchsia-800"
+							{...register("name", {
+								required: { value: true, message: "Updated name is required" },
+								pattern: { value: /^[a-zA-Z\s]+$/, message: "Only characters are allowed" },
+								minLength: { value: 3, message: "Minimum 3 characters" },
+								maxLength: { value: 50, message: "Maximum 50 characters" },
+							})}
+						/>
+					</div>
+					<div className="grid">
+						<label htmlFor="name" className="text-xs">
+							Property Type
+							{errors.type && <span className="text-red-500 text-xs"> ({errors.type.message}) </span>}
+						</label>
+						<select
+							id="propertyType"
+							defaultValue={propertyToBeUpdated?.type}
+							className="w-full border bg-fuchsia-500/5 border-gray-500/10 outline-none rounded py-2 text-xs px-3 focus:border-fuchsia-800 scroll-smooth"
+							{...register("type", {
+								required: { value: true, message: "Updated type is required" },
+							})}>
+							<option value="">Select property type</option>
+							{propertyTypeOptions.map((propertyOption) => {
+								return (
+									<option key={propertyOption.label} value={propertyOption.value}>
+										{propertyOption.label}
+									</option>
+								);
+							})}
+						</select>
+					</div>
+					<div className="grid">
+						<label htmlFor="description" className="text-xs">
+							Property Description
+							{errors.description && (
+								<span className="text-red-500 text-xs"> ({errors.description.message}) </span>
+							)}
+						</label>
+						<textarea
+							className="w-full border bg-fuchsia-500/5 border-gray-500/10 outline-none rounded py-2 text-xs px-3 focus:border-fuchsia-800 resize-none"
+							defaultValue={propertyToBeUpdated?.description}
+							{...register("description", {
+								required: { value: true, message: "Updated description is required" },
+							})}></textarea>
+					</div>
+					<div className="grid">
+						<label htmlFor="price" className="text-xs">
+							Property Price
+							{errors.price && <span className="text-red-500 text-xs"> ({errors.price.message}) </span>}
+						</label>
+						<input
+							type="text"
+							className="w-full border bg-fuchsia-500/5 border-gray-500/10 outline-none rounded py-2 text-xs px-3 focus:border-fuchsia-800"
+							defaultValue={propertyToBeUpdated?.price}
+							{...register("price", {
+								required: { value: true, message: "Updated price is required" },
+								pattern: { value: /^\d+(\.\d{1,2})?$/, message: "Numbers only" },
+								minLength: { value: 1, message: "Minimum 1 characters" },
+								maxLength: { value: 10, message: "Maximum 10 characters" },
+							})}
+						/>
+					</div>
+					<div className="flex items-center justify-center gap-2 mt-2">
+						<button
+							type="button"
+							onClick={() => closeUpdateDialogFunction()}
+							className="border-2 bg-fuchsia-800/20 px-5 py-1 text-fuchsia-800 hover:bg-fuchsia-800 hover:text-white rounded-md transition-all ease-in-out duration-300 flex items-center gap-2 border-fuchsia-800 cursor-pointer text-sm font-semibold w-full">
+							Cancel Update
+							<XCircleIcon className="size-6" />
+						</button>
+						<button
+							type="submit"
+							className="border-2 bg-red-500/20 px-5 py-1 text-red-500 hover:bg-red-500 hover:text-white rounded-md transition-all ease-in-out duration-300 flex items-center gap-2 border-red-500 cursor-pointer text-sm font-semibold w-full">
+							Update Details
+							<CheckCircleIcon className="size-6" />
+						</button>
+					</div>
+				</form>
+			</dialog>
 		</>
 	);
 }

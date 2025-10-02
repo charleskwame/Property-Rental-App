@@ -44,6 +44,30 @@ const PropertySchema = mongoose.Schema({
 		index: true,
 		required: [true, "Owner not specified"],
 	},
+	viewingTimes: {
+		type: [String],
+		default: [
+			"8:00 am",
+			"8:30 am",
+			"9:00 am",
+			"9:30 am",
+			"10:00 am",
+			"10:30 am",
+			"11:00 am",
+			"11:30 am",
+			"12:00 pm",
+			"12:30 pm",
+			"13:00 pm",
+			"13:30 pm",
+			"14:00 pm",
+			"14:30 pm",
+			"15:00 pm",
+			"15:30 pm",
+			"16:00 pm",
+			"16:30 pm",
+			"17:00 pm",
+		],
+	},
 });
 
 const PropertyModel = mongoose.model("PropertyModel", PropertySchema, "properties");

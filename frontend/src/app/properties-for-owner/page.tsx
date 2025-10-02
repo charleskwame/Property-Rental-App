@@ -8,6 +8,7 @@ import { useEffect } from "react";
 import { useRef } from "react";
 import { useState } from "react";
 import { XCircleIcon, PlusCircleIcon } from "@heroicons/react/24/outline";
+import Link from "next/link";
 
 export default function PropertiesForOwner() {
 	const routerToGoBackToLogIn = useRouter();
@@ -37,10 +38,17 @@ export default function PropertiesForOwner() {
 
 			<button
 				onClick={() => handleClickOpen()}
-				className="bg-fuchsia-800 font-semibold hover:bg-custom-white-50 hover:text-fuchsia-800 border-fuchsia-800 border-2 transition-all py-1.5 rounded text-white cursor-pointer flex items-center mt-3 px-3 gap-1 mx-auto">
+				className="bg-fuchsia-800 font-semibold hover:bg-custom-white-50 hover:text-fuchsia-800 border-fuchsia-800 border-2 transition-all py-0.5 rounded text-white cursor-pointer flex items-center mt-3 px-3 gap-1 mx-auto text-sm">
 				<span>List property</span>
 				<PlusCircleIcon className="size-6" />
 			</button>
+
+			<Link href={"/reservations-for-owner"}>
+				<button className="bg-fuchsia-800 font-semibold hover:bg-custom-white-50 hover:text-fuchsia-800 border-fuchsia-800 border-2 transition-all py-0.5 rounded text-white cursor-pointer flex items-center mt-3 px-3 gap-1 mx-auto text-sm">
+					<span>Manage Reservations</span>
+					<PlusCircleIcon className="size-6" />
+				</button>
+			</Link>
 
 			<dialog
 				ref={dialogRef}
