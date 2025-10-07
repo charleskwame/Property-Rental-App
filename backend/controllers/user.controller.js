@@ -16,6 +16,13 @@ import UserModel from "../models/user.model.js";
 import OTPModel from "../models/otp.model.js";
 import { otpEmailTemplate } from "../emailtemplates/otpverification.template.js";
 import ReservationsModel from "../models/reservations.model.js";
+import { ReservationEmailClient } from "../emailtemplates/reservationemailclient.template.js";
+import { ReservationEmailOwner } from "../emailtemplates/reservationemailowner.template.js";
+import { ReservationUpdateOwner } from "../emailtemplates/reservationupdateowner.template.js";
+import {
+	ReservationUpdateClientAccepted,
+	ReservationUpdateClientRejected,
+} from "../emailtemplates/reservationupdateclient.template.js";
 
 //creating nodemailer transport
 const transporter = nodemailer.createTransport({
@@ -491,21 +498,35 @@ export const sendReservationEmail = async (request, response) => {
 	const property = await PropertyModel.findOne({ _id: propertyID });
 	const user = await UserModel.findOne({ _id: userID });
 	const propertyOwner = await UserModel.findOne({ _id: property.owner });
+	const clientEmailTemplate = ReservationEmailClient(
+		user.name,
+		property.name,
+		date,
+		time,
+		propertyOwner.name,
+	);
+	const ownerEmailTemplate = ReservationEmailOwner(
+		propertyOwner.name,
+		property.name,
+		user.name,
+		date,
+		time,
+	);
 	//return response.json({ property, user, propertyOwner });
 	const mailList = [user.email, propertyOwner.email];
-	const mailOptionsToPropertyOwner = {
-		from: NODEMAILER_EMAIL,
-		to: mailList[1],
-		// bcc: mailList,
-		subject: "Viewing Request",
-		html: `<p>Viewing Request from ${user.name} to ${propertyOwner.name} for ${property.name} on ${date} at ${time}</p>`,
-	};
 	const mailOptionsToRenter = {
 		from: NODEMAILER_EMAIL,
 		to: mailList[0],
 		// bcc: mailList,
-		subject: "Copy of Viewing Request",
-		html: `<p>This is a copy of the viewing request sent to ${propertyOwner.name} from The Rent Easy Team on behalf of ${user.name} for property ${property.name} viewing on ${date} at ${time}</p>`,
+		subject: `Your viewing request for property (${property.name})`,
+		html: clientEmailTemplate,
+	};
+	const mailOptionsToPropertyOwner = {
+		from: NODEMAILER_EMAIL,
+		to: mailList[1],
+		// bcc: mailList,
+		subject: `You have a new viewing request for your property (${property.name})`,
+		html: ownerEmailTemplate,
 	};
 	try {
 		const reservation = await ReservationsModel.create({
@@ -609,24 +630,43 @@ export const updateReservationStatus = async (request, response, next) => {
 		);
 		const user = await UserModel.findOne(existingReservation.madeBy.clientID);
 		const propertyOwner = await UserModel.findOne(existingReservation.propertyOwner.propertyOwnerID);
+		const ownerUpdateEmailTemplate = ReservationUpdateOwner(
+			propertyOwner.name,
+			status.toLowerCase(),
+			existingReservation.madeBy.clientName,
+			existingReservation.propertyToView.propertyName,
+			existingReservation.date,
+			existingReservation.time,
+		);
+		const renterUpdateEmailTemplateAccepted = ReservationUpdateClientAccepted(
+			user.name,
+			existingReservation.propertyToView.propertyName,
+			existingReservation.date,
+			existingReservation.time,
+		);
+
+		const renterUpdateEmailTemplateRejected = ReservationUpdateClientRejected(
+			user.name,
+			existingReservation.propertyToView.propertyName,
+		);
 
 		const mailList = [user.email, propertyOwner.email];
-		const mailOptionsToPropertyOwner = {
+		const mailOptionsToRenter = {
 			from: NODEMAILER_EMAIL,
 			to: mailList[0],
 			// bcc: mailList,
-			subject: "update on viewing Request",
+			subject: "Update on viewing request",
 			html:
 				existingReservation.status === "Accepted"
-					? `<p>Your request to view ${existingReservation.propertyToView.propertyName} has been ${existingReservation.status}. The time for viewing is ${existingReservation.time}.</p>`
-					: `<p>Your request to view ${existingReservation.propertyToView.propertyName} has been ${existingReservation.status}</p>`,
+					? renterUpdateEmailTemplateAccepted
+					: renterUpdateEmailTemplateRejected,
 		};
-		const mailOptionsToRenter = {
+		const mailOptionsToPropertyOwner = {
 			from: NODEMAILER_EMAIL,
 			to: mailList[1],
 			// bcc: mailList,
-			subject: "Copy of update on Viewing Request",
-			html: `<p>You have ${existingReservation.status} the viewing request from ${user.name}. The time for viewing is ${existingReservation.time} on ${existingReservation.date}</p>`,
+			subject: `You have ${existingReservation.status.toLowerCase()} a viewing request`,
+			html: ownerUpdateEmailTemplate,
 		};
 		await transporter.sendMail(mailOptionsToPropertyOwner);
 		await transporter.sendMail(mailOptionsToRenter);
