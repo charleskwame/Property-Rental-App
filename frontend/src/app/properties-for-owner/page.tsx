@@ -23,7 +23,7 @@ export default function PropertiesForOwner() {
 		if (storedUserData === null) {
 			routerToGoBackToLogIn.push("/login");
 		}
-	}, []);
+	}, [routerToGoBackToLogIn]);
 
 	const handleClickOpen = () => {
 		setDialogOpen(true);

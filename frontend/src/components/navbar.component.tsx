@@ -16,20 +16,20 @@ import { useEffect, useState } from "react";
 import Logo from "../../public/assets/logo.svg";
 import Image from "next/image";
 // import SignUpRenter from "./signup.component";
-import { useRef } from "react";
+// import { useRef } from "react";
 import Toast from "@/components/toast.component";
 import { toast } from "react-toastify";
 //import SignUpRenter from "@/app/sign-up/page";
 
 export default function NavBar() {
 	const route = useRouter();
-	const dialogRef = useRef(null);
+	// const dialogRef = useRef(null);
 	const [displayProfileIcon, setDisplayProfileIcon] = useState<boolean>(false);
 	const [profileIconLetter, setProfileIconLetter] = useState<string>("");
 	const [isUserTypeKnown, setIsUserTypeKnown] = useState<boolean>(false);
 	const [isUserOwner, setIsUserOwner] = useState<boolean>(false);
-	const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
-	const [openSignUpDialog, setOpenSignUpDialog] = useState<boolean>(false);
+	// const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
+	// const [openSignUpDialog, setOpenSignUpDialog] = useState<boolean>(false);
 	useEffect(() => {
 		if (
 			JSON.parse(`${sessionStorage.getItem("User")}`) !== null &&
@@ -55,15 +55,15 @@ export default function NavBar() {
 		}
 	}, []);
 
-	const openDialogFunction = () => {
-		setOpenSignUpDialog(true);
-		(dialogRef.current as HTMLDialogElement | null)?.showModal();
-	};
+	// const openDialogFunction = () => {
+	// 	setOpenSignUpDialog(true);
+	// 	(dialogRef.current as HTMLDialogElement | null)?.showModal();
+	// };
 
-	const closeDialogFunction = () => {
-		setOpenSignUpDialog(false);
-		(dialogRef.current as HTMLDialogElement | null)?.close();
-	};
+	// const closeDialogFunction = () => {
+	// 	setOpenSignUpDialog(false);
+	// 	(dialogRef.current as HTMLDialogElement | null)?.close();
+	// };
 
 	const LogOut = () => {
 		toast.success("Logged Out");

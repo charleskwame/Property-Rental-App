@@ -1,12 +1,12 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import axios from "axios";
 //import { API_URL, NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME, CLOUDINARY_URL } from "../../config/env";
-import { CldUploadWidget } from "next-cloudinary";
+// import { CldUploadWidget } from "next-cloudinary";
 import { API_URL } from "@/config";
-import { useRouter } from "next/navigation";
-import Image from "next/image";
-import { useForm, SubmitHandler, set } from "react-hook-form";
+// import { useRouter } from "next/navigation";
+// import Image from "next/image";
+import { useForm } from "react-hook-form";
 import propertyTypeOptions from "@/propertytypes";
 import { toast } from "react-toastify";
 import { Locations } from "@/lib/cities";

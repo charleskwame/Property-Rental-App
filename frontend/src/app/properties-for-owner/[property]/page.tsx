@@ -36,7 +36,7 @@ export default function SpecificProperty() {
 		};
 
 		propertyDetails(`${params.property}`);
-	}, []);
+	}, [params.property]);
 	//console.log(params);
 	return (
 		<>

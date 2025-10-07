@@ -31,22 +31,18 @@ type FilterInputs = {
 };
 
 export default function PropertiesForRent() {
-	const {
-		register,
-		handleSubmit,
-		formState: { errors },
-	} = useForm<FilterInputs>();
+	const { register, handleSubmit } = useForm<FilterInputs>();
 
 	const routerToGoToSpecificPropertyPage = useRouter();
-	const routerToGoToLogIn = useRouter();
-	const routerToRefreshPage = useRouter();
+	// const routerToGoToLogIn = useRouter();
+	// const routerToRefreshPage = useRouter();
 
 	const [propertiesFetched, setPropertiesFetched] = useState<PropertyInterFace[]>([]);
 	const [loading, setLoading] = useState<boolean>(false);
-	const [loadingFavorites, setLoadingFavorites] = useState<boolean>(false);
-	const [favoritePropertiesFetched, setFavoritePropertiesFetched] = useState<PropertyInterFace[]>(
-		[],
-	);
+	// const [loadingFavorites, setLoadingFavorites] = useState<boolean>(false);
+	// const [favoritePropertiesFetched, setFavoritePropertiesFetched] = useState<PropertyInterFace[]>(
+	// 	[],
+	// );
 	const [apiResponseMessage, setApiResponseMessage] = useState<string>("");
 	const filterDialog = useRef(null);
 	const [openFilterDialog, setOpenFilterDialog] = useState<boolean>(false);

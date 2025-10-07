@@ -88,7 +88,7 @@ export default function SpecificProperty() {
 		};
 
 		propertyDetails(`${params.property}`);
-	}, []);
+	}, [params.property]);
 
 	const addPropertyToFavorites = async (event: React.MouseEvent, propertyID: string) => {
 		if (sessionStorage.getItem("User") !== null) {

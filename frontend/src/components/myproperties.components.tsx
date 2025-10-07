@@ -32,7 +32,7 @@ export default function MyProperties() {
 	const dialogRef = useRef(null);
 	const updateDialogRef = useRef(null);
 	const [propertiesLoaded, setPropertiesLoaded] = useState<PropertyInterFace[]>([]);
-	const routerToGoToSpecificPropertyPage = useRouter();
+	// const routerToGoToSpecificPropertyPage = useRouter();
 	const [openDeleteDialog, setOpenDeleteDialog] = useState<boolean>(false);
 	const [openUpdateDialog, setOpenUpdateDialog] = useState<boolean>(false);
 	const [propertyToBeDeleted, setPropertyToBeDeleted] = useState<PropertyInterFace>();

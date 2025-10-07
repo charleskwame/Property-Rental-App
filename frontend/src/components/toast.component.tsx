@@ -1,9 +1,9 @@
-import { toast, ToastContainer } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 
-type ToastProps = {
-	type: "success" | "error" | "info" | "warn" | "default";
-	message: string;
-};
+// type ToastProps = {
+// 	type: "success" | "error" | "info" | "warn" | "default";
+// 	message: string;
+// };
 
 export default function Toast() {
 	return (

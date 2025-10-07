@@ -27,7 +27,7 @@ export default function VerifyRenter() {
 				router.push("/properties-for-rent");
 			}
 		}
-	}, []);
+	}, [router]);
 
 	// Handle input change
 	const handleChange = (value: string, index: number) => {
