@@ -1,5 +1,7 @@
 "use client";
 
+export const runtime = "edge";
+
 import { useParams } from "next/navigation";
 import { useState, useEffect } from "react";
 import { PropertyInterFace } from "@/interfaces/property.interface";
