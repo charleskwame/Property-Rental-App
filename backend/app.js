@@ -16,7 +16,7 @@ const app = express();
 // Allow requests from specific origin (e.g., frontend at port 3000)
 app.use(
 	cors({
-		origin: "http://localhost:3000", // or "*" to allow all
+		origin: "*", // or "*" to allow all
 		credentials: true, // if you're using cookies or auth headers
 	}),
 );
