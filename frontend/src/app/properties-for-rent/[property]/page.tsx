@@ -7,6 +7,7 @@ export const runtime = "edge";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import axios from "axios";
+
 import { API_URL } from "@/config";
 import { PropertyInterFace } from "@/interfaces/property.interface";
 // import { User } from "@/interfaces/user.interface";
