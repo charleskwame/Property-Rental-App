@@ -32,7 +32,6 @@ export default function FavoriteProperties() {
 						},
 					});
 					if (request.data.status === "Success") {
-						//toast.success("Favorites Loaded");
 						setPropertiesLoaded(request.data.message);
 						setLoading(false);
 					}
