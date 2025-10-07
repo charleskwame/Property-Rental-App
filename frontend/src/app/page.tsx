@@ -1,22 +1,24 @@
 "use client";
-import Link from "next/link";
+export const runtime = "edge";
+
+// import Link from "next/link";
 
 import { useEffect, useRef } from "react";
 import { useState } from "react";
-import axios, { isAxiosError } from "axios";
+import axios from "axios";
 import { API_URL } from "@/config";
 import { PropertyInterFace } from "@/interfaces/property.interface";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import {
-	HeartIcon,
-	UserCircleIcon,
+	// HeartIcon,
+	// UserCircleIcon,
 	MapPinIcon,
 	HomeModernIcon,
 	XCircleIcon,
 } from "@heroicons/react/24/outline";
 import NavBar from "@/components/navbar.component";
-import SignUpRenter from "@/components/signup.component";
+// import SignUpRenter from "@/components/signup.component";
 import LoadingSpinner from "@/components/loadingspinner.component";
 import { useForm } from "react-hook-form";
 import propertyTypeOptions from "@/propertytypes";

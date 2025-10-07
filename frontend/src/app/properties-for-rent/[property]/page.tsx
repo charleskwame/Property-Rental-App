@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { API_URL } from "@/config";
 import { PropertyInterFace } from "@/interfaces/property.interface";
-import { User } from "@/interfaces/user.interface";
+// import { User } from "@/interfaces/user.interface";
 //import Image from "next/image";
 import NavBar from "@/components/navbar.component";
 import {
@@ -19,9 +19,10 @@ import {
 import { useRouter } from "next/navigation";
 import Toast from "@/components/toast.component";
 import { toast } from "react-toastify";
-import { useForm, SubmitHandler } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import ImageGallerySkeletonLoader from "@/components/imagegalleryskeleton.component";
 import { MapPin } from "lucide-react";
+// import { useRef } from "react";
 
 type ReservationDetails = {
 	date?: string;
@@ -30,15 +31,17 @@ type ReservationDetails = {
 	userID?: string;
 };
 
+export const runtime = "edge";
+
 export default function SpecificProperty() {
 	//const pathName = usePathname();
 	const params = useParams();
 	const routerToGoToLogIn = useRouter();
-
+	// const timeInputRef = useRef(null);
 	const [property, setProperty] = useState<PropertyInterFace>();
-	const [user, setUser] = useState<User>();
+	// const [user, setUser] = useState<User>();
 	const [selectedImage, setSelectedImage] = useState<string>();
-	const [isSelectedImage, setIsSelectedImage] = useState<boolean>(false);
+	// const [isSelectedImage, setIsSelectedImage] = useState<boolean>(false);
 
 	//const routerToGoToSpecificPropertyPage = useRouter();
 	//const propertyRouter = useRouter();
@@ -65,16 +68,17 @@ export default function SpecificProperty() {
 					},
 				});
 				if (request.status === 200) {
-					const requestOwner = await axios.get(`${API_URL}user?userID=${request.data.message.owner}`, {
-						headers: {
-							"Content-Type": "application/json",
-						},
-					});
-					if (requestOwner.status === 200) {
-						setProperty(request.data.message);
-						//console.log(requestOwner.data.data.userWithoutPassword);
-						setUser(requestOwner.data.data.userWithoutPassword);
-					}
+					// const requestOwner = await axios.get(`${API_URL}user?userID=${request.data.message.owner}`, {
+					// 	headers: {
+					// 		"Content-Type": "application/json",
+					// 	},
+					// });
+					// if (requestOwner.status === 200) {
+					// 	setProperty(request.data.message);
+					// 	//console.log(requestOwner.data.data.userWithoutPassword);
+					// 	setUser(requestOwner.data.data.userWithoutPassword);
+					// }
+					setProperty(request.data.message);
 				}
 				//sessionStorage.setItem("PropertyInViewing", JSON.stringify(request.data.message));
 			} catch (error) {
@@ -138,11 +142,32 @@ export default function SpecificProperty() {
 
 	const changeMainImage = (image: string) => {
 		setSelectedImage(image);
-		setIsSelectedImage(true);
+		// setIsSelectedImage(true);
+	};
+
+	const formatTimeTo12Hour = (timeStr: string | undefined): string | null => {
+		if (!timeStr) return null;
+
+		const [hStr, mStr] = timeStr.split(":");
+		const h = parseInt(hStr);
+		const m = parseInt(mStr);
+
+		if (isNaN(h) || isNaN(m)) return null;
+
+		const period = h >= 12 ? "PM" : "AM";
+		const hour12 = h % 12 === 0 ? 12 : h % 12;
+
+		return `${hour12}:${m.toString().padStart(2, "0")} ${period}`;
 	};
 
 	const sendViewingRequestEmail = async (reservationData: ReservationDetails) => {
-		// event.preventDefault();
+		const formatted = formatTimeTo12Hour(reservationData.time);
+		if (formatted) {
+			reservationData.time = formatted;
+			// console.log(reservationData.time);
+		}
+		// return true;
+
 		if (sessionStorage.getItem("User") !== null) {
 			const storedUserData = JSON.parse(`${sessionStorage.getItem("User")}`);
 
@@ -171,6 +196,22 @@ export default function SpecificProperty() {
 			routerToGoToLogIn.push("/login");
 		}
 	};
+
+	// const increaseTime = () => {
+	// 	const timeInputElement = document.getElementById("timeInput");
+	// 	if (timeInputElement instanceof HTMLInputElement) {
+	// 		const timeInput: HTMLInputElement = timeInputElement;
+	// 		timeInput.stepUp(30);
+	// 	}
+	// };
+
+	// const decreaseTime = () => {
+	// 	const timeInputElement = document.getElementById("timeInput");
+	// 	if (timeInputElement instanceof HTMLInputElement) {
+	// 		const timeInput: HTMLInputElement = timeInputElement;
+	// 		timeInput.stepDown(30);
+	// 	}
+	// };
 
 	return (
 		<>
@@ -264,7 +305,7 @@ export default function SpecificProperty() {
 								</p>
 
 								{/* <h1 className="font-semibold">Owner</h1> */}
-								<p className="text-sm text-black/50">Posted by {user?.name}</p>
+								<p className="text-sm text-black/50">Posted by {property?.ownerName}</p>
 
 								<form action="" onSubmit={handleSubmit(sendViewingRequestEmail)}>
 									<div className="mt-3 grid gap-2">
@@ -282,18 +323,21 @@ export default function SpecificProperty() {
 															message: "Date is required",
 														},
 													})}
-													//onChange={(event) => console.log(event.target.value)}
+													onChange={(event) => console.log(event.target.value)}
 												/>
 												<span className="text-red-500 text-xs">
 													{errors.date ? `(${errors.date!.message})` : ""}
 												</span>
 											</div>
 											<div className="grid">
-												{/* <input
+												<input
+													// ref={timeInputRef}
 													type="time"
 													//name="time"
-													id=""
+													id="timeInput"
 													className="border rounded-lg border-fuchsia-800/10 p-2 text-fuchsia-800 font-semibold text-xs"
+													min={`8:00`}
+													max={`17:00`}
 													{...register("time", {
 														required: {
 															value: true,
@@ -312,8 +356,25 @@ export default function SpecificProperty() {
 													//onChange={(event) => console.log(event.target.value)}
 												/>
 
-												{/* <select className="border rounded-lg border-fuchsia-800/10 p-2 text-fuchsia-800 font-semibold text-xs"> */}
-												{property?.viewingTimes ? (
+												<span className="text-red-500 text-xs container">
+													{errors.time ? `(${errors.time!.message})` : ""}
+												</span>
+
+												{/* <button
+													className="border border-fuchsia-800/10 p-1"
+													type="button"
+													onClick={() => increaseTime()}>
+													+
+												</button>
+												<button
+													className="border border-fuchsia-800/10 p-1"
+													type="button"
+													onClick={() => decreaseTime()}>
+													-
+												</button> */}
+
+												{/* <select className="border rounded-lg border-fuchsia-800/10 p-2 text-fuchsia-800 font-semibold text-xs">
+												{/* {property?.viewingTimes ? (
 													<>
 														<select
 															className="border rounded-lg border-fuchsia-800/10 p-2 text-fuchsia-800 font-semibold text-xs"
@@ -338,7 +399,7 @@ export default function SpecificProperty() {
 															{errors.time ? `(${errors.time!.message})` : ""}
 														</span>
 													</>
-												) : null}
+												) : null} */}
 												{/* </select> */}
 											</div>
 										</div>

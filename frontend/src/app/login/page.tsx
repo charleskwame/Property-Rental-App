@@ -1,18 +1,18 @@
 "use client";
 
 import axios from "axios";
-import { useState, useEffect, useRef } from "react";
+import { useState } from "react";
 import { API_URL } from "@/config";
 import { useRouter } from "next/navigation";
-import { GoToPageFunction } from "@/app/functions/gotoLogin.function";
-import { XCircleIcon } from "@heroicons/react/24/outline";
+// import { GoToPageFunction } from "@/app/functions/gotoLogin.function";
+// import { XCircleIcon } from "@heroicons/react/24/outline";
 import Logo from "../../../public/assets/logo.svg";
 import Image from "next/image";
 import NavBarDecorative from "@/components/navbardecorative.component";
 import { toast } from "react-toastify";
 import Toast from "@/components/toast.component";
-import { error, log } from "console";
-import { useForm, SubmitHandler } from "react-hook-form";
+// import { error, log } from "console";
+import { useForm } from "react-hook-form";
 
 type FormInputs = {
 	name?: string;
@@ -21,6 +21,8 @@ type FormInputs = {
 	phonenumber?: string;
 	usertype?: string;
 };
+
+export const runtime = "edge";
 
 export default function SignUpRenter() {
 	const route = useRouter();
@@ -105,8 +107,7 @@ export default function SignUpRenter() {
 				// sign up form
 				<form
 					className="bg-custom-white-50 text-gray-500  p-3 text-left text-sm rounded-2xl border border-fuchsia-800/10 lg:max-w-1/3 w-[90%] fixed -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2"
-					onSubmit={handleSubmit(handleSignUp)}
-				>
+					onSubmit={handleSubmit(handleSignUp)}>
 					<div className="flex items-center gap-2 mb-1">
 						<Image src={Logo} alt="Rent Easy Logo" className="size-8" />
 						<h2 className="font-bold text-fuchsia-800 text-xl">Create an account</h2>
@@ -210,8 +211,7 @@ export default function SignUpRenter() {
 								pattern: { value: /^(renter|owner)$/, message: "Invalid usertype" },
 								minLength: { value: 1, message: "Minimum 1 characters" },
 								maxLength: { value: 10, message: "Maximum 10 characters" },
-							})}
-						>
+							})}>
 							<option value="">Select Type</option>
 							<option value="renter">Renter</option>
 							<option value="owner">Property Owner</option>
@@ -220,8 +220,7 @@ export default function SignUpRenter() {
 
 					<button
 						type="submit"
-						className="w-full bg-fuchsia-800 font-semibold hover:bg-custom-white-50 hover:text-fuchsia-800 hover:border-fuchsia-800 border transition-all py-2.5 rounded text-white cursor-pointer mt-2"
-					>
+						className="w-full bg-fuchsia-800 font-semibold hover:bg-custom-white-50 hover:text-fuchsia-800 hover:border-fuchsia-800 border transition-all py-2.5 rounded text-white cursor-pointer mt-2">
 						Create Account
 					</button>
 
@@ -230,8 +229,7 @@ export default function SignUpRenter() {
 						<button
 							type="button"
 							className="text-orange-400 underline cursor-pointer"
-							onClick={() => setOpenLogIn(false)}
-						>
+							onClick={() => setOpenLogIn(false)}>
 							Log In
 						</button>
 					</p>
@@ -241,8 +239,7 @@ export default function SignUpRenter() {
 				<form
 					action=""
 					className="bg-custom-white-50 text-gray-500  p-3 text-left text-sm rounded-2xl border border-fuchsia-800/10 lg:max-w-1/3 w-[90%] fixed -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2"
-					onSubmit={handleSubmit(handleLogIn)}
-				>
+					onSubmit={handleSubmit(handleLogIn)}>
 					<div className="flex items-center gap-2 mb-1">
 						<Image src={Logo} alt="Rent Easy Logo" className="size-10" />
 						<h2 className="text-xl font-bold text-center text-fuchsia-800">Welcome back</h2>
@@ -294,8 +291,7 @@ export default function SignUpRenter() {
 					{/* <button type="submit">Log in</button> */}
 					<button
 						type="submit"
-						className="w-full bg-fuchsia-800 font-semibold hover:bg-custom-white-50 hover:text-fuchsia-800 hover:border-fuchsia-800 border transition-all py-2.5 rounded text-white cursor-pointer mt-2"
-					>
+						className="w-full bg-fuchsia-800 font-semibold hover:bg-custom-white-50 hover:text-fuchsia-800 hover:border-fuchsia-800 border transition-all py-2.5 rounded text-white cursor-pointer mt-2">
 						Log In
 					</button>
 
@@ -304,8 +300,7 @@ export default function SignUpRenter() {
 						<button
 							type="button"
 							className="text-orange-400 underline cursor-pointer"
-							onClick={() => setOpenLogIn(true)}
-						>
+							onClick={() => setOpenLogIn(true)}>
 							Sign up
 						</button>
 					</p>

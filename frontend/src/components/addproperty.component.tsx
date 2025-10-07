@@ -19,6 +19,7 @@ type PropertyInputs = {
 	images?: string[];
 	price?: string;
 	owner?: string;
+	ownerName?: string;
 };
 export default function AddProperty() {
 	//const routerToGoBackToLogIn = useRouter();
@@ -43,7 +44,11 @@ export default function AddProperty() {
 		propertyData.images = uploadedImages;
 
 		propertyData.owner = JSON.parse(`${sessionStorage.getItem("User")}`).data.userWithoutPassword._id;
-		//console.log("Final property data:", propertyData);
+		propertyData.ownerName = JSON.parse(
+			`${sessionStorage.getItem("User")}`,
+		).data.userWithoutPassword.name;
+		// console.log("Final property data:", propertyData);
+		// return true;
 
 		const storedUserData = JSON.parse(`${sessionStorage.getItem("User")}`);
 

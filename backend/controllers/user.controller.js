@@ -112,7 +112,7 @@ export const getUser = async (request, response, next) => {
 export const getProperties = async (request, response, next) => {
 	// connecting to database
 	try {
-		const properties = await PropertyModel.find();
+		const properties = await PropertyModel.find().limit(30);
 		if (properties.length <= 0) {
 			return response.status(400).json({
 				status: "Failed",
@@ -199,7 +199,7 @@ export const addProperty = async (request, response, next) => {
 	const session = await mongoose.startSession();
 	session.startTransaction();
 	try {
-		const { name, location, type, description, images, price, owner } = request.body;
+		const { name, location, type, description, images, price, owner, ownerName } = request.body;
 		const existingProperty = await PropertyModel.findOne({ name, location, type });
 		if (existingProperty) {
 			return response.status(400).json({ status: "Failed", message: "Property Already Registered" });
@@ -215,6 +215,7 @@ export const addProperty = async (request, response, next) => {
 					images,
 					price,
 					owner,
+					ownerName,
 				},
 			],
 			{ session },

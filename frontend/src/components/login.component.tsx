@@ -6,7 +6,7 @@ import { API_URL } from "@/config";
 import { useRouter } from "next/navigation";
 import { GoToPageFunction } from "@/app/functions/gotoLogin.function";
 //import { json } from "stream/consumers";
-import Link from "next/link";
+// import Link from "next/link";
 
 type logInProps = {
 	openlogindialog: boolean;

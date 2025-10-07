@@ -11,15 +11,17 @@ import Toast from "@/components/toast.component";
 import { toast } from "react-toastify";
 // import { headers } from "next/headers";
 
+export const runtime = "edge";
+
 export default function AccountSettings() {
 	const route = useRouter();
 	const [userName, setUserName] = useState<string>("");
 	const [email, setEmail] = useState<string>("");
 	const [password, setPassword] = useState<string>("");
 	const [confirmPassword, setConfirmPassword] = useState<string>("");
-	const [bio, setBio] = useState<string>("");
-	const [avatar, setAvatar] = useState<string>("");
-	const [banner, setBanner] = useState<string>("");
+	// const [bio, setBio] = useState<string>("");
+	// const [avatar, setAvatar] = useState<string>("");
+	// const [banner, setBanner] = useState<string>("");
 	useEffect(() => {
 		// get all current user details
 		const unparsedUserDetails = sessionStorage.getItem("User");
@@ -78,8 +80,7 @@ export default function AccountSettings() {
 				<form
 					action=""
 					onSubmit={(event) => handleUpdate(event)}
-					className="bg-custom-white-50 text-gray-500  p-4 py-4 text-left text-sm rounded-lg shadow-[0px_0px_10px_0px] shadow-black/10 fixed w-[90%] left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 lg:max-w-1/3 grid gap-1"
-				>
+					className="bg-custom-white-50 text-gray-500  p-4 py-4 text-left text-sm rounded-lg shadow-[0px_0px_10px_0px] shadow-black/10 fixed w-[90%] left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 lg:max-w-1/3 grid gap-1">
 					<div className="flex items-center gap-2 mb-1">
 						<Image src={Logo} alt="Rent Easy Logo" className="size-10" />
 						<h2 className="text-xl font-bold text-center text-fuchsia-800">Update Account Details</h2>

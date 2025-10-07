@@ -9,6 +9,9 @@ import { useRef } from "react";
 import { useState } from "react";
 import { XCircleIcon, PlusCircleIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
+import { Edit2 } from "lucide-react";
+
+export const runtime = "edge";
 
 export default function PropertiesForOwner() {
 	const routerToGoBackToLogIn = useRouter();
@@ -36,19 +39,21 @@ export default function PropertiesForOwner() {
 		<>
 			<NavBar />
 
-			<button
-				onClick={() => handleClickOpen()}
-				className="bg-fuchsia-800 font-semibold hover:bg-custom-white-50 hover:text-fuchsia-800 border-fuchsia-800 border-2 transition-all py-0.5 rounded text-white cursor-pointer flex items-center mt-3 px-3 gap-1 mx-auto text-sm">
-				<span>List property</span>
-				<PlusCircleIcon className="size-6" />
-			</button>
-
-			<Link href={"/reservations-for-owner"}>
-				<button className="bg-fuchsia-800 font-semibold hover:bg-custom-white-50 hover:text-fuchsia-800 border-fuchsia-800 border-2 transition-all py-0.5 rounded text-white cursor-pointer flex items-center mt-3 px-3 gap-1 mx-auto text-sm">
-					<span>Manage Reservations</span>
-					<PlusCircleIcon className="size-6" />
+			<div className="flex gap-2 mt-3 justify-center">
+				<button
+					onClick={() => handleClickOpen()}
+					className="bg-fuchsia-800 font-semibold hover:bg-custom-white-50 hover:text-fuchsia-800 border-fuchsia-800 border-2 transition-all py-0.5 rounded text-white cursor-pointer flex items-center px-3 gap-1 text-sm w-fit">
+					<span>List property</span>
+					<PlusCircleIcon className="size-4" />
 				</button>
-			</Link>
+
+				<Link href={"/reservations-for-owner"}>
+					<button className="bg-fuchsia-800 font-semibold hover:bg-custom-white-50 hover:text-fuchsia-800 border-fuchsia-800 border-2 transition-all py-0.5 rounded text-white cursor-pointer flex items-center px-3 gap-1 text-sm w-fit">
+						<span>Manage Reservations</span>
+						<Edit2 className="size-4" />
+					</button>
+				</Link>
+			</div>
 
 			<dialog
 				ref={dialogRef}

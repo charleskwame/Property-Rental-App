@@ -1,11 +1,11 @@
 "use client";
 
 import axios from "axios";
-import { useState, useEffect, useRef } from "react";
+import { useState } from "react";
 import { API_URL } from "@/config";
 import { useRouter } from "next/navigation";
-import { GoToPageFunction } from "@/app/functions/gotoLogin.function";
-import { XCircleIcon } from "@heroicons/react/24/outline";
+// import { GoToPageFunction } from "@/app/functions/gotoLogin.function";
+// import { XCircleIcon } from "@heroicons/react/24/outline";
 
 export default function SignUpRenter() {
 	const route = useRouter();
@@ -110,8 +110,7 @@ export default function SignUpRenter() {
 				// sign up form
 				<form
 					className="bg-custom-white-50 text-gray-500  p-4 py-4 text-left text-sm rounded-2xl shadow-[0px_0px_10px_0px] shadow-black/10"
-					onSubmit={(event) => handleSignUp(event)}
-				>
+					onSubmit={(event) => handleSignUp(event)}>
 					<h2 className="text-xl font-bold mb-2 text-center text-fuchsia-800">Create an account</h2>
 
 					<input
@@ -160,8 +159,7 @@ export default function SignUpRenter() {
 						className="w-full border mt-1 bg-fuchsia-500/5 border-gray-500/10 outline-none rounded py-2.5 px-3 focus:border-fuchsia-800 mb-3"
 						required
 						value={usertype}
-						onChange={(event) => setUsertype(event?.target.value)}
-					>
+						onChange={(event) => setUsertype(event?.target.value)}>
 						<option value="">Select Type</option>
 						<option value="renter">Renter</option>
 						<option value="owner">Owner</option>
@@ -169,8 +167,7 @@ export default function SignUpRenter() {
 
 					<button
 						type="submit"
-						className="w-full mb-3 bg-fuchsia-800 font-semibold hover:bg-custom-white-50 hover:text-fuchsia-800 hover:border-fuchsia-800 border transition-all py-2.5 rounded text-white cursor-pointer"
-					>
+						className="w-full mb-3 bg-fuchsia-800 font-semibold hover:bg-custom-white-50 hover:text-fuchsia-800 hover:border-fuchsia-800 border transition-all py-2.5 rounded text-white cursor-pointer">
 						Create Account
 					</button>
 
@@ -179,8 +176,7 @@ export default function SignUpRenter() {
 						<button
 							type="button"
 							className="text-orange-400 underline cursor-pointer"
-							onClick={() => setOpenLogIn(false)}
-						>
+							onClick={() => setOpenLogIn(false)}>
 							Log In
 						</button>
 					</p>
@@ -190,8 +186,7 @@ export default function SignUpRenter() {
 				<form
 					action=""
 					className="bg-custom-white-50 text-gray-500  p-4 py-4 text-left text-sm rounded-2xl shadow-[0px_0px_10px_0px] shadow-black/10"
-					onSubmit={(event) => handleLogIn(event)}
-				>
+					onSubmit={(event) => handleLogIn(event)}>
 					<h2 className="text-xl font-bold mb-2 text-center text-fuchsia-800">Welcome back</h2>
 
 					<input
@@ -217,8 +212,7 @@ export default function SignUpRenter() {
 					{/* <button type="submit">Log in</button> */}
 					<button
 						type="submit"
-						className="w-full mb-3 bg-fuchsia-800 font-semibold hover:bg-custom-white-50 hover:text-fuchsia-800 hover:border-fuchsia-800 border transition-all py-2.5 rounded text-white cursor-pointer"
-					>
+						className="w-full mb-3 bg-fuchsia-800 font-semibold hover:bg-custom-white-50 hover:text-fuchsia-800 hover:border-fuchsia-800 border transition-all py-2.5 rounded text-white cursor-pointer">
 						Log In
 					</button>
 
@@ -227,8 +221,7 @@ export default function SignUpRenter() {
 						<button
 							type="button"
 							className="text-orange-400 underline cursor-pointer"
-							onClick={() => setOpenLogIn(true)}
-						>
+							onClick={() => setOpenLogIn(true)}>
 							Sign up
 						</button>
 					</p>

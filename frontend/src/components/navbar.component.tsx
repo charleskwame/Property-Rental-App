@@ -3,8 +3,8 @@
 import Link from "next/link";
 import {
 	UserCircleIcon,
-	XCircleIcon,
-	HeartIcon,
+	// XCircleIcon,
+	// HeartIcon,
 	Cog8ToothIcon,
 	ArrowLeftEndOnRectangleIcon,
 	BookmarkIcon,
@@ -15,7 +15,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import Logo from "../../public/assets/logo.svg";
 import Image from "next/image";
-import SignUpRenter from "./signup.component";
+// import SignUpRenter from "./signup.component";
 import { useRef } from "react";
 import Toast from "@/components/toast.component";
 import { toast } from "react-toastify";
@@ -69,6 +69,7 @@ export default function NavBar() {
 		toast.success("Logged Out");
 		sessionStorage.removeItem("User");
 		sessionStorage.removeItem("UserLoggedIn");
+		// return true;
 		//alert("Logged Out");
 		location.reload();
 		route.push("/");

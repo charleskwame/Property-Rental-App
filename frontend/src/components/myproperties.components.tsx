@@ -14,8 +14,8 @@ import {
 	HomeModernIcon,
 } from "@heroicons/react/24/outline";
 import { toast } from "react-toastify";
-import { useForm, SubmitHandler } from "react-hook-form";
-import { Locations } from "@/lib/cities";
+import { useForm } from "react-hook-form";
+// import { Locations } from "@/lib/cities";
 import propertyTypeOptions from "@/propertytypes";
 //import {HomeIcon, MapPinIcon} from "@heroicons/react/24/outline";
 
@@ -75,10 +75,10 @@ export default function MyProperties() {
 		}
 	}, []);
 
-	const propertyDetails = async (event: React.MouseEvent, _id: string) => {
-		event.preventDefault();
-		routerToGoToSpecificPropertyPage.push(`/properties-for-rent/${_id}`);
-	};
+	// const propertyDetails = async (event: React.MouseEvent, _id: string) => {
+	// 	event.preventDefault();
+	// 	routerToGoToSpecificPropertyPage.push(`/properties-for-rent/${_id}`);
+	// };
 
 	const openDeleteDialogFunction = () => {
 		setOpenDeleteDialog(true);
@@ -174,103 +174,64 @@ export default function MyProperties() {
 					}>
 					{propertiesLoaded?.length > 0 ? (
 						propertiesLoaded.map((propertyLoaded) => (
-							<>
-								<div key={propertyLoaded._id} className="relative w-fit border-1 rounded-xl">
-									{/* <div className="">
+							<div key={propertyLoaded._id} className="relative w-fit border-1 rounded-xl ">
+								{/* <div className="">
                                                                     </div> */}
-									{/* <p className="text-xs ">
+								{/* <p className="text-xs ">
                                                                         Remove
                                                                     </p> */}
-									{/* <HeartIcon
+								{/* <HeartIcon
 										className="size-8 fill-fuchsia-800 stroke-fuchsia-800 cursor-pointer flex items-center absolute top-1 right-1 gap-1 border-2 border-fuchsia-800 p-1 bg-fuchsia-800/20 text-fuchsia-800 font-semibold rounded-lg hover:bg-fuchsia-800 hover:fill-white hover:stroke-white transtion-all duration-300 ease-in-out"
 										onClick={(event) => removePropertyFromFavorites(event, property._id)}
 									/> */}
-									<div
-										className="rounded-xl"
-										// onClick={(event) => {
-										// 	propertyDetails(event, property._id);
-										// }}
-									>
-										<Image
-											className=" border-2 border-gray-100 object-cover rounded-t-xl"
-											src={propertyLoaded.images[0]}
-											alt={`Image of ${propertyLoaded.name}`}
-											//fill
-											width={400}
-											height={200}
-										/>
-										<div className="p-1 border rounded-b-xl grid gap-1">
-											<h1 className="font-semibold text-sm flex items-center gap-1 text-fuchsia-800">
-												<HomeModernIcon className="size-4" />
-												{propertyLoaded.name}
-											</h1>
-											<div className="flex items-center justify-between">
-												<p className="text-xs flex items-center gap-1">
-													<MapPinIcon className="size-3" />
-													{propertyLoaded.location}
-												</p>
-												<p className="text-xs font-semibold text-fuchsia-800">
-													GHc{propertyLoaded.price} <small className="text-black">/month</small>
-												</p>
-											</div>
+								<div
+									className="rounded-xl"
+									// onClick={(event) => {
+									// 	propertyDetails(event, property._id);
+									// }}
+								>
+									<Image
+										className=" border-2 border-gray-100 object-cover rounded-t-xl"
+										src={propertyLoaded.images[0]}
+										alt={`Image of ${propertyLoaded.name}`}
+										//fill
+										width={400}
+										height={200}
+									/>
+									<div className="p-1  grid gap-1 min-h-full">
+										<h1 className="font-semibold text-sm flex items-center gap-1 text-fuchsia-800">
+											<HomeModernIcon className="size-4" />
+											{propertyLoaded.name}
+										</h1>
+										<div className="flex items-center justify-between">
+											<p className="text-xs flex items-center gap-1">
+												<MapPinIcon className="size-3" />
+												{propertyLoaded.location}
+											</p>
+											<p className="text-xs font-semibold text-fuchsia-800">
+												GHc{propertyLoaded.price} <small className="text-black">/month</small>
+											</p>
 										</div>
 									</div>
-									<button
-										className="absolute -top-1 -right-1 bg-fuchsia-800 text-white p-1 rounded-md hover:text-fuchsia-800 hover:bg-white hover:border-fuchsia-800 border-2 border-fuchsia-800 transition-all ease-in-out duration-300 cursor-pointer"
-										onClick={() => {
-											openUpdateDialogFunction();
-											setPropertyToBeUpdated(propertyLoaded);
-										}}>
-										<PencilIcon className="size-6" />
-									</button>
-
-									<button
-										className="absolute -top-1 -left-1 bg-red-500 text-white p-1 rounded-md hover:text-red-500 hover:bg-white hover:border-red-500 border-2 border-red-500 transition-all ease-in-out duration-300 cursor-pointer"
-										onClick={() => {
-											openDeleteDialogFunction();
-											setPropertyToBeDeleted(propertyLoaded);
-										}}>
-										<TrashIcon className="size-6" />
-									</button>
 								</div>
-								{/* <div key={propertyLoaded._id} className="relative w-fit cursor-pointer">
-									<div
-										className="rounded-3xl"
-										onClick={(event) => {
-											propertyDetails(event, propertyLoaded._id);
-										}}>
-										<Image
-											className="rounded-3xl border-2 border-gray-100 aspect-square"
-											src={propertyLoaded.images[0]}
-											alt={`Image of ${propertyLoaded.name}`}
-											width={200}
-											height={200}
-										/>
-										<div className="px-2">
-											<h1 className="font-semibold text-sm">{propertyLoaded.name} </h1>
-											<p className="text-xs">GHc {propertyLoaded.price}</p>
-										</div>
-									</div>
+								<button
+									className="absolute -top-1 -right-1 bg-fuchsia-800 text-white p-1 rounded-md hover:text-fuchsia-800 hover:bg-white hover:border-fuchsia-800 border-2 border-fuchsia-800 transition-all ease-in-out duration-300 cursor-pointer"
+									onClick={() => {
+										openUpdateDialogFunction();
+										setPropertyToBeUpdated(propertyLoaded);
+									}}>
+									<PencilIcon className="size-6" />
+								</button>
 
-									<button
-										className="absolute bottom-10 right-0 bg-fuchsia-800 text-white p-1 rounded-md hover:text-fuchsia-800 hover:bg-white hover:border-fuchsia-800 border-2 border-fuchsia-800 transition-all ease-in-out duration-300 cursor-pointer"
-										onClick={() => {
-											openUpdateDialogFunction();
-											setPropertyToBeUpdated(propertyLoaded);
-										}}>
-										<PencilIcon className="size-6" />
-									</button>
-
-									<button
-										className="absolute bottom-0 right-0 bg-red-500 text-white p-1 rounded-md hover:text-red-500 hover:bg-white hover:border-red-500 border-2 border-red-500 transition-all ease-in-out duration-300 cursor-pointer"
-										onClick={() => {
-											openDeleteDialogFunction();
-											setPropertyToBeDeleted(propertyLoaded);
-										}}>
-										<TrashIcon className="size-6" />
-									</button>
-								</div> */}
-							</>
+								<button
+									className="absolute -top-1 -left-1 bg-red-500 text-white p-1 rounded-md hover:text-red-500 hover:bg-white hover:border-red-500 border-2 border-red-500 transition-all ease-in-out duration-300 cursor-pointer"
+									onClick={() => {
+										openDeleteDialogFunction();
+										setPropertyToBeDeleted(propertyLoaded);
+									}}>
+									<TrashIcon className="size-6" />
+								</button>
+							</div>
 						))
 					) : (
 						<h1 className="text-center text-xl font-semibold text-fuchsia-800 mt-10">
@@ -447,4 +408,44 @@ export default function MyProperties() {
 }
 {
 	/* <input type="text" value={propertyLoaded?.type} /> */
+}
+
+{
+	/* <div key={propertyLoaded._id} className="relative w-fit cursor-pointer">
+                            <div
+                                className="rounded-3xl"
+                                onClick={(event) => {
+                                    propertyDetails(event, propertyLoaded._id);
+                                }}>
+                                <Image
+                                    className="rounded-3xl border-2 border-gray-100 aspect-square"
+                                    src={propertyLoaded.images[0]}
+                                    alt={`Image of ${propertyLoaded.name}`}
+                                    width={200}
+                                    height={200}
+                                />
+                                <div className="px-2">
+                                    <h1 className="font-semibold text-sm">{propertyLoaded.name} </h1>
+                                    <p className="text-xs">GHc {propertyLoaded.price}</p>
+                                </div>
+                            </div>
+
+                            <button
+                                className="absolute bottom-10 right-0 bg-fuchsia-800 text-white p-1 rounded-md hover:text-fuchsia-800 hover:bg-white hover:border-fuchsia-800 border-2 border-fuchsia-800 transition-all ease-in-out duration-300 cursor-pointer"
+                                onClick={() => {
+                                    openUpdateDialogFunction();
+                                    setPropertyToBeUpdated(propertyLoaded);
+                                }}>
+                                <PencilIcon className="size-6" />
+                            </button>
+
+                            <button
+                                className="absolute bottom-0 right-0 bg-red-500 text-white p-1 rounded-md hover:text-red-500 hover:bg-white hover:border-red-500 border-2 border-red-500 transition-all ease-in-out duration-300 cursor-pointer"
+                                onClick={() => {
+                                    openDeleteDialogFunction();
+                                    setPropertyToBeDeleted(propertyLoaded);
+                                }}>
+                                <TrashIcon className="size-6" />
+                            </button>
+                        </div> */
 }
