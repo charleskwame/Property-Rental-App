@@ -1,4 +1,4 @@
-export const API_URL = "http://localhost:5050/api/v1/";
+export const API_URL = "https://property-rental-app-80ir.onrender.com/api/v1/";
 
 export const NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME = "dmiy3wi6r";
 
