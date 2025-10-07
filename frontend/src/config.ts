@@ -1,4 +1,4 @@
-export const API_URL = "https://property-rental-app-2kyh.onrender.com/api/v1/";
+export const API_URL = "https://property-rental-app-api.vercel.app/api/v1/";
 
 export const NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME = "dmiy3wi6r";
 
