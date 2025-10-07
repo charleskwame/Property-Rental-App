@@ -29,7 +29,7 @@ app.use(cookieParser());
 //app.use("/api/v1/renters/", RenterRouter);
 app.use("/api/v1/user/", UserRouter);
 
-app.listen(PORT, async () => {
+app.listen(PORT || 5050, async () => {
 	console.log(`running on port ${PORT}`);
 	await connectToDatabase();
 });
