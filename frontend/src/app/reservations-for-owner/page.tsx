@@ -12,8 +12,6 @@ import { Edit2 } from "lucide-react";
 import { toast } from "react-toastify";
 import LoadingSpinner from "@/components/loadingspinner.component";
 
-export const runtime = "edge";
-
 export default function ReservationsForOwner() {
 	const [reservationsLoaded, setReservationsLoaded] = useState<ReservationsLoaded[]>([]);
 	const [isChangeStatusDialogOpen, setIsChangeStatusDialogOpen] = useState<boolean>(false);

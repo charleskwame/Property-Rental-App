@@ -31,8 +31,6 @@ type ReservationDetails = {
 	userID?: string;
 };
 
-export const runtime = "edge";
-
 export default function SpecificProperty() {
 	//const pathName = usePathname();
 	const params = useParams();

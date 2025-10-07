@@ -22,8 +22,6 @@ type FormInputs = {
 	usertype?: string;
 };
 
-export const runtime = "edge";
-
 export default function SignUpRenter() {
 	const route = useRouter();
 	//const dialogRef = useRef(null);

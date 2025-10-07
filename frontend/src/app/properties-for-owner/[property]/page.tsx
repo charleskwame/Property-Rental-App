@@ -7,8 +7,6 @@ import axios from "axios";
 import { API_URL } from "@/config";
 import Image from "next/image";
 
-export const runtime = "edge";
-
 export default function SpecificProperty() {
 	const params = useParams();
 	const [property, setProperty] = useState<PropertyInterFace>();

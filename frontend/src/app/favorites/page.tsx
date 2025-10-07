@@ -12,8 +12,6 @@ import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import Toast from "@/components/toast.component";
 
-export const runtime = "edge";
-
 export default function FavoriteProperties() {
 	const [loading, setLoading] = useState<boolean>(false);
 	const [propertiesLoaded, setPropertiesLoaded] = useState<PropertyInterFace[]>([]);

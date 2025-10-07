@@ -12,8 +12,6 @@ import Toast from "@/components/toast.component";
 import { toast } from "react-toastify";
 import NavBarDecorative from "@/components/navbardecorative.component";
 
-export const runtime = "edge";
-
 export default function SendRenterOTP() {
 	//const routeToVerifyRenterOTP = useRouter();
 	const route = useRouter();

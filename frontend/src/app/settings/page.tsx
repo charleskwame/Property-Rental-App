@@ -11,8 +11,6 @@ import Toast from "@/components/toast.component";
 import { toast } from "react-toastify";
 // import { headers } from "next/headers";
 
-export const runtime = "edge";
-
 export default function AccountSettings() {
 	const route = useRouter();
 	const [userName, setUserName] = useState<string>("");

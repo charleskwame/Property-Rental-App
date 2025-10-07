@@ -10,8 +10,6 @@ import NavBarDecorative from "@/components/navbardecorative.component";
 import Toast from "@/components/toast.component";
 import { toast } from "react-toastify";
 
-export const runtime = "edge";
-
 export default function VerifyRenter() {
 	const router = useRouter();
 	const [otpDigits, setOtpDigits] = useState<string[]>(["", "", "", "", "", ""]);

@@ -11,8 +11,6 @@ import { XCircleIcon, PlusCircleIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import { Edit2 } from "lucide-react";
 
-export const runtime = "edge";
-
 export default function PropertiesForOwner() {
 	const routerToGoBackToLogIn = useRouter();
 	const dialogRef = useRef(null);

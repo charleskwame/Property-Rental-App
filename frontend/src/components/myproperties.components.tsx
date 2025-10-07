@@ -3,7 +3,7 @@ import { PropertyInterFace } from "@/interfaces/property.interface";
 import axios from "axios";
 import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+// import { useRouter } from "next/navigation";
 import LoadingSpinner from "./loadingspinner.component";
 import {
 	TrashIcon,
