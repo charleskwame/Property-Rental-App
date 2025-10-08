@@ -88,10 +88,46 @@ export default function VerifyRenter() {
 			});
 
 			if (response.data.status === "Success") {
-				toast.success("Email Verified Successfully");
+				const body = {
+					userName: parsed.data.userWithoutPassword.name,
+					email: parsed.data.userWithoutPassword.email,
+				};
+
+				try {
+					const response = await fetch("/api/send-verified-otp-email", {
+						method: "POST",
+						cache: "no-cache",
+						body: JSON.stringify(body),
+						headers: {
+							"Content-Type": "application/json",
+						},
+					});
+
+					// const data = await response.json();
+
+					if (!response.ok) {
+						// Server returned an error status (e.g. 400 or 500)
+						// console.error("Error sending email:", data.error || "Unknown error");
+						toast.error("Cannot Verify Email");
+						// You can show this error in UI
+						return;
+					}
+
+					// console.log("Email sent successfully:", data.message);
+					toast.success("Email Verified Successfully");
+					router.push("/");
+
+					// Show success to the user
+				} catch (error) {
+					// Network error or unexpected issue
+					// console.error("Network or unexpected error:", err);
+					toast.error("Network Error, Email Not Verified");
+					console.log(error);
+				}
+				// toast.success("Email Verified Successfully");
+				// router.push("/");
 				sessionStorage.setItem("User", JSON.stringify(response.data));
 				sessionStorage.setItem("UserLoggedIn", JSON.stringify({ loggedin: true }));
-				router.push("/");
 			}
 		} catch (error) {
 			toast.error("Verification failed, please try again.");

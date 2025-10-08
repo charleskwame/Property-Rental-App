@@ -147,9 +147,11 @@ export default function PropertiesForRent() {
 		}
 	};
 
-	const sendEmail = async () => {
-		await fetch("/api/email", { method: "POST" });
-	};
+	// const sendEmail = async () => {
+	// 	await fetch("/api/email", { method: "POST" }).then((response) => {
+	// 		console.log(response);
+	// 	});
+	// };
 
 	return (
 		<main className="">
@@ -340,9 +342,9 @@ export default function PropertiesForRent() {
 				</div>
 			)}
 
-			<button className="border-2 p-3 m-3" onClick={() => sendEmail()}>
+			{/* <button className="border-2 p-3 m-3" onClick={() => sendEmail()}>
 				Send Test Email
-			</button>
+			</button> */}
 		</main>
 	);
 }

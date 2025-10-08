@@ -186,7 +186,49 @@ export default function SpecificProperty() {
 					},
 				});
 				if (request.status === 200) {
-					toast.success("Viewing request sent");
+					// console.log(request.data);
+					// return;
+					// toast.success("Viewing request sent");
+					try {
+						const body = {
+							clientemail: request.data.data.clientEmail,
+							owneremail: request.data.data.ownerEmail,
+							propertyname: request.data.data.reservation.propertyToView.propertyName,
+							date: request.data.data.reservation.date,
+							time: request.data.data.reservation.time,
+							username: request.data.data.reservation.madeBy.clientName,
+							ownername: request.data.data.reservation.propertyOwner.propertyOwnerName,
+						};
+						// console.log(body);
+						// return true;
+						const response = await fetch("/api/send-reservation-emails", {
+							method: "POST",
+							cache: "no-cache",
+							body: JSON.stringify(body),
+							headers: {
+								"Content-Type": "application/json",
+							},
+						});
+
+						const data = await response.json();
+
+						if (!response.ok) {
+							// Server returned an error status (e.g. 400 or 500)
+							console.error("Error sending email:", data.error || "Unknown error");
+							toast.error("Could Not Complete Reservation, Try again later");
+							// You can show this error in UI
+							return;
+						}
+
+						console.log("Email sent successfully:", data.message);
+						toast.success("Reservation Made! An Email Has Been Sent To You");
+						// Show success to the user
+					} catch (error) {
+						// Network error or unexpected issue
+						console.error("Network or unexpected error:", error);
+						toast.error("Reservation Could Not Be Completed! Try Again");
+					}
+
 					//alert("Viewing request sent");
 				}
 			} catch (error) {
@@ -213,6 +255,37 @@ export default function SpecificProperty() {
 	// 		timeInput.stepDown(30);
 	// 	}
 	// };
+
+	// {
+	//     "status": "Success",
+	//     "message": "Reservation created",
+	//     "data": {
+	//       "reservation": {
+	//         "madeBy": {
+	//           "clientID": "68d6678a5aec3dc74877f352",
+	//           "clientName": "Gloria Baah",
+	//           "_id": "68e6889693852b11bef3969a"
+	//         },
+	//         "propertyToView": {
+	//           "propertyID": "68dd37918263bc5f3e7a621b",
+	//           "propertyName": "Bungalow in Bawku",
+	//           "_id": "68e6889693852b11bef3969b"
+	//         },
+	//         "propertyOwner": {
+	//           "propertyOwnerID": "68c070efd33c1202a3ca9673",
+	//           "propertyOwnerName": "Charles Tetteh",
+	//           "_id": "68e6889693852b11bef3969c"
+	//         },
+	//         "date": "2025-10-30T00:00:00.000Z",
+	//         "time": "12:34 PM",
+	//         "status": "Pending",
+	//         "_id": "68e6889693852b11bef39699",
+	//         "__v": 0
+	//       },
+	//       "clientEmail": "quamheberri67@gmail.com",
+	//       "ownerEmail": "charlestettehnull@gmail.com"
+	//     }
+	//   }
 
 	return (
 		<>

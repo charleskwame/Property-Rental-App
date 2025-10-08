@@ -10,19 +10,19 @@ import { JWT_SECRET, JWT_EXPIRES_IN } from "../config/env.js";
 import UserModel from "../models/user.model.js";
 import OTPModel from "../models/otp.model.js";
 //import { createTransport } from "nodemailer";
-import { NODEMAILER_EMAIL, NODEMAILER_PASSWORD } from "../config/env.js";
-import nodemailer from "nodemailer";
-import { verificationSuccessTemplate } from "../emailtemplates/verificationsuccess.template.js";
+// import { NODEMAILER_EMAIL, NODEMAILER_PASSWORD } from "../config/env.js";
+// import nodemailer from "nodemailer";
+// import { verificationSuccessTemplate } from "../emailtemplates/verificationsuccess.template.js";
 
 //creating nodemailer transport
-const transporter = nodemailer.createTransport({
-	service: "gmail",
-	secure: false,
-	auth: {
-		user: NODEMAILER_EMAIL,
-		pass: NODEMAILER_PASSWORD,
-	},
-});
+// const transporter = nodemailer.createTransport({
+// 	service: "gmail",
+// 	secure: false,
+// 	auth: {
+// 		user: NODEMAILER_EMAIL,
+// 		pass: NODEMAILER_PASSWORD,
+// 	},
+// });
 
 export const verifyOTP = async (request, response) => {
 	try {
@@ -68,16 +68,16 @@ export const verifyOTP = async (request, response) => {
 
 		const { password: _, ...userWithoutPassword } = updatedUser.toObject();
 
-		const emailTemplate = verificationSuccessTemplate(updatedUser.name);
+		// const emailTemplate = verificationSuccessTemplate(updatedUser.name);
 
-		const mailOptions = {
-			from: NODEMAILER_EMAIL,
-			to: updatedUser.email,
-			subject: `Email Successfully Verified`,
-			html: emailTemplate,
-		};
+		// const mailOptions = {
+		// 	from: NODEMAILER_EMAIL,
+		// 	to: updatedUser.email,
+		// 	subject: `Email Successfully Verified`,
+		// 	html: emailTemplate,
+		// };
 
-		await transporter.sendMail(mailOptions);
+		// await transporter.sendMail(mailOptions);
 
 		response.status(200).json({
 			status: "Success",

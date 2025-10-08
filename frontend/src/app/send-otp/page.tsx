@@ -44,7 +44,7 @@ export default function SendRenterOTP() {
 	const handleOTPSubmission = async (event: React.FormEvent) => {
 		event.preventDefault();
 		const storedUserData = JSON.parse(`${sessionStorage.getItem("User")}`);
-		console.log(storedUserData);
+		// console.log(storedUserData);
 
 		const token = `Bearer ${storedUserData.data.token}`;
 
@@ -61,9 +61,44 @@ export default function SendRenterOTP() {
 			});
 			//setIsSendingOTP(!isSendingOTP);
 			if (request.status === 200) {
-				toast.success("OTP Sent Successfully");
-				//console.log(request.data);
-				route.push("/verify-user");
+				// console.log(request.data);
+				const body = {
+					otpCode: request.data.data.otp,
+					userName: storedUserData.data.userWithoutPassword.name,
+					email: storedUserData.data.userWithoutPassword.email,
+				};
+
+				try {
+					const response = await fetch("/api/send-otp-email", {
+						method: "POST",
+						cache: "no-cache",
+						body: JSON.stringify(body),
+						headers: {
+							"Content-Type": "application/json",
+						},
+					});
+
+					// const data = await response.json();
+
+					if (!response.ok) {
+						// Server returned an error status (e.g. 400 or 500)
+						// console.error("Error sending email:", data.error || "Unknown error");
+						toast.error("OTP Email Not Sent, Try Again");
+						// You can show this error in UI
+						return;
+					}
+
+					// console.log("Email sent successfully:", data.message);
+					toast.success("OTP Sent To Your Inbox");
+					route.push("/verify-user");
+
+					// Show success to the user
+				} catch (error) {
+					// Network error or unexpected issue
+					// console.error("Network or unexpected error:", err);
+					toast.error("Network Error, OTP Not Sent");
+					console.log(error);
+				}
 			}
 		} catch (error) {
 			toast.error("Failed to send OTP");
@@ -103,3 +138,24 @@ export default function SendRenterOTP() {
 		</>
 	);
 }
+
+// console.log("frontend body is " + body.userName);
+// await fetch("/api/send-otp-email", {
+// 	method: "POST",
+// 	cache: "no-cache",
+// 	body: JSON.stringify(body),
+// 	headers: {
+// 		"Content-Type": "application/json",
+// 	},
+// })
+// 	.then((response) => response.json())
+// 	.then((data) => console.log(data));
+// const sendEmailRequest = await axios.post("/api/send-email-otp", body);
+
+// console.log(sendEmailRequest);
+
+// if (sendEmailRequest.status === 200) {
+// 	toast.success("OTP Sent Successfully");
+// 	//console.log(request.data);
+// 	// route.push("/verify-user");
+// }
