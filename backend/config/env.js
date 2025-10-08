@@ -10,4 +10,5 @@ export const {
 	JWT_EXPIRES_IN,
 	NODEMAILER_EMAIL,
 	NODEMAILER_PASSWORD,
+	SENDGRIDKEY,
 } = process.env;
