@@ -32,6 +32,7 @@ const transporter = nodemailer.createTransport({
 		user: NODEMAILER_EMAIL,
 		pass: NODEMAILER_PASSWORD,
 	},
+	timeout: 10000,
 });
 
 //function to add renter(sign up)
