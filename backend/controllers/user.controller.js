@@ -27,7 +27,7 @@ import {
 //creating nodemailer transport
 const transporter = nodemailer.createTransport({
 	service: "gmail",
-	secure: false,
+	// secure: false,
 	auth: {
 		user: NODEMAILER_EMAIL,
 		pass: NODEMAILER_PASSWORD,
@@ -551,7 +551,12 @@ export const sendReservationEmail = async (request, response) => {
 			message: "Email Sent",
 		});
 	} catch (error) {
-		throw new Error(error);
+		console.error("Email sending failed:", error);
+		return response.status(500).json({
+			status: "Error",
+			message: "Email failed to send",
+			error: error.message,
+		});
 	}
 };
 
