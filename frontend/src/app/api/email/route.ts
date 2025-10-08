@@ -1,9 +1,9 @@
-import { EmailTemplate } from "@/components/emails/email-template";
+// import { EmailTemplate } from "@/components/emails/email-template";
 // import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 // import { Resend } from "resend";
 
-export const runtime = "edge";
+// export const runtime = "edge";
 
 // const resend = new Resend(process.env.RESEND_API_KEY);
 
