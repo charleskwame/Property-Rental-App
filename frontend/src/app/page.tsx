@@ -150,9 +150,7 @@ export default function PropertiesForRent() {
 	return (
 		<main className="">
 			<NavBar />
-			{/* <LoadingSpinner /> */}
 
-			{/* <SignUpRenter open={true} /> */}
 			{loading ? (
 				<LoadingSpinner message={"Loading Properties"} />
 			) : (
