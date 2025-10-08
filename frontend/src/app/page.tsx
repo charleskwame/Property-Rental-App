@@ -147,6 +147,10 @@ export default function PropertiesForRent() {
 		}
 	};
 
+	const sendEmail = async () => {
+		await fetch("/api/email", { method: "POST" });
+	};
+
 	return (
 		<main className="">
 			<NavBar />
@@ -241,7 +245,7 @@ export default function PropertiesForRent() {
 								? `grid grid-cols-2 lg:grid-cols-5 gap-1 ${
 										openFilterDialog &&
 										"transition-all ease-in-out duration-300 translate-y-[120px] md:translate-y-20"
-								  }`
+									}`
 								: ""
 						}>
 						{propertiesFetched.length > 0 ? (
@@ -335,6 +339,10 @@ export default function PropertiesForRent() {
 					</div>
 				</div>
 			)}
+
+			<button className="border-2 p-3 m-3" onClick={() => sendEmail()}>
+				Send Test Email
+			</button>
 		</main>
 	);
 }
