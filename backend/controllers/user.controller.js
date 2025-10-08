@@ -8,7 +8,6 @@ import {
 	JWT_SECRET,
 	NODEMAILER_EMAIL,
 	NODEMAILER_PASSWORD,
-	SENDGRIDKEY,
 } from "../config/env.js";
 import jwt from "jsonwebtoken";
 import nodemailer from "nodemailer";
@@ -27,11 +26,11 @@ import {
 
 //creating nodemailer transport
 const transporter = nodemailer.createTransport({
-	service: "SendGrid",
+	service: "gmail",
 	// secure: false,
 	auth: {
-		user: "apikey",
-		pass: SENDGRIDKEY,
+		user: NODEMAILER_EMAIL,
+		pass: NODEMAILER_PASSWORD,
 	},
 });
 
