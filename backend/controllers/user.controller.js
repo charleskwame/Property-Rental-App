@@ -1,39 +1,14 @@
 /* eslint-disable no-unused-vars */
 import mongoose from "mongoose";
 import PropertyModel from "../models/property.model.js";
-//import RenterModel from "../models/Renter.models.js";
+
 import bcrypt from "bcryptjs";
-import {
-	JWT_EXPIRES_IN,
-	JWT_SECRET,
-	NODEMAILER_EMAIL,
-	// NODEMAILER_PASSWORD,
-} from "../config/env.js";
+import { JWT_EXPIRES_IN, JWT_SECRET } from "../config/env.js";
 import jwt from "jsonwebtoken";
-// import nodemailer from "nodemailer";
-//import RenterOTPModel from "../models/otp.model.js";
+
 import UserModel from "../models/user.model.js";
 import OTPModel from "../models/otp.model.js";
-import { otpEmailTemplate } from "../emailtemplates/otpverification.template.js";
 import ReservationsModel from "../models/reservations.model.js";
-// import { ReservationEmailClient } from "../emailtemplates/reservationemailclient.template.js";
-// import { ReservationEmailOwner } from "../emailtemplates/reservationemailowner.template.js";
-// import { ReservationUpdateOwner } from "../emailtemplates/reservationupdateowner.template.js";
-// import {
-// 	ReservationUpdateClientAccepted,
-// 	ReservationUpdateClientRejected,
-// } from "../emailtemplates/reservationupdateclient.template.js";
-
-// //creating nodemailer transport
-// const transporter = nodemailer.createTransport({
-// 	service: "gmail",
-// 	// secure: false,
-// 	auth: {
-// 		user: NODEMAILER_EMAIL,
-// 		pass: NODEMAILER_PASSWORD,
-// 	},
-// 	timeout: 10000,
-// });
 
 //function to add renter(sign up)
 export const addUser = async (request, response, next) => {
@@ -302,17 +277,6 @@ export const sendUserOTP = async (request, response) => {
 
 	const userToVerify = await UserModel.findOne({ email: email });
 
-	const emailTemplate = otpEmailTemplate(otp, userToVerify.name);
-
-	const mailOptions = {
-		from: NODEMAILER_EMAIL,
-		to: email,
-		subject: `Welcome To Rent Easy, Verify Your Email`,
-		html: emailTemplate,
-	};
-
-	// console.log(emailTemplate);
-
 	try {
 		const salt = await bcrypt.genSalt(10);
 
@@ -500,36 +464,9 @@ export const sendReservationEmail = async (request, response) => {
 	const property = await PropertyModel.findOne({ _id: propertyID });
 	const user = await UserModel.findOne({ _id: userID });
 	const propertyOwner = await UserModel.findOne({ _id: property.owner });
-	// const clientEmailTemplate = ReservationEmailClient(
-	// 	user.name,
-	// 	property.name,
-	// 	date,
-	// 	time,
-	// 	propertyOwner.name,
-	// );
-	// const ownerEmailTemplate = ReservationEmailOwner(
-	// 	propertyOwner.name,
-	// 	property.name,
-	// 	user.name,
-	// 	date,
-	// 	time,
-	// );
-	//return response.json({ property, user, propertyOwner });
+
 	const mailList = [user.email, propertyOwner.email];
-	// const mailOptionsToRenter = {
-	// 	from: NODEMAILER_EMAIL,
-	// 	to: mailList[0],
-	// 	// bcc: mailList,
-	// 	subject: `Your viewing request for property (${property.name})`,
-	// 	html: clientEmailTemplate,
-	// };
-	// const mailOptionsToPropertyOwner = {
-	// 	from: NODEMAILER_EMAIL,
-	// 	to: mailList[1],
-	// 	// bcc: mailList,
-	// 	subject: `You have a new viewing request for your property (${property.name})`,
-	// 	html: ownerEmailTemplate,
-	// };
+
 	try {
 		const reservation = await ReservationsModel.create({
 			madeBy: { clientID: user._id, clientName: user.name },
@@ -545,9 +482,7 @@ export const sendReservationEmail = async (request, response) => {
 				message: "Reservation not created",
 			});
 		}
-		// await PropertyModel.updateOne({ _id: propertyID }, { $pull: { viewingTimes: time } });
-		// await transporter.sendMail(mailOptionsToPropertyOwner);
-		// await transporter.sendMail(mailOptionsToRenter);
+
 		return response.status(200).json({
 			status: "Success",
 			message: "Reservation created",
@@ -638,7 +573,6 @@ export const updateReservationStatus = async (request, response, next) => {
 		);
 		const user = await UserModel.findOne(existingReservation.madeBy.clientID);
 		const propertyOwner = await UserModel.findOne(existingReservation.propertyOwner.propertyOwnerID);
-		// const ownerUpdateEmailTemplate = ReservationUpdateOwner(
 		// 	propertyOwner.name,
 		// 	status.toLowerCase(),
 		// 	existingReservation.madeBy.clientName,
@@ -659,25 +593,7 @@ export const updateReservationStatus = async (request, response, next) => {
 		// );
 
 		const mailList = [user.email, propertyOwner.email];
-		// const mailOptionsToRenter = {
-		// 	from: NODEMAILER_EMAIL,
-		// 	to: mailList[0],
-		// 	// bcc: mailList,
-		// 	subject: "Update on viewing request",
-		// 	html:
-		// 		existingReservation.status === "Accepted"
-		// 			? renterUpdateEmailTemplateAccepted
-		// 			: renterUpdateEmailTemplateRejected,
-		// };
-		// const mailOptionsToPropertyOwner = {
-		// 	from: NODEMAILER_EMAIL,
-		// 	to: mailList[1],
-		// 	// bcc: mailList,
-		// 	subject: `You have ${existingReservation.status.toLowerCase()} a viewing request`,
-		// 	html: ownerUpdateEmailTemplate,
-		// };
-		// await transporter.sendMail(mailOptionsToPropertyOwner);
-		// await transporter.sendMail(mailOptionsToRenter);
+
 		return response.json({
 			message: "All done, Updates Done",
 			data: { existingReservation, clientEmail: mailList[0], ownerEmail: mailList[1] },
