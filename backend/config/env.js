@@ -5,7 +5,7 @@ config({ path: `.env.${process.env.NODE_ENV || "development"}.local` });
 export const {
 	PORT,
 	NODE_ENV,
-	DB_URI,
+	MONGODB_URI,
 	JWT_SECRET,
 	JWT_EXPIRES_IN,
 	NODEMAILER_EMAIL,
