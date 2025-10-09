@@ -575,24 +575,6 @@ export const updateReservationStatus = async (request, response, next) => {
 		);
 		const user = await UserModel.findOne(existingReservation.madeBy.clientID);
 		const propertyOwner = await UserModel.findOne(existingReservation.propertyOwner.propertyOwnerID);
-		// 	propertyOwner.name,
-		// 	status.toLowerCase(),
-		// 	existingReservation.madeBy.clientName,
-		// 	existingReservation.propertyToView.propertyName,
-		// 	existingReservation.date,
-		// 	existingReservation.time,
-		// );
-		// const renterUpdateEmailTemplateAccepted = ReservationUpdateClientAccepted(
-		// 	user.name,
-		// 	existingReservation.propertyToView.propertyName,
-		// 	existingReservation.date,
-		// 	existingReservation.time,
-		// );
-
-		// const renterUpdateEmailTemplateRejected = ReservationUpdateClientRejected(
-		// 	user.name,
-		// 	existingReservation.propertyToView.propertyName,
-		// );
 
 		const mailList = [user.email, propertyOwner.email];
 
