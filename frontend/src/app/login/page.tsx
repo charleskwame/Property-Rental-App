@@ -1,7 +1,7 @@
 "use client";
 
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { API_URL } from "@/config";
 import { useRouter } from "next/navigation";
 // import { GoToPageFunction } from "@/app/functions/gotoLogin.function";
@@ -44,6 +44,13 @@ export default function SignUpRenter() {
 		handleSubmit,
 		formState: { errors },
 	} = useForm<FormInputs>();
+
+	useEffect(() => {
+		const loginstatus = JSON.parse(`${sessionStorage.getItem("UserLoggedIn")}`);
+		if (loginstatus.loggedin === true) {
+			route.push("/");
+		}
+	});
 
 	const handleSignUp = async (formData: FormInputs) => {
 		//console.log(formData);
