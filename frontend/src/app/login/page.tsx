@@ -46,9 +46,11 @@ export default function SignUpRenter() {
 	} = useForm<FormInputs>();
 
 	useEffect(() => {
-		const loginstatus = JSON.parse(`${sessionStorage.getItem("UserLoggedIn")}`);
-		if (loginstatus.loggedin === true) {
-			route.push("/");
+		if (JSON.parse(`${sessionStorage.getItem("UserLoggedIn")}`) !== null || undefined) {
+			const loginstatus = JSON.parse(`${sessionStorage.getItem("UserLoggedIn")}`);
+			if (loginstatus.loggedin === true) {
+				route.push("/");
+			}
 		}
 	});
 
