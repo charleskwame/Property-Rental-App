@@ -23,6 +23,8 @@ type FormInputs = {
 export default function SignUpRenter() {
 	const route = useRouter();
 	const [openLogIn, setOpenLogIn] = useState<boolean>(false);
+	const [isLoggingIn, setIsLoggingIn] = useState<boolean>(false);
+	const [isSigningUp, setIsSigningUp] = useState<boolean>(false);
 
 	// react hook form set up
 	const {
@@ -42,23 +44,27 @@ export default function SignUpRenter() {
 
 	const handleSignUp = async (formData: FormInputs) => {
 		try {
+			setIsSigningUp(true);
 			const request = await axios.post(`${API_URL}user/sign-up`, formData, {
 				headers: {
 					"Content-Type": "application/json",
 				},
 			});
 			if (request.data.status === "Success") {
+				setIsSigningUp(false);
 				toast.success("Please verify your email");
 				sessionStorage.setItem("User", JSON.stringify(request.data));
 				route.push("/send-otp");
 			}
 		} catch (error) {
 			console.log(error);
+			setIsSigningUp(false);
 		}
 	};
 
 	const handleLogIn = async (formData: FormInputs) => {
 		try {
+			setIsLoggingIn(true);
 			const request = await axios.post(`${API_URL}user/log-in`, formData, {
 				headers: {
 					"Content-Type": "application/json",
@@ -66,12 +72,14 @@ export default function SignUpRenter() {
 			});
 
 			if (request.data.status === "Pending Verification" && request.status === 400) {
+				setIsLoggingIn(false);
 				toast.info("Please verify your email");
 				sessionStorage.setItem("User", JSON.stringify(request.data));
 				route.push("/send-otp");
 			}
 
 			if (request.status === 200) {
+				setIsLoggingIn(false);
 				toast.success("Logged in successfully");
 				sessionStorage.setItem("User", JSON.stringify(request.data));
 				sessionStorage.setItem("UserLoggedIn", JSON.stringify({ loggedin: true }));
@@ -79,7 +87,9 @@ export default function SignUpRenter() {
 
 				location.reload();
 			}
+			setIsLoggingIn(false);
 		} catch (error) {
+			setIsLoggingIn(false);
 			console.log(error);
 		}
 	};
@@ -185,7 +195,7 @@ export default function SignUpRenter() {
 					<button
 						type="submit"
 						className="w-full bg-fuchsia-800 font-semibold hover:bg-custom-white-50 hover:text-fuchsia-800 hover:border-fuchsia-800 border transition-all py-2.5 rounded text-white cursor-pointer mt-2">
-						Create Account
+						{isSigningUp ? "Signing up..." : "Sign Up"}
 					</button>
 
 					<p className="text-center mt-2 text-xs">
@@ -255,7 +265,7 @@ export default function SignUpRenter() {
 					<button
 						type="submit"
 						className="w-full bg-fuchsia-800 font-semibold hover:bg-custom-white-50 hover:text-fuchsia-800 hover:border-fuchsia-800 border transition-all py-2.5 rounded text-white cursor-pointer mt-2">
-						Log In
+						{isLoggingIn ? "Logging in..." : "Log In"}
 					</button>
 
 					<p className="text-center mt-3">
