@@ -153,7 +153,7 @@ export default function MyProperties() {
 			) : (
 				<div
 					className={
-						propertiesLoaded.length > 0 ? `grid grid-cols-2 lg:grid-cols-5 gap-2 mt-5 px-2` : ""
+						propertiesLoaded.length > 0 ? `grid grid-cols-2 lg:grid-cols-4 gap-2 mt-5 px-2` : ""
 					}>
 					{propertiesLoaded?.length > 0 ? (
 						propertiesLoaded.map((propertyLoaded) => (

@@ -212,7 +212,7 @@ export default function PropertiesForRent() {
 					<div
 						className={
 							propertiesFetched.length > 0
-								? `grid grid-cols-2 lg:grid-cols-5 gap-1 ${
+								? `grid grid-cols-2 lg:grid-cols-4 gap-1 ${
 										openFilterDialog &&
 										"transition-all ease-in-out duration-300 translate-y-[120px] md:translate-y-20"
 								  }`

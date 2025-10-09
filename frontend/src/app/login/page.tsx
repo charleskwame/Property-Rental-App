@@ -85,7 +85,7 @@ export default function SignUpRenter() {
 				sessionStorage.setItem("UserLoggedIn", JSON.stringify({ loggedin: true }));
 				route.push("/");
 
-				location.reload();
+				// location.reload();
 			}
 			setIsLoggingIn(false);
 		} catch (error) {
