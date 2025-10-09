@@ -28,13 +28,26 @@ export default function PropertiesForRent() {
 	const [propertiesFetched, setPropertiesFetched] = useState<PropertyInterFace[]>([]);
 	const [loading, setLoading] = useState<boolean>(false);
 	const [apiResponseMessage, setApiResponseMessage] = useState<string>("");
+	const [loadingMessage, setLoadingMessage] = useState<string>("Loading Properties");
 	const filterDialog = useRef(null);
 	const [openFilterDialog, setOpenFilterDialog] = useState<boolean>(false);
 	useEffect(() => {
+		const loadTime =
+			window.performance.timing.domContentLoadedEventEnd - window.performance.timing.navigationStart;
+		console.log(loadTime / 1000 + "s");
 		const getProperties = async () => {
 			try {
 				setLoading(true);
+
+				// Start a timer to show a slow loading message after 5s
+				const slowLoadingTimer = setTimeout(() => {
+					setLoadingMessage("Slow loading...Server is in cold start. This will happen only once");
+				}, 5000);
+
 				const request = await axios.get(`${API_URL}user/properties`, {});
+
+				// Request finished, cancel the slow loading message
+				clearTimeout(slowLoadingTimer);
 
 				if (request.status === 200) {
 					setPropertiesFetched(request.data.message);
@@ -50,6 +63,33 @@ export default function PropertiesForRent() {
 				setLoading(false);
 				console.log(error);
 			}
+
+			// try {
+			// 	setLoading(true);
+			// 	const request = await axios.get(`${API_URL}user/properties`, {});
+
+			// 	// if (loadTime > 5) {
+			// 	// 	setLoadingMessage("Slow loading...Server is in cold start. This will happen only once");
+			// 	// }
+
+			// 	setTimeout(() => {
+			// 		setLoadingMessage("Slow loading...Server is in cold start. This will happen only once");
+			// 	}, 5000);
+
+			// 	if (request.status === 200) {
+			// 		setPropertiesFetched(request.data.message);
+			// 		setLoading(false);
+			// 	}
+
+			// 	if (request.status === 400) {
+			// 		setPropertiesFetched([]);
+			// 		setLoading(false);
+			// 		setApiResponseMessage("No properties listed");
+			// 	}
+			// } catch (error) {
+			// 	setLoading(false);
+			// 	console.log(error);
+			// }
 		};
 
 		getProperties();
@@ -95,7 +135,7 @@ export default function PropertiesForRent() {
 			<NavBar />
 
 			{loading ? (
-				<LoadingSpinner message={"Loading Properties"} />
+				<LoadingSpinner message={loadingMessage} />
 			) : (
 				<div className="px-2 mt-3">
 					<div className={openFilterDialog ? "mb-0" : "mb-3"}>
