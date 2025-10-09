@@ -50,7 +50,7 @@ export default function SignUpRenter() {
 					"Content-Type": "application/json",
 				},
 			});
-			if (request.data.status === "Success") {
+			if (request.status === 200) {
 				setIsSigningUp(false);
 				toast.success("Please verify your email");
 				sessionStorage.setItem("User", JSON.stringify(request.data));
