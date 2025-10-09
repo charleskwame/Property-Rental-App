@@ -77,13 +77,13 @@ export default function SignUpRenter() {
 				},
 			});
 
-			if (request.data.status === "Pending Verification") {
+			if (request.data.status === "Pending Verification" && request.status === 400) {
 				toast.info("Please verify your email");
 				sessionStorage.setItem("User", JSON.stringify(request.data));
 				route.push("/send-otp");
 			}
 
-			if (request.data.status === "Success") {
+			if (request.status === 200) {
 				toast.success("Logged in successfully");
 				sessionStorage.setItem("User", JSON.stringify(request.data));
 				sessionStorage.setItem("UserLoggedIn", JSON.stringify({ loggedin: true }));

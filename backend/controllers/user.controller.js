@@ -78,7 +78,9 @@ export const getUser = async (request, response, next) => {
 		const { password: _, ...userWithoutPassword } = foundUser.toObject();
 
 		if (!userWithoutPassword.isVerified) {
-			return response.json({ status: "Pending Verification", data: { token, userWithoutPassword } });
+			return response
+				.status(400)
+				.json({ status: "Pending Verification", data: { token, userWithoutPassword } });
 		}
 
 		response.status(200).json({
