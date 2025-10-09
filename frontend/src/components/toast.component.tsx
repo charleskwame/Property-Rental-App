@@ -17,6 +17,7 @@ export default function Toast() {
 			pauseOnFocusLoss
 			draggable
 			className={`text-xs font-semibold`}
+			position="top-center"
 		/>
 	);
 }
