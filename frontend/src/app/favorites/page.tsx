@@ -103,11 +103,6 @@ export default function FavoriteProperties() {
 						{propertiesLoaded.length > 0 ? (
 							propertiesLoaded.map((property) => (
 								<div key={property._id} className="relative w-fit cursor-pointer border-1 rounded-xl">
-									{/* <div className="">
-									</div> */}
-									{/* <p className="text-xs ">
-										Remove
-									</p> */}
 									<HeartIcon
 										className="size-8 fill-fuchsia-800 stroke-fuchsia-800 cursor-pointer flex items-center absolute top-1 right-1 gap-1 border-2 border-fuchsia-800 p-1 bg-fuchsia-800/20 text-fuchsia-800 font-semibold rounded-lg hover:bg-fuchsia-800 hover:fill-white hover:stroke-white transtion-all duration-300 ease-in-out"
 										onClick={(event) => removePropertyFromFavorites(event, property._id)}
@@ -154,29 +149,3 @@ export default function FavoriteProperties() {
 		</>
 	);
 }
-
-// <div key={property._id} className="relative w-fit cursor-pointer">
-// 	<div
-// 		className="rounded-3xl"
-// 		onClick={(event) => {
-// 			propertyDetails(event, property._id);
-// 		}}>
-// 		<Image
-// 			className="rounded-3xl border-2 border-gray-100 aspect-square"
-// 			src={property.images[0]}
-// 			alt={`Image of ${property.name}`}
-// 			width={200}
-// 			height={200}
-// 		/>
-// 		<div className="px-2">
-// 			<h1 className="font-semibold text-sm">{property.name}</h1>
-// 			<p className="text-xs">GHc {property.price}</p>
-// 		</div>
-
-// 		<button
-// 			className="border border-red-500 text-red-500 w-full py-1 rounded-lg hover:bg-red-500 hover:text-white transition-all ease-in-out duration-300 mt-2 cursor-pointer"
-// 			onClick={(event) => removePropertyFromFavorites(event, property._id)}>
-// 			Remove Favorite
-// 		</button>
-// 	</div>
-// </div>

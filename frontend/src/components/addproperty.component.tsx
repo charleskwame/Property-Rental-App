@@ -1,11 +1,9 @@
 "use client";
 import { useState } from "react";
 import axios from "axios";
-//import { API_URL, NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME, CLOUDINARY_URL } from "../../config/env";
-// import { CldUploadWidget } from "next-cloudinary";
+
 import { API_URL } from "@/config";
-// import { useRouter } from "next/navigation";
-// import Image from "next/image";
+
 import { useForm } from "react-hook-form";
 import propertyTypeOptions from "@/propertytypes";
 import { toast } from "react-toastify";
@@ -22,14 +20,7 @@ type PropertyInputs = {
 	ownerName?: string;
 };
 export default function AddProperty() {
-	//const routerToGoBackToLogIn = useRouter();
-	// const [propertyName, setPropertyName] = useState<string>("");
-	// const [propertyLocation, setPropertyLocation] = useState<string>("");
-	// const [propertyType, setPropertyType] = useState<string>("");
-	// const [propertyDescription, setPropertyDescription] = useState<string>("");
 	const [propertyImages, setPropertyImages] = useState<File[]>([]);
-	// const [propertyImageLinks, setPropertyImageLinks] = useState<string[]>([]);
-	// const [propertyPrice, setPropertyPrice] = useState<string>();
 
 	const {
 		register,
@@ -38,21 +29,15 @@ export default function AddProperty() {
 	} = useForm<PropertyInputs>();
 
 	const addProperty = async (propertyData: PropertyInputs) => {
-		// console.log(propertyData);
-		// return;
-		const uploadedImages = await uploadFilesToCloudinary(); // ← now gets the result directly
+		const uploadedImages = await uploadFilesToCloudinary();
 		propertyData.images = uploadedImages;
 
 		propertyData.owner = JSON.parse(`${sessionStorage.getItem("User")}`).data.userWithoutPassword._id;
 		propertyData.ownerName = JSON.parse(
 			`${sessionStorage.getItem("User")}`,
 		).data.userWithoutPassword.name;
-		// console.log("Final property data:", propertyData);
-		// return true;
 
 		const storedUserData = JSON.parse(`${sessionStorage.getItem("User")}`);
-
-		//console.log(propertyData);
 
 		try {
 			const token = `Bearer ${storedUserData.data.token}`;
@@ -64,16 +49,13 @@ export default function AddProperty() {
 				},
 			});
 			toast.info("Adding property");
-			//console.log(propertyImageLink);
+
 			if (request.data.status === "Success") {
 				toast.success("Property Added");
 				location.reload();
-				// console.log("Property Added");
-				// console.log(request.data);
 			} else {
 				toast.error("Failed to add property");
 				location.reload();
-				// console.log("Failed to add property");
 			}
 		} catch (error) {
 			console.log(error);
@@ -122,7 +104,7 @@ export default function AddProperty() {
 		event.preventDefault();
 		if (event.target.files && event.target.files.length > 4) {
 			toast.error("Maximum 4 files allowed, Please try again");
-			// alert("Maximum 4 files allowed, Please try again");
+
 			event.target.value = "";
 			setPropertyImages([]);
 		}
@@ -132,7 +114,6 @@ export default function AddProperty() {
 		event.preventDefault();
 		for (const file of event.target.files!) {
 			if (file.size > 1 * 1024 * 1024) {
-				// alert("One or More files filesize exceeds 1MB");
 				toast.error("One or More files filesize exceeds 1MB");
 				event.target.value = "";
 				setPropertyImages([]);

@@ -3,7 +3,7 @@ import { PropertyInterFace } from "@/interfaces/property.interface";
 import axios from "axios";
 import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
-// import { useRouter } from "next/navigation";
+
 import LoadingSpinner from "./loadingspinner.component";
 import {
 	TrashIcon,
@@ -15,9 +15,8 @@ import {
 } from "@heroicons/react/24/outline";
 import { toast } from "react-toastify";
 import { useForm } from "react-hook-form";
-// import { Locations } from "@/lib/cities";
+
 import propertyTypeOptions from "@/propertytypes";
-//import {HomeIcon, MapPinIcon} from "@heroicons/react/24/outline";
 
 type UpdateInputs = {
 	name?: string;
@@ -32,7 +31,7 @@ export default function MyProperties() {
 	const dialogRef = useRef(null);
 	const updateDialogRef = useRef(null);
 	const [propertiesLoaded, setPropertiesLoaded] = useState<PropertyInterFace[]>([]);
-	// const routerToGoToSpecificPropertyPage = useRouter();
+
 	const [openDeleteDialog, setOpenDeleteDialog] = useState<boolean>(false);
 	const [openUpdateDialog, setOpenUpdateDialog] = useState<boolean>(false);
 	const [propertyToBeDeleted, setPropertyToBeDeleted] = useState<PropertyInterFace>();
@@ -63,7 +62,6 @@ export default function MyProperties() {
 						setPropertiesLoaded(request.data.message);
 						setLoading(false);
 					}
-					//console.log(request);
 				} catch (error) {
 					setLoading(false);
 
@@ -74,11 +72,6 @@ export default function MyProperties() {
 			getMyProperties();
 		}
 	}, []);
-
-	// const propertyDetails = async (event: React.MouseEvent, _id: string) => {
-	// 	event.preventDefault();
-	// 	routerToGoToSpecificPropertyPage.push(`/properties-for-rent/${_id}`);
-	// };
 
 	const openDeleteDialogFunction = () => {
 		setOpenDeleteDialog(true);
@@ -96,7 +89,6 @@ export default function MyProperties() {
 		const storedUserData = JSON.parse(`${sessionStorage.getItem("User")}`);
 		const token = `Bearer ${storedUserData.data.token}`;
 		try {
-			//console.log(propertyID + `is to be deleted`);
 			const request = await axios.delete(
 				`${API_URL}user/properties/${ownerID}/${propertyToBeDeleted?._id}`,
 				{
@@ -108,7 +100,6 @@ export default function MyProperties() {
 			);
 
 			if (request.status === 200) {
-				//console.log("Deleted Successfully");
 				setOpenUpdateDialog(false);
 				toast.success("Property Updated Successfully");
 				location.reload();
@@ -130,18 +121,11 @@ export default function MyProperties() {
 
 	const handleUpdate = async (updateData: UpdateInputs) => {
 		console.log(updateData);
-		//event.preventDefault();
 
 		const storedUserData = JSON.parse(`${sessionStorage.getItem("User")}`);
 		const token = `Bearer ${storedUserData.data.token}`;
-		//const ownerID = storedUserData.data.userWithoutPassword._id;
+
 		try {
-			//console.log(propertyID + `is to be deleted`);
-
-			//console.log(token);
-			// console.log(propertyToBeUpdated);
-			// return;
-
 			const request = await axios.put(
 				`${API_URL}user/properties/update/${propertyToBeUpdated?._id}`,
 				updateData,
@@ -154,7 +138,6 @@ export default function MyProperties() {
 			);
 
 			if (request.status === 200) {
-				// console.log("Deleted Successfully");
 				setOpenUpdateDialog(false);
 				toast.success("Property Updated Successfully");
 				location.reload();
@@ -175,26 +158,11 @@ export default function MyProperties() {
 					{propertiesLoaded?.length > 0 ? (
 						propertiesLoaded.map((propertyLoaded) => (
 							<div key={propertyLoaded._id} className="relative w-fit border-1 rounded-xl ">
-								{/* <div className="">
-                                                                    </div> */}
-								{/* <p className="text-xs ">
-                                                                        Remove
-                                                                    </p> */}
-								{/* <HeartIcon
-										className="size-8 fill-fuchsia-800 stroke-fuchsia-800 cursor-pointer flex items-center absolute top-1 right-1 gap-1 border-2 border-fuchsia-800 p-1 bg-fuchsia-800/20 text-fuchsia-800 font-semibold rounded-lg hover:bg-fuchsia-800 hover:fill-white hover:stroke-white transtion-all duration-300 ease-in-out"
-										onClick={(event) => removePropertyFromFavorites(event, property._id)}
-									/> */}
-								<div
-									className="rounded-xl"
-									// onClick={(event) => {
-									// 	propertyDetails(event, property._id);
-									// }}
-								>
+								<div className="rounded-xl">
 									<Image
 										className=" border-2 border-gray-100 object-cover rounded-t-xl"
 										src={propertyLoaded.images[0]}
 										alt={`Image of ${propertyLoaded.name}`}
-										//fill
 										width={400}
 										height={200}
 									/>
@@ -370,82 +338,4 @@ export default function MyProperties() {
 			</dialog>
 		</>
 	);
-}
-
-{
-	/* <input type="text" value={propertyLoaded?.location} /> */
-}
-{
-	/* 
-										<div className="lg:w-1/2">
-											<label htmlFor="location" className="text-xs">
-												Property Location
-												{errors.location && (
-													<span className="text-red-500 text-xs"> ({errors.location.message}) </span>
-												)}
-											</label>
-											<select
-												defaultValue={propertyLoaded?.location}
-												className="w-full border bg-fuchsia-500/5 border-gray-500/10 outline-none rounded py-2 text-xs px-3 focus:border-fuchsia-800 scroll-smooth"
-												{...register("location", {
-													required: { value: true, message: "Location is required" },
-												})}>
-												<option value="">Select Location</option>
-												{Locations.map((location) => (
-													<optgroup
-														key={location.region}
-														label={`${location.region}` + " Region"}
-														className="bg-fuchsia-800/5">
-														{location.cities.map((city) => (
-															<option key={city} value={city}>
-																{city}
-															</option>
-														))}
-													</optgroup>
-												))}
-											</select>
-										</div> */
-}
-{
-	/* <input type="text" value={propertyLoaded?.type} /> */
-}
-
-{
-	/* <div key={propertyLoaded._id} className="relative w-fit cursor-pointer">
-                            <div
-                                className="rounded-3xl"
-                                onClick={(event) => {
-                                    propertyDetails(event, propertyLoaded._id);
-                                }}>
-                                <Image
-                                    className="rounded-3xl border-2 border-gray-100 aspect-square"
-                                    src={propertyLoaded.images[0]}
-                                    alt={`Image of ${propertyLoaded.name}`}
-                                    width={200}
-                                    height={200}
-                                />
-                                <div className="px-2">
-                                    <h1 className="font-semibold text-sm">{propertyLoaded.name} </h1>
-                                    <p className="text-xs">GHc {propertyLoaded.price}</p>
-                                </div>
-                            </div>
-
-                            <button
-                                className="absolute bottom-10 right-0 bg-fuchsia-800 text-white p-1 rounded-md hover:text-fuchsia-800 hover:bg-white hover:border-fuchsia-800 border-2 border-fuchsia-800 transition-all ease-in-out duration-300 cursor-pointer"
-                                onClick={() => {
-                                    openUpdateDialogFunction();
-                                    setPropertyToBeUpdated(propertyLoaded);
-                                }}>
-                                <PencilIcon className="size-6" />
-                            </button>
-
-                            <button
-                                className="absolute bottom-0 right-0 bg-red-500 text-white p-1 rounded-md hover:text-red-500 hover:bg-white hover:border-red-500 border-2 border-red-500 transition-all ease-in-out duration-300 cursor-pointer"
-                                onClick={() => {
-                                    openDeleteDialogFunction();
-                                    setPropertyToBeDeleted(propertyLoaded);
-                                }}>
-                                <TrashIcon className="size-6" />
-                            </button>
-                        </div> */
 }

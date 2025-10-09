@@ -4,14 +4,12 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { API_URL } from "@/config";
 import { useRouter } from "next/navigation";
-// import { GoToPageFunction } from "@/app/functions/gotoLogin.function";
-// import { XCircleIcon } from "@heroicons/react/24/outline";
 import Logo from "../../../public/assets/logo.svg";
 import Image from "next/image";
 import NavBarDecorative from "@/components/navbardecorative.component";
 import { toast } from "react-toastify";
 import Toast from "@/components/toast.component";
-// import { error, log } from "console";
+
 import { useForm } from "react-hook-form";
 
 type FormInputs = {
@@ -24,19 +22,7 @@ type FormInputs = {
 
 export default function SignUpRenter() {
 	const route = useRouter();
-	//const dialogRef = useRef(null);
-	// const [name, setName] = useState<string>("");
-	// const [email, setEmail] = useState<string>("");
-	// const [password, setPassword] = useState<string>("");
-	// const [phonenumber, setPhonenumber] = useState<string>("");
-	// const [usertype, setUsertype] = useState<string>("");
 	const [openLogIn, setOpenLogIn] = useState<boolean>(false);
-	//const [closeDialog, setCloseDialog] = useState<boolean>(true);
-	//const [isSendingOTP, setIsSendingOTP] = useState<boolean>(false);
-
-	// log in email and password
-	// const [logInEmail, setLogInEmail] = useState<string>("");
-	// const [logInPassword, setLogInPassword] = useState<string>("");
 
 	// react hook form set up
 	const {
@@ -55,8 +41,6 @@ export default function SignUpRenter() {
 	});
 
 	const handleSignUp = async (formData: FormInputs) => {
-		//console.log(formData);
-		//return;
 		try {
 			const request = await axios.post(`${API_URL}user/sign-up`, formData, {
 				headers: {
@@ -64,12 +48,9 @@ export default function SignUpRenter() {
 				},
 			});
 			if (request.data.status === "Success") {
-				//setIsSendingOTP(!isSendingOTP);
 				toast.success("Please verify your email");
 				sessionStorage.setItem("User", JSON.stringify(request.data));
 				route.push("/send-otp");
-				//console.log(request.data);
-				//routeToAllOwnerProperties.push("/propertiesForOwner");
 			}
 		} catch (error) {
 			console.log(error);
@@ -77,8 +58,6 @@ export default function SignUpRenter() {
 	};
 
 	const handleLogIn = async (formData: FormInputs) => {
-		//console.log(formData);
-
 		try {
 			const request = await axios.post(`${API_URL}user/log-in`, formData, {
 				headers: {
@@ -97,8 +76,7 @@ export default function SignUpRenter() {
 				sessionStorage.setItem("User", JSON.stringify(request.data));
 				sessionStorage.setItem("UserLoggedIn", JSON.stringify({ loggedin: true }));
 				route.push("/");
-				//console.log(request.data);
-				//console.log(request.data.renterWithoutPassword);
+
 				location.reload();
 			}
 		} catch (error) {
@@ -181,27 +159,6 @@ export default function SignUpRenter() {
 							})}
 						/>
 					</div>
-					{/* 
-					<div className="mt-1">
-						<label htmlFor="" className="text-xs">
-							Phone Number
-							{errors.phonenumber && (
-								<span className="text-red-500 text-xs"> ({errors.phonenumber.message}) </span>
-							)}
-						</label>
-						<input
-							id="phonenumber"
-							className="w-full border bg-fuchsia-500/5 border-gray-500/10 outline-none rounded py-2 text-xs px-3 focus:border-fuchsia-800"
-							type="text"
-							placeholder="Phonenumber"
-							{...register("phonenumber", {
-								required: { value: true, message: "Phonenumber is required" },
-								pattern: { value: /^\d{10}$/, message: "Invalid phonenumber" },
-								minLength: { value: 10, message: "Minimum 10 characters" },
-								maxLength: { value: 10, message: "Maximum 10 characters" },
-							})}
-						/>
-					</div> */}
 
 					<div className="mt-1">
 						<label htmlFor="" className="text-xs">
@@ -295,7 +252,6 @@ export default function SignUpRenter() {
 						/>
 					</div>
 
-					{/* <button type="submit">Log in</button> */}
 					<button
 						type="submit"
 						className="w-full bg-fuchsia-800 font-semibold hover:bg-custom-white-50 hover:text-fuchsia-800 hover:border-fuchsia-800 border transition-all py-2.5 rounded text-white cursor-pointer mt-2">
@@ -313,7 +269,6 @@ export default function SignUpRenter() {
 					</p>
 				</form>
 			)}
-			{/* </dialog> */}
 		</>
 	);
 }

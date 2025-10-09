@@ -92,9 +92,6 @@ export default function ReservationsForOwner() {
 				},
 			);
 			if (request.status === 200) {
-				// window.location.reload();
-				// console.log(response.data);
-
 				try {
 					const body = {
 						clientemail: request.data.data.clientEmail,
@@ -106,8 +103,7 @@ export default function ReservationsForOwner() {
 						ownername: request.data.data.existingReservation.propertyOwner.propertyOwnerName,
 						status: request.data.data.existingReservation.status.toLowerCase(),
 					};
-					// console.log(body);
-					// return true;
+
 					const response = await fetch("/api/send-reservation-update-emails", {
 						method: "POST",
 						cache: "no-cache",
@@ -120,64 +116,30 @@ export default function ReservationsForOwner() {
 					const data = await response.json();
 
 					if (!response.ok) {
-						// Server returned an error status (e.g. 400 or 500)
 						console.error("Error sending email:", data.error || "Unknown error");
 						toast.error("Could Not Complete Reservation, Try again later");
-						// You can show this error in UI
+
 						location.reload();
 						return;
 					}
 
 					console.log("Email sent successfully:", data.message);
-					// toast.success("Reservation Made! An Email Has Been Sent To You");
+
 					toast.success("Reservation Updated Sucessfully");
 					location.reload();
-					// Show success to the user
 				} catch (error) {
 					// Network error or unexpected issue
 					console.error("Network or unexpected error:", error);
 					toast.error("Reservation Could Not Be Completed! Try Again");
 					location.reload();
 				}
-
-				//alert("Viewing request sent");
 			}
-			// console.log(response);
 		} catch (error) {
 			console.log(error);
 			location.reload();
 		}
 	};
 
-	const temp = {
-		message: "All done, Updates Done",
-		data: {
-			existingReservation: {
-				_id: "68e6860c93852b11bef39606",
-				madeBy: {
-					clientID: "68d6678a5aec3dc74877f352",
-					clientName: "Gloria Baah",
-					_id: "68e6860c93852b11bef39607",
-				},
-				propertyToView: {
-					propertyID: "68dd37918263bc5f3e7a621b",
-					propertyName: "Bungalow in Bawku",
-					_id: "68e6860c93852b11bef39608",
-				},
-				propertyOwner: {
-					propertyOwnerID: "68c070efd33c1202a3ca9673",
-					propertyOwnerName: "Charles Tetteh",
-					_id: "68e6860c93852b11bef39609",
-				},
-				date: "2025-10-22T00:00:00.000Z",
-				time: "12:12 PM",
-				status: "Accepted",
-				__v: 0,
-			},
-			clientEmail: "quamheberri67@gmail.com",
-			ownerEmail: "charlestettehnull@gmail.com",
-		},
-	};
 	return (
 		<>
 			<NavBar />
@@ -276,8 +238,7 @@ export default function ReservationsForOwner() {
 								{reservationToUpdate.time}
 							</p>
 						)}
-						{/* <button>No Cancel</button>
-						<button onClick={() => handleReservationStatusUpdate()}>Yes Change</button> */}
+
 						<div className="flex items-center justify-center gap-2">
 							<button
 								type="button"
@@ -303,14 +264,4 @@ export default function ReservationsForOwner() {
 			</main>
 		</>
 	);
-}
-
-{
-	/* <tr className="bg-fuchsia-800/5 text-fuchsia-800 border-b-2 border-fuchsia-800">
-                                    <th className="font-semibold py-2">Property</th>
-                                    <th className="font-semibold py-2">Reserved By</th>
-                                    <th className="font-semibold py-2">Date of viewing</th>
-                                    <th className="font-semibold py-2">Time of viewing</th>
-                                    <th className="font-semibold py-2">Reservation Status</th>
-                                </tr> */
 }

@@ -9,7 +9,6 @@ import { useRouter } from "next/navigation";
 import NavBarDecorative from "@/components/navbardecorative.component";
 import Toast from "@/components/toast.component";
 import { toast } from "react-toastify";
-// import { headers } from "next/headers";
 
 export default function AccountSettings() {
 	const route = useRouter();
@@ -17,20 +16,13 @@ export default function AccountSettings() {
 	const [email, setEmail] = useState<string>("");
 	const [password, setPassword] = useState<string>("");
 	const [confirmPassword, setConfirmPassword] = useState<string>("");
-	// const [bio, setBio] = useState<string>("");
-	// const [avatar, setAvatar] = useState<string>("");
-	// const [banner, setBanner] = useState<string>("");
+
 	useEffect(() => {
 		// get all current user details
 		const unparsedUserDetails = sessionStorage.getItem("User");
 		const parsedUserDetails = JSON.parse(unparsedUserDetails!);
 		setUserName(parsedUserDetails.data.userWithoutPassword.name);
 		setEmail(parsedUserDetails.data.userWithoutPassword.email);
-
-		//console.log(parsedUserDetails);
-
-		//const token = sessionStorage.getItem("token");
-		//console.log(token);
 	}, []);
 
 	const handleUpdate = async (event: React.FormEvent) => {
@@ -38,7 +30,7 @@ export default function AccountSettings() {
 		const storedUserData = JSON.parse(`${sessionStorage.getItem("User")}`);
 		const userID = storedUserData.data.userWithoutPassword._id;
 		const token = `Bearer ${storedUserData.data.token}`;
-		//console.log(token);
+
 		if (password !== confirmPassword) {
 			alert("Passwords do not match");
 			return;
@@ -60,10 +52,9 @@ export default function AccountSettings() {
 				toast.success("Update Pending, Please Verify Your Email Address");
 				sessionStorage.setItem("User", JSON.stringify(response.data));
 				route.push("/send-otp");
-				//alert("Details updated successfully");
+
 				location.reload();
 			}
-			//console.log(response);
 		} catch (error) {
 			toast.error("Update Failed");
 			console.log(error);

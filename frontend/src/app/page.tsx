@@ -1,7 +1,5 @@
 "use client";
 
-// import Link from "next/link";
-
 import { useEffect, useRef } from "react";
 import { useState } from "react";
 import axios from "axios";
@@ -9,15 +7,8 @@ import { API_URL } from "@/config";
 import { PropertyInterFace } from "@/interfaces/property.interface";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import {
-	// HeartIcon,
-	// UserCircleIcon,
-	MapPinIcon,
-	HomeModernIcon,
-	XCircleIcon,
-} from "@heroicons/react/24/outline";
+import { MapPinIcon, HomeModernIcon, XCircleIcon } from "@heroicons/react/24/outline";
 import NavBar from "@/components/navbar.component";
-// import SignUpRenter from "@/components/signup.component";
 import LoadingSpinner from "@/components/loadingspinner.component";
 import { useForm } from "react-hook-form";
 import propertyTypeOptions from "@/propertytypes";
@@ -33,15 +24,9 @@ export default function PropertiesForRent() {
 	const { register, handleSubmit } = useForm<FilterInputs>();
 
 	const routerToGoToSpecificPropertyPage = useRouter();
-	// const routerToGoToLogIn = useRouter();
-	// const routerToRefreshPage = useRouter();
 
 	const [propertiesFetched, setPropertiesFetched] = useState<PropertyInterFace[]>([]);
 	const [loading, setLoading] = useState<boolean>(false);
-	// const [loadingFavorites, setLoadingFavorites] = useState<boolean>(false);
-	// const [favoritePropertiesFetched, setFavoritePropertiesFetched] = useState<PropertyInterFace[]>(
-	// 	[],
-	// );
 	const [apiResponseMessage, setApiResponseMessage] = useState<string>("");
 	const filterDialog = useRef(null);
 	const [openFilterDialog, setOpenFilterDialog] = useState<boolean>(false);
@@ -68,45 +53,6 @@ export default function PropertiesForRent() {
 		};
 
 		getProperties();
-
-		//const unParsedRenterData = sessionStorage.getItem("Renter");
-		//console.log(unParsedRenterData);
-
-		//if (!unParsedRenterData) return;
-
-		//const storedRenterData = JSON.parse(unParsedRenterData);
-		//const storedRenterData = JSON.parse(`${sessionStorage.getItem("Renter")}`);
-
-		//const likedProperties = storedRenterData.data.renterWithoutPassword.likedproperties;
-
-		// const fetchFavoriteProperties = async () => {
-		// 	if (likedProperties.length === 0) return;
-
-		// 	try {
-		// 		setLoadingFavorites(true); // Start loading
-
-		// 		const requests = likedProperties.map((propertyID: string) =>
-		// 			axios.get(`${API_URL}user/properties/${propertyID}`),
-		// 		);
-
-		// 		const responses = await Promise.all(requests);
-
-		// 		// Filter out only successful responses
-		// 		const successfulData = responses
-		// 			.filter((response) => response.data.status === "Success")
-		// 			.map((response) => response.data.message);
-
-		// 		//console.log(successfulData);
-		// 		setFavoritePropertiesFetched(successfulData);
-		// 		setLoadingFavorites(false); // Stop loading
-		// 	} catch (error) {
-		// 		console.error("Failed to fetch some favorite properties", error);
-		// 		setLoadingFavorites(false);
-		// 	}
-		// };
-		// fetchFavoriteProperties();
-		// if (sessionStorage.getItem("Renter") !== null) {
-		// }
 	}, []);
 
 	const propertyDetails = async (event: React.MouseEvent, _id: string) => {
@@ -132,8 +78,6 @@ export default function PropertiesForRent() {
 			if (request.status === 200) {
 				setPropertiesFetched(request.data.data);
 			}
-			//console.log(request);
-			//handleCloseFilterDialog();
 		} catch (error) {
 			if (axios.isAxiosError(error) && error.response) {
 				const { status, data } = error.response;
@@ -143,15 +87,8 @@ export default function PropertiesForRent() {
 				}
 			}
 			console.log(error);
-			//handleCloseFilterDialog();
 		}
 	};
-
-	// const sendEmail = async () => {
-	// 	await fetch("/api/email", { method: "POST" }).then((response) => {
-	// 		console.log(response);
-	// 	});
-	// };
 
 	return (
 		<main className="">
@@ -160,7 +97,6 @@ export default function PropertiesForRent() {
 			{loading ? (
 				<LoadingSpinner message={"Loading Properties"} />
 			) : (
-				// <h1>Loading...</h1>
 				<div className="px-2 mt-3">
 					<div className={openFilterDialog ? "mb-0" : "mb-3"}>
 						<div className="flex justify-between">
@@ -177,8 +113,6 @@ export default function PropertiesForRent() {
 						</div>
 						{/* filter dialog */}
 						<div
-							// ref={filterDialog}
-							// open={openFilterDialog}
 							className={
 								openFilterDialog
 									? `p-1 rounded-lg animate-jump-in w-[95%] md:w-fit border-1 mt-2 mx-auto fixed bg-white left-1/2 -translate-x-1/2 duration-500`
@@ -198,9 +132,7 @@ export default function PropertiesForRent() {
 										<select
 											id="propertyType"
 											className="w-full md:w-2/4 border bg-fuchsia-500/5 border-gray-500/10 outline-none rounded py-2 text-xs px-3 focus:border-fuchsia-800 scroll-smooth"
-											{...register("type", {
-												// required: { value: true, message: "Type is required" },
-											})}>
+											{...register("type", {})}>
 											<option value="">All Types</option>
 											{propertyTypeOptions.map((propertyOption) => {
 												return (
@@ -210,15 +142,11 @@ export default function PropertiesForRent() {
 												);
 											})}
 										</select>
-										{/* <hr className="w-5 h-[2px] bg-fuchsia-800/20" />
-							<p>or</p>
-							<hr className="w-5 h-[2px] bg-fuchsia-800/20" /> */}
+
 										{/* location filter */}
 										<select
 											className="w-full md:w-2/4 border bg-fuchsia-500/5 border-gray-500/10 outline-none rounded py-2 text-xs px-3 focus:border-fuchsia-800 scroll-smooth"
-											{...register("location", {
-												// required: { value: true, message: "Location is required" },
-											})}>
+											{...register("location", {})}>
 											<option value="">All Locations</option>
 											{Locations.map((location) => (
 												<optgroup
@@ -247,52 +175,11 @@ export default function PropertiesForRent() {
 								? `grid grid-cols-2 lg:grid-cols-5 gap-1 ${
 										openFilterDialog &&
 										"transition-all ease-in-out duration-300 translate-y-[120px] md:translate-y-20"
-									}`
+								  }`
 								: ""
 						}>
 						{propertiesFetched.length > 0 ? (
 							propertiesFetched.map((propertyFetched) => (
-								// <div
-								// 	key={propertyFetched._id}
-								// 	className="relative w-[400px] h-[360px] md:w-fit md:h-fit cursor-pointer border rounded-xl flex flex-col overflow-hidden">
-								// 	<div
-								// 		className="flex flex-col h-full"
-								// 		onClick={(event) => propertyDetails(event, propertyFetched._id)}>
-								// 		{/* Image Section */}
-								// 		<Image
-								// 			className="object-cover rounded-t-xl"
-								// 			src={propertyFetched.images[0]}
-								// 			alt={`Image of ${propertyFetched.name}`}
-								// 			width={400}
-								// 			height={180}
-								// 		/>
-
-								// 		{/* Content Area (flex column to push bottom section down) */}
-								// 		<div className="flex flex-col justify-between flex-grow p-1">
-								// 			{/* Title */}
-								// 			<h1 className="font-semibold text-xs md:text-sm flex items-center gap-1 text-fuchsia-800">
-								// 				<HomeModernIcon className="size-4" />
-								// 				{propertyFetched.name}
-								// 			</h1>
-
-								// 			{/* Spacer or optional description could go here */}
-								// 			<div className="flex-grow" />
-
-								// 			{/* Location and Price pinned to bottom */}
-								// 			<div className="flex items-center justify-between pt-2">
-								// 				<p className="text-[10px] md:text-xs flex items-center gap-1">
-								// 					<MapPinIcon className="size-3" />
-								// 					{propertyFetched.location}
-								// 				</p>
-								// 				<p className="text-xs font-semibold text-fuchsia-800">
-								// 					GHc{propertyFetched.price}
-								// 					<small className="text-black text-[10px]">/m</small>
-								// 				</p>
-								// 			</div>
-								// 		</div>
-								// 	</div>
-								// </div>
-
 								<div
 									key={propertyFetched._id}
 									className="relative w-fit cursor-pointer border-1 rounded-xl flex flex-col h-full justify-between">
@@ -341,101 +228,6 @@ export default function PropertiesForRent() {
 					</div>
 				</div>
 			)}
-
-			{/* <button className="border-2 p-3 m-3" onClick={() => sendEmail()}>
-				Send Test Email
-			</button> */}
 		</main>
 	);
 }
-
-{
-	/* {loading ? (
-	<h1>Loading...</h1>
-) : (
-	<div>
-		<h1>View Listings</h1>
-		<div className="grid grid-cols-2 lg:grid-cols-6 gap-3">
-			{!loading && propertiesFetched?.length > 0 ? (
-				propertiesFetched.map((property) => (
-					<div key={property._id} className="relative">
-						<HeartIcon
-							className="size-7 absolute top-2 right-2 fill-gray-200 hover:fill-red-500"
-							onClick={(event) => addPropertyToFavorites(event, property._id)}
-						/>
-						<div
-							className="w-fit border-2 border-gray-100 rounded-3xl p-1"
-							onClick={(event) => {
-								propertyDetails(event, property._id);
-							}}
-						>
-							<Image
-								className="rounded-3xl border-2 border-gray-100"
-								src={property.images}
-								alt={`Image of ${property.name}`}
-								width={200}
-								height={200}
-							/>
-							<div className="px-2 flex items-baseline justify-between py-2">
-								<h1 className="font-semibold text-sm">{property.name}</h1>
-								<p className="text-xs">{property.price}</p>
-							</div>
-						</div>
-					</div>
-				))
-			) : (
-				<h1>No properties found</h1>
-			)}
-		</div>
-	</div>
-)} */
-}
-
-{
-	/* {sessionStorage.getItem("User") !== null && (
-                                        <HeartIcon
-                                            className="size-7 absolute top-2 right-2 fill-gray-200 hover:fill-red-500 hover:stroke-red-500 transition-all ease-in-out duration-300"
-                                            onClick={(event) => addPropertyToFavorites(event, propertyFetched._id)}
-                                        />
-                                    )} */
-}
-
-// const addPropertyToFavorites = async (event: React.MouseEvent, propertyID: string) => {
-// 	if (sessionStorage.getItem("User") !== null) {
-// 		const storedUserData = JSON.parse(`${sessionStorage.getItem("User")}`);
-
-// 		const token = `Bearer ${storedUserData.data.token}`;
-// 		const userID = storedUserData.data.userWithoutPassword._id;
-
-// 		const formData = {
-// 			userID: userID,
-// 			propertyID: propertyID,
-// 		};
-
-// 		try {
-// 			const request = await axios.post(`${API_URL}user/properties/add-to-favorites`, formData, {
-// 				headers: {
-// 					"Content-Type": "application/json",
-// 					Authorization: token,
-// 				},
-// 			});
-// 			if (request.status === 200) {
-// 				alert("Property added to favorites");
-// 			}
-// 			sessionStorage.setItem("User", JSON.stringify(request.data));
-// 			//location.reload();
-// 			//console.log(request);
-// 		} catch (error) {
-// 			console.log(error);
-// 		}
-// 	} else {
-// 		routerToGoToLogIn.push("/login");
-// 	}
-
-// 	// console.log(token);
-// 	// console.log(userID);
-// };
-
-// console.log(
-// 	JSON.parse(`${sessionStorage.getItem("User")}`).data.userWithoutPassword.likedproperties,
-// );

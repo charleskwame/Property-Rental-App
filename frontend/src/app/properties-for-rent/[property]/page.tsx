@@ -3,15 +3,12 @@
 
 export const runtime = "edge";
 
-//import { useRouter } from "next/navigation";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import axios from "axios";
 
 import { API_URL } from "@/config";
 import { PropertyInterFace } from "@/interfaces/property.interface";
-// import { User } from "@/interfaces/user.interface";
-//import Image from "next/image";
 import NavBar from "@/components/navbar.component";
 import {
 	ArrowUpOnSquareIcon,
@@ -25,7 +22,6 @@ import { toast } from "react-toastify";
 import { useForm } from "react-hook-form";
 import ImageGallerySkeletonLoader from "@/components/imagegalleryskeleton.component";
 import { MapPin } from "lucide-react";
-// import { useRef } from "react";
 
 type ReservationDetails = {
 	date?: string;
@@ -35,18 +31,12 @@ type ReservationDetails = {
 };
 
 export default function SpecificProperty() {
-	//const pathName = usePathname();
 	const params = useParams();
 	const routerToGoToLogIn = useRouter();
-	// const timeInputRef = useRef(null);
-	const [property, setProperty] = useState<PropertyInterFace>();
-	// const [user, setUser] = useState<User>();
-	const [selectedImage, setSelectedImage] = useState<string>();
-	// const [isSelectedImage, setIsSelectedImage] = useState<boolean>(false);
 
-	//const routerToGoToSpecificPropertyPage = useRouter();
-	//const propertyRouter = useRouter();
-	//const { _id } = propertyRouter.query;
+	const [property, setProperty] = useState<PropertyInterFace>();
+
+	const [selectedImage, setSelectedImage] = useState<string>();
 
 	const {
 		register,
@@ -56,36 +46,18 @@ export default function SpecificProperty() {
 
 	useEffect(() => {
 		const propertyDetails = async (_id: string) => {
-			//event.preventDefault();
-			// const storedRenterData = JSON.parse(`${sessionStorage.getItem("Renter")}`);
-			// const token = `Bearer ${storedRenterData.data.token}`;
-			// console.log(token);
-			// console.log(_id);
 			try {
 				const request = await axios.get(`${API_URL}user/properties/${_id}`, {
 					headers: {
 						"Content-Type": "application/json",
-						//Authorization: token,
 					},
 				});
 				if (request.status === 200) {
-					// const requestOwner = await axios.get(`${API_URL}user?userID=${request.data.message.owner}`, {
-					// 	headers: {
-					// 		"Content-Type": "application/json",
-					// 	},
-					// });
-					// if (requestOwner.status === 200) {
-					// 	setProperty(request.data.message);
-					// 	//console.log(requestOwner.data.data.userWithoutPassword);
-					// 	setUser(requestOwner.data.data.userWithoutPassword);
-					// }
 					setProperty(request.data.message);
 				}
-				//sessionStorage.setItem("PropertyInViewing", JSON.stringify(request.data.message));
 			} catch (error) {
 				console.log(error);
 			}
-			//routerToGoToSpecificPropertyPage.push(`/properties-for-rent/${_id}`);
 		};
 
 		propertyDetails(`${params.property}`);
@@ -112,11 +84,8 @@ export default function SpecificProperty() {
 				});
 				if (request.status === 200) {
 					toast.success("Property added to favorites");
-					//alert("Property added to favorites");
 				}
 				sessionStorage.setItem("User", JSON.stringify(request.data));
-				//location.reload();
-				//console.log(request);
 			} catch (error) {
 				toast.error("Failed to add property to favorites");
 				console.log(error);
@@ -124,17 +93,12 @@ export default function SpecificProperty() {
 		} else {
 			routerToGoToLogIn.push("/login");
 		}
-
-		// console.log(token);
-		// console.log(userID);
 	};
-	//console.log(params);
 
 	const copyToClipboard = async (text: string) => {
 		try {
 			await navigator.clipboard.writeText(text);
 			toast.success("Copied link to clipboard");
-			//alert("Copied the text: " + text);
 		} catch (err) {
 			toast.error("Failed to copy text");
 			console.error("Failed to copy text: ", err);
@@ -143,7 +107,6 @@ export default function SpecificProperty() {
 
 	const changeMainImage = (image: string) => {
 		setSelectedImage(image);
-		// setIsSelectedImage(true);
 	};
 
 	const formatTimeTo12Hour = (timeStr: string | undefined): string | null => {
@@ -165,19 +128,16 @@ export default function SpecificProperty() {
 		const formatted = formatTimeTo12Hour(reservationData.time);
 		if (formatted) {
 			reservationData.time = formatted;
-			// console.log(reservationData.time);
 		}
-		// return true;
 
 		if (sessionStorage.getItem("User") !== null) {
 			const storedUserData = JSON.parse(`${sessionStorage.getItem("User")}`);
 
 			reservationData.propertyID = property?._id;
 			reservationData.userID = storedUserData.data.userWithoutPassword._id;
-			// const token = `Bearer ${user?.token}`;
+
 			const token = `Bearer ${storedUserData.data.token}`;
 
-			// console.log(reservationData);
 			try {
 				const request = await axios.post(`${API_URL}user/send-reservation-email`, reservationData, {
 					headers: {
@@ -186,9 +146,6 @@ export default function SpecificProperty() {
 					},
 				});
 				if (request.status === 200) {
-					// console.log(request.data);
-					// return;
-					// toast.success("Viewing request sent");
 					try {
 						const body = {
 							clientemail: request.data.data.clientEmail,
@@ -199,8 +156,7 @@ export default function SpecificProperty() {
 							username: request.data.data.reservation.madeBy.clientName,
 							ownername: request.data.data.reservation.propertyOwner.propertyOwnerName,
 						};
-						// console.log(body);
-						// return true;
+
 						const response = await fetch("/api/send-reservation-emails", {
 							method: "POST",
 							cache: "no-cache",
@@ -213,23 +169,18 @@ export default function SpecificProperty() {
 						const data = await response.json();
 
 						if (!response.ok) {
-							// Server returned an error status (e.g. 400 or 500)
 							console.error("Error sending email:", data.error || "Unknown error");
 							toast.error("Could Not Complete Reservation, Try again later");
-							// You can show this error in UI
+
 							return;
 						}
 
 						console.log("Email sent successfully:", data.message);
 						toast.success("Reservation Made! An Email Has Been Sent To You");
-						// Show success to the user
 					} catch (error) {
-						// Network error or unexpected issue
 						console.error("Network or unexpected error:", error);
 						toast.error("Reservation Could Not Be Completed! Try Again");
 					}
-
-					//alert("Viewing request sent");
 				}
 			} catch (error) {
 				toast.error("Failed to send viewing request");
@@ -239,53 +190,6 @@ export default function SpecificProperty() {
 			routerToGoToLogIn.push("/login");
 		}
 	};
-
-	// const increaseTime = () => {
-	// 	const timeInputElement = document.getElementById("timeInput");
-	// 	if (timeInputElement instanceof HTMLInputElement) {
-	// 		const timeInput: HTMLInputElement = timeInputElement;
-	// 		timeInput.stepUp(30);
-	// 	}
-	// };
-
-	// const decreaseTime = () => {
-	// 	const timeInputElement = document.getElementById("timeInput");
-	// 	if (timeInputElement instanceof HTMLInputElement) {
-	// 		const timeInput: HTMLInputElement = timeInputElement;
-	// 		timeInput.stepDown(30);
-	// 	}
-	// };
-
-	// {
-	//     "status": "Success",
-	//     "message": "Reservation created",
-	//     "data": {
-	//       "reservation": {
-	//         "madeBy": {
-	//           "clientID": "68d6678a5aec3dc74877f352",
-	//           "clientName": "Gloria Baah",
-	//           "_id": "68e6889693852b11bef3969a"
-	//         },
-	//         "propertyToView": {
-	//           "propertyID": "68dd37918263bc5f3e7a621b",
-	//           "propertyName": "Bungalow in Bawku",
-	//           "_id": "68e6889693852b11bef3969b"
-	//         },
-	//         "propertyOwner": {
-	//           "propertyOwnerID": "68c070efd33c1202a3ca9673",
-	//           "propertyOwnerName": "Charles Tetteh",
-	//           "_id": "68e6889693852b11bef3969c"
-	//         },
-	//         "date": "2025-10-30T00:00:00.000Z",
-	//         "time": "12:34 PM",
-	//         "status": "Pending",
-	//         "_id": "68e6889693852b11bef39699",
-	//         "__v": 0
-	//       },
-	//       "clientEmail": "quamheberri67@gmail.com",
-	//       "ownerEmail": "charlestettehnull@gmail.com"
-	//     }
-	//   }
 
 	return (
 		<>
@@ -433,48 +337,6 @@ export default function SpecificProperty() {
 												<span className="text-red-500 text-xs container">
 													{errors.time ? `(${errors.time!.message})` : ""}
 												</span>
-
-												{/* <button
-													className="border border-fuchsia-800/10 p-1"
-													type="button"
-													onClick={() => increaseTime()}>
-													+
-												</button>
-												<button
-													className="border border-fuchsia-800/10 p-1"
-													type="button"
-													onClick={() => decreaseTime()}>
-													-
-												</button> */}
-
-												{/* <select className="border rounded-lg border-fuchsia-800/10 p-2 text-fuchsia-800 font-semibold text-xs">
-												{/* {property?.viewingTimes ? (
-													<>
-														<select
-															className="border rounded-lg border-fuchsia-800/10 p-2 text-fuchsia-800 font-semibold text-xs"
-															{...register("time", {
-																required: {
-																	value: true,
-																	message: "Time is required",
-																},
-															})}>
-															<option value="" className="w-56">
-																Select Time
-															</option>
-															{property?.viewingTimes.map((time) => {
-																return (
-																	<option key={time} className="font-semibold">
-																		{time}
-																	</option>
-																);
-															})}
-														</select>
-														<span className="text-red-500 text-xs container">
-															{errors.time ? `(${errors.time!.message})` : ""}
-														</span>
-													</>
-												) : null} */}
-												{/* </select> */}
 											</div>
 										</div>
 									</div>
@@ -484,17 +346,13 @@ export default function SpecificProperty() {
 									</button>
 								</form>
 							</div>
-
-							{/* <div>
-									<h1 className="font-semibold">Contact</h1>
-									<p className="text-sm text-black/50">{user?.email}</p>
-									<p className="text-sm text-black/50">{user?.phonenumber}</p>
-								</div> */}
 						</div>
 					</div>
 				</main>
 			) : (
-				<h1>Property Not Found</h1>
+				<h1 className="text-center text-xs lg:text-lg font-semibold text-fuchsia-800 mt-10">
+					Property Not Found
+				</h1>
 			)}
 		</>
 	);
