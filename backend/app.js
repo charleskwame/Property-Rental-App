@@ -5,7 +5,7 @@ import connectToDatabase from "./database/database.js";
 //import PropertyOwnerRouter from "./routes/user.routes.js";
 import errorMiddleware from "./middleware/error.middleware.js";
 import cookieParser from "cookie-parser";
-// import cors from "cors";
+import cors from "cors";
 import UserRouter from "./routes/user.routes.js";
 //import authenticateRenter from "./middleware/authenticaterenters.middleware.js";
 //import authenticatePropertyOwner from "./middleware/authenticatepropertyowners.middleware.js";
@@ -14,12 +14,12 @@ const app = express();
 //const appcors = cors();
 
 // Allow requests from specific origin (e.g., frontend at port 3000)
-// app.use(
-// 	cors({
-// 		origin: "*", // or "*" to allow all
-// 		credentials: true, // if you're using cookies or auth headers
-// 	}),
-// );
+app.use(
+	cors({
+		origin: "*", // or "*" to allow all
+		credentials: true, // if you're using cookies or auth headers
+	}),
+);
 
 app.use(errorMiddleware);
 app.use(express.json());
