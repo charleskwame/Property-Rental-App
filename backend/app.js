@@ -14,12 +14,12 @@ const app = express();
 //const appcors = cors();
 
 // Allow requests from specific origin (e.g., frontend at port 3000)
-app.use(
-	cors({
-		origin: "*", // or "*" to allow all
-		credentials: true, // if you're using cookies or auth headers
-	}),
-);
+// app.use(
+// 	cors({
+// 		origin: "*", // or "*" to allow all
+// 		credentials: true, // if you're using cookies or auth headers
+// 	}),
+// );
 
 app.use(errorMiddleware);
 app.use(express.json());
