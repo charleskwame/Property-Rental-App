@@ -61,6 +61,12 @@ export default function PropertiesForRent() {
 					setLoading(false);
 					setApiResponseMessage("No properties listed");
 				}
+
+				if (request.status >= 500) {
+					// setLoadingMessage("Cannot Reach Server")
+					setLoading(false);
+					setApiResponseMessage("Cannot Reach Server. Please try again later");
+				}
 			} catch (error) {
 				setLoading(false);
 				console.log(error);
