@@ -16,7 +16,7 @@ type FormInputs = {
 	name?: string;
 	email?: string;
 	password?: string;
-	phonenumber?: string;
+
 	usertype?: string;
 };
 

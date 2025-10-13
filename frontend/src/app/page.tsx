@@ -28,7 +28,9 @@ export default function PropertiesForRent() {
 	const [propertiesFetched, setPropertiesFetched] = useState<PropertyInterFace[]>([]);
 	const [loading, setLoading] = useState<boolean>(false);
 	const [apiResponseMessage, setApiResponseMessage] = useState<string>("");
-	const [loadingMessage, setLoadingMessage] = useState<string>("Loading Properties");
+	const [loadingMessage, setLoadingMessage] = useState<string>(
+		"Loading Properties and starting server...",
+	);
 	const filterDialog = useRef(null);
 	const [openFilterDialog, setOpenFilterDialog] = useState<boolean>(false);
 	useEffect(() => {
@@ -41,7 +43,7 @@ export default function PropertiesForRent() {
 
 				// Start a timer to show a slow loading message after 5s
 				const slowLoadingTimer = setTimeout(() => {
-					setLoadingMessage("Slow loading...Server is in cold start. This will happen only once");
+					setLoadingMessage("Slow loading. Refresh page...");
 				}, 5000);
 
 				const request = await axios.get(`${API_URL}user/properties`, {});

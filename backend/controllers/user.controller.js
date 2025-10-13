@@ -29,7 +29,6 @@ export const addUser = async (request, response, next) => {
 					name,
 					email,
 					password: hashedPassword,
-					// phonenumber,
 					usertype,
 				},
 			],

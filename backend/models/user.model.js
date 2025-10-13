@@ -23,13 +23,6 @@ const User = new mongoose.Schema(
 			minLength: 8,
 			maxLenth: 50,
 		},
-		// phonenumber: {
-		// 	type: String,
-		// 	required: [true, "Phone number not provided"],
-		// 	minLength: 10,
-		// 	maxLength: 15,
-		// 	unique: true,
-		// },
 		usertype: {
 			type: String,
 			required: [true, "User Type Not Set"],
