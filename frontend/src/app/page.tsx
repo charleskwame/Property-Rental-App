@@ -34,70 +34,44 @@ export default function PropertiesForRent() {
 	const filterDialog = useRef(null);
 	const [openFilterDialog, setOpenFilterDialog] = useState<boolean>(false);
 	useEffect(() => {
-		const loadTime =
-			window.performance.timing.domContentLoadedEventEnd - window.performance.timing.navigationStart;
-		console.log(loadTime / 1000 + "s");
 		const getProperties = async () => {
+			setLoading(true);
+
+			// Show slow loading after 5 seconds
+			const slowLoadingTimer = setTimeout(() => {
+				setLoadingMessage("Slow loading. Refresh page...");
+			}, 5000);
+
 			try {
-				setLoading(true);
+				const request = await axios.get(`${API_URL}user/properties`);
 
-				// Start a timer to show a slow loading message after 5s
-				const slowLoadingTimer = setTimeout(() => {
-					setLoadingMessage("Slow loading. Refresh page...");
-				}, 5000);
-
-				const request = await axios.get(`${API_URL}user/properties`, {});
-
-				// Request finished, cancel the slow loading message
 				clearTimeout(slowLoadingTimer);
 
 				if (request.status === 200) {
 					setPropertiesFetched(request.data.message);
-					setLoading(false);
-				}
-
-				if (request.status === 400) {
+					setApiResponseMessage(""); // Clear old messages
+				} else if (request.status === 400) {
 					setPropertiesFetched([]);
-					setLoading(false);
 					setApiResponseMessage("No properties listed");
 				}
-
-				if (request.status >= 500) {
-					// setLoadingMessage("Cannot Reach Server")
-					setLoading(false);
-					setApiResponseMessage("Cannot Reach Server. Please try again later");
-				}
 			} catch (error) {
+				clearTimeout(slowLoadingTimer); // Also cancel timeout here
+
+				if (axios.isAxiosError(error)) {
+					if (error.response?.status === 503) {
+						setApiResponseMessage("Cannot Reach Server. Please try again later");
+						setPropertiesFetched([]);
+					} else {
+						setApiResponseMessage("An unexpected error occurred. Please try again later");
+					}
+				} else {
+					setApiResponseMessage("Network error. Please check your connection.");
+				}
+
+				console.log("Error fetching properties:", error);
+			} finally {
 				setLoading(false);
-				console.log(error);
 			}
-
-			// try {
-			// 	setLoading(true);
-			// 	const request = await axios.get(`${API_URL}user/properties`, {});
-
-			// 	// if (loadTime > 5) {
-			// 	// 	setLoadingMessage("Slow loading...Server is in cold start. This will happen only once");
-			// 	// }
-
-			// 	setTimeout(() => {
-			// 		setLoadingMessage("Slow loading...Server is in cold start. This will happen only once");
-			// 	}, 5000);
-
-			// 	if (request.status === 200) {
-			// 		setPropertiesFetched(request.data.message);
-			// 		setLoading(false);
-			// 	}
-
-			// 	if (request.status === 400) {
-			// 		setPropertiesFetched([]);
-			// 		setLoading(false);
-			// 		setApiResponseMessage("No properties listed");
-			// 	}
-			// } catch (error) {
-			// 	setLoading(false);
-			// 	console.log(error);
-			// }
 		};
 
 		getProperties();
@@ -129,9 +103,10 @@ export default function PropertiesForRent() {
 		} catch (error) {
 			if (axios.isAxiosError(error) && error.response) {
 				const { status, data } = error.response;
-				if (status === 400 || status === 404) {
+				if (status === 400 || status === 404 || status === 503) {
 					setPropertiesFetched([]);
 					setApiResponseMessage(data.message);
+					return;
 				}
 			}
 			console.log(error);
