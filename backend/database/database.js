@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-
 import { MONGODB_URI, NODE_ENV } from "../config/env.js";
 
 if (!MONGODB_URI) {
@@ -7,12 +6,26 @@ if (!MONGODB_URI) {
 }
 
 const connectToDatabase = async () => {
+	// If we're already connected, return the existing connection
+	if (mongoose.connection.readyState === 1) {
+		console.log("Using existing database connection");
+		return mongoose.connection;
+	}
+
 	try {
-		await mongoose.connect(MONGODB_URI);
+		const opts = {
+			maxPoolSize: 10,
+			serverSelectionTimeoutMS: 5000,
+			socketTimeoutMS: 45000,
+		};
+
+		await mongoose.connect(MONGODB_URI, opts);
 		console.log(`Database connected successfully in ${NODE_ENV}`);
+
+		return mongoose.connection;
 	} catch (error) {
-		console.log(error);
-		console.log("Error occured in connect to database function");
+		console.error("Database connection error:", error);
+		console.log("Error occurred in connect to database function");
 		process.exit(1);
 	}
 };
