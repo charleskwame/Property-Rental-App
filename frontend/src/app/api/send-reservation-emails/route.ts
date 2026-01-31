@@ -18,7 +18,6 @@ export async function POST(request: Request) {
 
 		const ClientReservationEmailTemplate = ReservationEmailClient(
 			body.username,
-			body.ownername,
 			body.propertyname,
 			body.date,
 			body.time,

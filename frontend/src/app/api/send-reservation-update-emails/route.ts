@@ -20,7 +20,6 @@ export async function POST(request: Request) {
 
 		const ClientReservationEmailUpdateAccepted = ReservationUpdateClientAccepted(
 			body.username,
-			// body.ownername,
 			body.propertyname,
 			body.date,
 			body.time,
@@ -29,11 +28,12 @@ export async function POST(request: Request) {
 		const ClientReservationEmailUpdateRejected = ReservationUpdateClientRejected(
 			body.username,
 			body.propertyname,
+			body.date,
+			body.time,
 		);
 
 		const OwnerReservationEmailUpdate = ReservationUpdateOwner(
 			body.ownername,
-			body.status,
 			body.username,
 			body.propertyname,
 			body.date,

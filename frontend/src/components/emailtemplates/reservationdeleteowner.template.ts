@@ -5,127 +5,83 @@ export const ReservationDeleteOwner = (
 	date: string,
 	time: string,
 ) => {
-	return `<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional //EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-    <html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
-    <head>
-      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <meta name="x-apple-disable-message-reformatting">
-      <meta http-equiv="X-UA-Compatible" content="IE=edge">
-      <title>Reservation Deleted</title>
-      
-      <style type="text/css">
-        @media only screen and (min-width: 720px) {
-          .u-row { width: 700px !important; }
-          .u-row .u-col { vertical-align: top; }
-          .u-row .u-col-100 { width: 700px !important; }
-        }
-        @media only screen and (max-width: 720px) {
-          .u-row-container { max-width: 100% !important; padding-left: 0px !important; padding-right: 0px !important; }
-          .u-row { width: 100% !important; }
-          .u-row .u-col { min-width: 320px !important; max-width: 100% !important; display: block !important; }
-          .u-row .u-col > div { margin: 0 auto; }
-        }
-        body { margin: 0; padding: 0; }
-        table, tr, td { vertical-align: top; border-collapse: collapse; }
-        p { margin: 0; }
-      </style>
-    </head>
-    
-    <body class="clean-body u_body" style="margin: 0;padding: 0;background-color: #f9f9f9;">
-      <table style="border-collapse: collapse;table-layout: fixed;border-spacing: 0;vertical-align: top;min-width: 320px;Margin: 0 auto;background-color: #f9f9f9;width:100%" cellpadding="0" cellspacing="0">
-      <tbody>
-      <tr style="vertical-align: top">
-        <td style="word-break: break-word;border-collapse: collapse !important;vertical-align: top">
-        
-        <div class="u-row-container" style="padding: 40px 10px 0px;background-color: transparent">
-          <div class="u-row" style="margin: 0 auto;min-width: 320px;max-width: 700px;overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;background-color: #ffffff;">
-            <div style="border-collapse: collapse;display: table;width: 100%;height: 100%;background-color: transparent;">
-              
-              <div class="u-col u-col-100" style="max-width: 320px;min-width: 700px;display: table-cell;vertical-align: top;">
-                <div style="height: 100%;width: 100% !important;">
-                  <div style="box-sizing: border-box; height: 100%; padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;">
-                    
-                    <table style="font-family:arial,helvetica,sans-serif;" role="presentation" cellpadding="0" cellspacing="0" width="100%" border="0">
-                      <tbody>
-                        <tr>
-                          <td style="overflow-wrap:break-word;word-break:break-word;padding:30px 10px 20px;font-family:arial,helvetica,sans-serif;" align="left">
-                            <h1 style="margin: 0px; color: #c026d3; line-height: 140%; text-align: center; word-wrap: break-word; font-size: 28px; font-weight: 700;">
-                              <span>Reservation Deleted</span>
-                            </h1>
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
-                    
-                    <table style="font-family:arial,helvetica,sans-serif;" role="presentation" cellpadding="0" cellspacing="0" width="100%" border="0">
-                      <tbody>
-                        <tr>
-                          <td style="overflow-wrap:break-word;word-break:break-word;padding:10px 40px;font-family:arial,helvetica,sans-serif;" align="left">
-                            <div style="font-size: 14px; line-height: 160%; text-align: left; word-wrap: break-word;">
-                              <p style="line-height: 160%;">Hi <strong>${ownername}</strong>,</p>
-                              <p style="line-height: 160%;">&nbsp;</p>
-                              <p style="line-height: 160%;">This is a confirmation that you have successfully <strong style="color: #dc2626;">deleted</strong> the reservation for your property.</p>
-                              <p style="line-height: 160%;">&nbsp;</p>
-                              <p style="line-height: 160%;"><strong>Deleted Reservation Details:</strong></p>
-                              <ul style="line-height: 160%;">
-                                <li><strong>Property:</strong> ${propertyname}</li>
-                                <li><strong>Renter:</strong> ${username}</li>
-                                <li><strong>Date:</strong> ${date}</li>
-                                <li><strong>Time:</strong> ${time}</li>
-                              </ul>
-                              <p style="line-height: 160%;">&nbsp;</p>
-                              <p style="line-height: 160%;">The renter has been notified via email about the cancellation.</p>
-                              <p style="line-height: 160%;">&nbsp;</p>
-                              <p style="line-height: 160%;">This time slot is now available for new reservations.</p>
-                              <p style="line-height: 160%;">&nbsp;</p>
-                              <p style="line-height: 160%;">Best regards,<br /><strong>Property Rental Team</strong></p>
-                            </div>
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
-                    
-                  </div>
-                </div>
-              </div>
-              
-            </div>
-          </div>
-        </div>
-        
-        <div class="u-row-container" style="padding: 0px 10px 40px;background-color: transparent">
-          <div class="u-row" style="margin: 0 auto;min-width: 320px;max-width: 700px;overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;background-color: #f3e8ff;">
-            <div style="border-collapse: collapse;display: table;width: 100%;height: 100%;background-color: transparent;">
-              
-              <div class="u-col u-col-100" style="max-width: 320px;min-width: 700px;display: table-cell;vertical-align: top;">
-                <div style="height: 100%;width: 100% !important;">
-                  <div style="box-sizing: border-box; height: 100%; padding: 20px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;">
-                    
-                    <table style="font-family:arial,helvetica,sans-serif;" role="presentation" cellpadding="0" cellspacing="0" width="100%" border="0">
-                      <tbody>
-                        <tr>
-                          <td style="overflow-wrap:break-word;word-break:break-word;padding:10px;font-family:arial,helvetica,sans-serif;" align="left">
-                            <div style="font-size: 12px; color: #7c3aed; line-height: 140%; text-align: center; word-wrap: break-word;">
-                              <p style="line-height: 140%;">© 2026 Property Rental App. All rights reserved.</p>
-                            </div>
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
-                    
-                  </div>
-                </div>
-              </div>
-              
-            </div>
-          </div>
-        </div>
-        
-        </td>
-      </tr>
-      </tbody>
-      </table>
-    </body>
-    </html>`;
+	return `<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Viewing Cancelled</title>
+	<style>
+		body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif; line-height: 1.6; color: #333; margin: 0; padding: 0; }
+		.container { max-width: 600px; margin: 0 auto; background-color: #ffffff; }
+		.header { background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%); color: white; padding: 40px 20px; text-align: center; }
+		.header h1 { margin: 0; font-size: 28px; font-weight: 700; }
+		.content { padding: 40px 20px; }
+		.greeting { font-size: 18px; color: #2c3e50; margin-bottom: 20px; }
+		.details-box { background: #fef5f5; border-left: 4px solid #e74c3c; padding: 20px; margin: 25px 0; border-radius: 4px; }
+		.detail-row { display: flex; justify-content: space-between; margin: 12px 0; padding: 8px 0; border-bottom: 1px solid #ffe0e0; }
+		.detail-row:last-child { border-bottom: none; }
+		.detail-label { font-weight: 600; color: #666; }
+		.detail-value { color: #e74c3c; font-weight: 700; }
+		.info-text { color: #666; font-size: 14px; margin: 20px 0; line-height: 1.8; }
+		.action-text { background: #f3e5f5; border: 1px solid #e1bee7; padding: 15px; border-radius: 4px; color: #6a1b9a; font-size: 14px; margin: 20px 0; }
+		.footer { background: #f5f5f5; padding: 20px; text-align: center; font-size: 12px; color: #888; border-top: 1px solid #e0e0e0; }
+		.footer-text { margin: 5px 0; }
+		.divider { height: 1px; background: #e0e0e0; margin: 30px 0; }
+	</style>
+</head>
+<body>
+	<div class="container">
+		<div class="header">
+			<h1>✗ Viewing Cancelled</h1>
+		</div>
+		
+		<div class="content">
+			<div class="greeting">
+				Hi <strong>${ownername}</strong>,
+			</div>
+			
+			<p class="info-text">
+				A viewing request has been cancelled. Here are the details of the cancelled viewing:
+			</p>
+			
+			<div class="details-box">
+				<div class="detail-row">
+					<span class="detail-label">Renter Name:</span>
+					<span class="detail-value">${username}</span>
+				</div>
+				<div class="detail-row">
+					<span class="detail-label">Property:</span>
+					<span class="detail-value">${propertyname}</span>
+				</div>
+				<div class="detail-row">
+					<span class="detail-label">Date:</span>
+					<span class="detail-value">${date}</span>
+				</div>
+				<div class="detail-row">
+					<span class="detail-label">Time:</span>
+					<span class="detail-value">${time}</span>
+				</div>
+			</div>
+			
+			<div class="action-text">
+				<strong>📅 Time Slot Available</strong><br>
+				This time slot on ${date} at ${time} is now available for other viewing requests. You can log in to your account to manage your property and track new viewing requests.
+			</div>
+			
+			<p class="info-text">
+				Keep your property listings active and updated to maximize viewing opportunities. If you need any assistance, feel free to reach out!
+			</p>
+		</div>
+		
+		<div class="divider"></div>
+		
+		<div class="footer">
+			<div class="footer-text"><strong>Property Rental App</strong></div>
+			<div class="footer-text">Empowering property owners</div>
+			<div class="footer-text" style="margin-top: 15px; font-style: italic;">© 2025 Property Rental App. All rights reserved.</div>
+		</div>
+	</div>
+</body>
+</html>`;
 };
