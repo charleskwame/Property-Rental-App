@@ -96,7 +96,6 @@ export default function SignUpRenter() {
 
 	return (
 		<>
-			<Toast />
 			<NavBarDecorative />
 			{openLogIn ? (
 				// sign up form

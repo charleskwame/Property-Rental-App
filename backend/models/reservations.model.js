@@ -23,17 +23,34 @@ const ReservationSchema = mongoose.Schema({
 	date: {
 		type: Date,
 		required: true,
+		index: true,
 	},
 	time: {
+		type: String,
+		required: true,
+	},
+	startTime: {
+		type: String,
+		required: true,
+	},
+	endTime: {
 		type: String,
 		required: true,
 	},
 	status: {
 		type: String,
 		required: true,
-		enums: "Accepted" | "Rejected" | "Pending Confirmation",
+		enums: ["Accepted", "Rejected", "Pending Confirmation"],
 		default: "Pending",
 	},
+});
+
+// Compound index to prevent double bookings
+ReservationSchema.index({
+	"propertyToView.propertyID": 1,
+	date: 1,
+	startTime: 1,
+	endTime: 1,
 });
 
 const ReservationsModel = mongoose.model("ReservationsModel", ReservationSchema, "reservations");

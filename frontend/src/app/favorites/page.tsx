@@ -90,7 +90,7 @@ export default function FavoriteProperties() {
 	return (
 		<>
 			<NavBar />
-			<Toast />
+
 			{loading ? (
 				<LoadingSpinner message={`Loading Favorites`} />
 			) : (

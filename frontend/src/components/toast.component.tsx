@@ -1,23 +1,20 @@
 import { ToastContainer } from "react-toastify";
 
-// type ToastProps = {
-// 	type: "success" | "error" | "info" | "warn" | "default";
-// 	message: string;
-// };
-
 export default function Toast() {
 	return (
 		<ToastContainer
-			autoClose={1000}
-			hideProgressBar={true}
-			newestOnTop={false}
+			autoClose={3000}
+			hideProgressBar={false}
+			newestOnTop={true}
 			closeOnClick={true}
-			limit={2}
 			rtl={false}
-			pauseOnFocusLoss
-			draggable
-			className={`text-xs font-semibold`}
-			position="top-center"
+			pauseOnFocusLoss={false}
+			draggable={true}
+			pauseOnHover={true}
+			limit={3}
+			className="text-xs font-semibold"
+			position="top-right"
+			theme="light"
 		/>
 	);
 }
