@@ -22,7 +22,7 @@ app.use(express.urlencoded({ extended: false, limit: "10mb" }));
 app.use(cookieParser());
 
 // Health check endpoint
-app.get("/health", (req, res) => {
+app.get("/health", (res) => {
 	res.status(200).json({
 		status: "OK",
 		timestamp: new Date().toISOString(),
@@ -44,7 +44,8 @@ app.use(async (req, res, next) => {
 	}
 });
 
-app.use("/api/v1/user/", UserRouter);
+// API routes
+app.use("/api/v1/user", UserRouter);
 app.use(errorMiddleware);
 
 // Handle unhandled routes
@@ -52,23 +53,26 @@ app.use("*", (req, res) => {
 	res.status(404).json({ error: "Route not found" });
 });
 
-const server = app.listen(PORT || 5050, async () => {
-	console.log(`Server running on port ${PORT}`);
-	try {
-		await connectToDatabase();
-		console.log("Database connected successfully");
-	} catch (error) {
-		console.error("Failed to connect to database on startup:", error);
-	}
-});
-
-// Graceful shutdown
-process.on("SIGTERM", () => {
-	console.log("SIGTERM received, shutting down gracefully");
-	server.close(() => {
-		mongoose.connection.close();
-		console.log("Process terminated");
+// Only listen locally, not on Vercel
+if (process.env.NODE_ENV !== "production" || !process.env.VERCEL) {
+	const server = app.listen(PORT || 5050, async () => {
+		console.log(`Server running on port ${PORT}`);
+		try {
+			await connectToDatabase();
+			console.log("Database connected successfully");
+		} catch (error) {
+			console.error("Failed to connect to database on startup:", error);
+		}
 	});
-});
+
+	// Graceful shutdown
+	process.on("SIGTERM", () => {
+		console.log("SIGTERM received, shutting down gracefully");
+		server.close(() => {
+			mongoose.connection.close();
+			console.log("Process terminated");
+		});
+	});
+}
 
 export default app;

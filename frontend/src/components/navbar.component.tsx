@@ -13,15 +13,15 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import Logo from "../../public/assets/logo.svg";
 import Image from "next/image";
+import BackButton from "@/components/backbutton.component";
 
-import Toast from "@/components/toast.component";
 import { toast } from "react-toastify";
 
 export default function NavBar() {
 	const route = useRouter();
 
 	const [displayProfileIcon, setDisplayProfileIcon] = useState<boolean>(false);
-	const [profileIconLetter, setProfileIconLetter] = useState<string>("");
+	const [profileIconInitials, setProfileIconInitials] = useState<string>("");
 	const [isUserTypeKnown, setIsUserTypeKnown] = useState<boolean>(false);
 	const [isUserOwner, setIsUserOwner] = useState<boolean>(false);
 
@@ -34,7 +34,19 @@ export default function NavBar() {
 			const unparsedUserData = sessionStorage.getItem("User");
 			const storedUserData = JSON.parse(unparsedUserData!);
 			const userName: string = storedUserData.data.userWithoutPassword.name;
-			setProfileIconLetter(userName.slice(0, 1));
+
+			// Extract first and last name initials
+			const nameParts = userName.trim().split(" ");
+			let initials = "";
+			if (nameParts.length >= 2) {
+				// First and last name initials
+				initials =
+					nameParts[0].charAt(0).toUpperCase() + nameParts[nameParts.length - 1].charAt(0).toUpperCase();
+			} else if (nameParts.length === 1) {
+				// Only first name, use first letter
+				initials = nameParts[0].charAt(0).toUpperCase();
+			}
+			setProfileIconInitials(initials);
 
 			setDisplayProfileIcon(true);
 
@@ -61,17 +73,19 @@ export default function NavBar() {
 
 	return (
 		<>
-			<Toast />
 			<nav className="border-b-1 border-fuchsia-800 py-2 lg:py-0">
 				<div className="px-2">
 					<div className="flex items-center justify-between">
-						<Link href={"/"}>
-							<Image
-								src={Logo}
-								alt={`Logo`}
-								className={isUserOwner ? "w-8 h-8 lg:w-12 lg:h-12" : `w-10 h-10 lg:w-12 lg:h-12`}
-							/>
-						</Link>
+						<div className="flex items-center gap-3">
+							<Link href={"/"}>
+								<Image
+									src={Logo}
+									alt={`Logo`}
+									className={isUserOwner ? "w-8 h-8 lg:w-12 lg:h-12" : `w-10 h-10 lg:w-12 lg:h-12`}
+								/>
+							</Link>
+							<BackButton />
+						</div>
 						{!isUserTypeKnown ? (
 							<div className="flex gap-2.5 items-center">
 								<button className="border-2 bg-white border-orange-400 px-4 text-sm font-semibold text-fuchsia-800 py-1 rounded-full">
@@ -127,8 +141,8 @@ export default function NavBar() {
 												</p>
 											</div>
 
-											<div className="rounded-full font-bold bg-fuchsia-800 text-custom-white-50 cursor-pointer w-7 h-7 lg:w-9 lg:h-9 flex items-center justify-center">
-												<p className="text-xs lg:text-base text-center w-fit h-fit">{profileIconLetter}</p>
+											<div className="rounded-full font-bold bg-fuchsia-200 text-fuchsia-800 border-2 border-fuchsia-800 cursor-pointer w-7 h-7 lg:w-9 lg:h-9 flex items-center justify-center">
+												<p className="text-xs lg:text-base text-center w-fit h-fit">{profileIconInitials}</p>
 											</div>
 										</div>
 									)}

@@ -37,6 +37,10 @@ export default function PropertiesForOwner() {
 		<>
 			<NavBar />
 
+			<div className="px-2 mt-5">
+				<h1 className="text-2xl font-bold text-fuchsia-800 text-center mb-5">My Properties</h1>
+			</div>
+
 			<div className="flex gap-2 mt-3 justify-center">
 				<button
 					onClick={() => handleClickOpen()}

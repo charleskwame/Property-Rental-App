@@ -2,14 +2,23 @@
     "version": 2,
     "builds": [
         {
-            "src": "app.js",
-            "use": "@vercel/node"
+            "src": "api/index.js",
+            "use": "@vercel/node",
+            "config": {
+                "zeroConfig": true
+            }
         }
     ],
     "routes": [
         {
             "src": "/(.*)",
-            "dest": "/app.js"
+            "dest": "/api/index.js"
         }
-    ]
+    ],
+    "env": {
+        "MONGODB_URI": "@MONGODB_URI",
+        "JWT_SECRET": "@JWT_SECRET",
+        "JWT_EXPIRES_IN": "@JWT_EXPIRES_IN",
+        "NODE_ENV": "@NODE_ENV"
+    }
 }

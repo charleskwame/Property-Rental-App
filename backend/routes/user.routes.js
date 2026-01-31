@@ -22,6 +22,8 @@ import {
 	filterProperties,
 	getReservationsForOwner,
 	updateReservationStatus,
+	getAvailableTimeSlots,
+	deleteReservation,
 } from "../controllers/user.controller.js";
 
 const UserRouter = Router();
@@ -45,8 +47,10 @@ UserRouter.post("/verify-otp", authenticateUser, verifyOTP);
 UserRouter.get("/favorites/:userID", authenticateUser, getFavoritedProperties);
 UserRouter.put("/update-details/", authenticateUser, updateUserDetails);
 UserRouter.post("/send-reservation-email", authenticateUser, sendReservationEmail);
+UserRouter.get("/available-time-slots", getAvailableTimeSlots);
 UserRouter.get("/reservation/:ownerID", authenticateUser, getReservationsForOwner);
 UserRouter.put("/reservation/update-reservation-status", authenticateUser, updateReservationStatus);
+UserRouter.delete("/reservation/:reservationID", authenticateUser, deleteReservation);
 
 // Renter specific routes
 

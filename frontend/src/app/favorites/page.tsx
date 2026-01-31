@@ -10,7 +10,6 @@ import Image from "next/image";
 import { BookmarkIcon, HeartIcon, HomeModernIcon, MapPinIcon } from "@heroicons/react/24/outline";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
-import Toast from "@/components/toast.component";
 
 export default function FavoriteProperties() {
 	const [loading, setLoading] = useState<boolean>(false);
@@ -90,7 +89,7 @@ export default function FavoriteProperties() {
 	return (
 		<>
 			<NavBar />
-			<Toast />
+
 			{loading ? (
 				<LoadingSpinner message={`Loading Favorites`} />
 			) : (
