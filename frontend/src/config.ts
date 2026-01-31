@@ -2,9 +2,9 @@
 
 // export const API_URL = "https://rental-api-4njm.onrender.com/api/v1/"; //render slow
 
-//export const API_URL = "https://rental-api-ten.vercel.app/api/v1/";
+export const API_URL = "https://rental-api-ten.vercel.app/api/v1/";
 
-export const API_URL = "https://property-rental-app-production.up.railway.app/api/v1/";
+//export const API_URL = "https://property-rental-app-production.up.railway.app/api/v1/";
 
 export const NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME = "dmiy3wi6r";
 
