@@ -102,6 +102,9 @@ export default function SpecificProperty() {
 				}
 			} catch (error) {
 				console.error("Failed to fetch available slots:", error);
+				if (axios.isAxiosError(error)) {
+					console.error("API Error:", error.response?.status, error.response?.data);
+				}
 				toast.error("Could not load available time slots");
 				setAvailableSlots([]);
 			} finally {
