@@ -41,6 +41,7 @@ export default function SpecificProperty() {
 	const [loadingSlots, setLoadingSlots] = useState(false);
 	const [isOwner, setIsOwner] = useState(false);
 	const [isFavorited, setIsFavorited] = useState(false);
+	const [isSubmittingReservation, setIsSubmittingReservation] = useState(false);
 
 	const {
 		register,
@@ -198,6 +199,8 @@ export default function SpecificProperty() {
 
 			const token = `Bearer ${storedUserData.data.token}`;
 
+			setIsSubmittingReservation(true);
+
 			try {
 				// Send time in 24-hour format (HH:MM) to backend for validation
 				const request = await axios.post(`${API_URL}user/send-reservation-email`, reservationData, {
@@ -260,6 +263,8 @@ export default function SpecificProperty() {
 					toast.error("Failed to send viewing request");
 				}
 				console.log(axiosError);
+			} finally {
+				setIsSubmittingReservation(false);
 			}
 		} else {
 			routerToGoToLogIn.push("/login");
@@ -431,9 +436,11 @@ export default function SpecificProperty() {
 												</div>
 											</div>
 										</div>
-										<button className="w-full mt-3 bg-fuchsia-800 font-semibold hover:bg-custom-white-50 hover:text-fuchsia-800 hover:border-fuchsia-800 border-2 border-transparent transition-all py-2.5 rounded text-white cursor-pointer flex items-center justify-center gap-1 text-sm disabled:opacity-50 disabled:cursor-not-allowed">
+										<button
+											disabled={isSubmittingReservation}
+											className="w-full mt-3 bg-fuchsia-800 font-semibold hover:bg-custom-white-50 hover:text-fuchsia-800 hover:border-fuchsia-800 border-2 border-transparent transition-all py-2.5 rounded text-white cursor-pointer flex items-center justify-center gap-1 text-sm disabled:opacity-50 disabled:cursor-not-allowed">
 											<BookOpenIcon className="size-5" />
-											Reserve Viewing
+											{isSubmittingReservation ? "Reserving..." : "Reserve Viewing"}
 										</button>
 									</form>
 								)}
