@@ -5,7 +5,7 @@ export const runtime = "edge";
 
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 
 import { API_URL } from "@/config";
 import { PropertyInterFace } from "@/interfaces/property.interface";
@@ -243,19 +243,20 @@ export default function SpecificProperty() {
 						toast.error("Reservation Could Not Be Completed! Try Again");
 					}
 				}
-			} catch (error: any) {
+			} catch (error) {
 				// Handle booking conflict error
-				if (error.response?.status === 409) {
+				const axiosError = error as AxiosError<{ message: string }>;
+				if (axiosError.response?.status === 409) {
 					toast.error(
-						error.response.data.message ||
+						axiosError.response.data.message ||
 							"This time slot is already booked. Please select another time.",
 					);
-				} else if (error.response?.status === 403) {
-					toast.error(error.response.data.message || "You cannot book your own property.");
+				} else if (axiosError.response?.status === 403) {
+					toast.error(axiosError.response.data.message || "You cannot book your own property.");
 				} else {
 					toast.error("Failed to send viewing request");
 				}
-				console.log(error);
+				console.log(axiosError);
 			}
 		} else {
 			routerToGoToLogIn.push("/login");

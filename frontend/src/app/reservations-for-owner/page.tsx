@@ -2,7 +2,7 @@
 
 import NavBar from "@/components/navbar.component";
 import { useEffect, useState } from "react";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { API_URL } from "@/config";
 import { ReservationsLoaded } from "@/interfaces/reservation.interface";
 import { useRef } from "react";
@@ -207,10 +207,12 @@ export default function ReservationsForOwner() {
 					location.reload();
 				}
 			}
-		} catch (error: any) {
+		} catch (error) {
+			const axiosError = error as AxiosError<{ message: string }>;
 			console.error("Delete reservation error:", error);
-			console.error("Error response:", error.response?.data);
-			const errorMessage = error.response?.data?.message || "Failed to delete reservation. Try again.";
+			console.error("Error response:", axiosError.response?.data);
+			const errorMessage =
+				axiosError.response?.data?.message || "Failed to delete reservation. Try again.";
 			toast.error(errorMessage);
 			setIsDeleteDialogOpen(false);
 		} finally {
