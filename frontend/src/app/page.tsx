@@ -49,24 +49,39 @@ export default function PropertiesForRent() {
 				clearTimeout(slowLoadingTimer);
 
 				if (request.status === 200) {
-					setPropertiesFetched(request.data.message);
-					setApiResponseMessage(""); // Clear old messages
+					const properties = request.data.message;
+					setPropertiesFetched(properties);
+
+					// Check if the array is empty
+					if (properties.length === 0) {
+						setApiResponseMessage("No properties have been listed yet");
+					} else {
+						setApiResponseMessage(""); // Clear old messages
+					}
 				} else if (request.status === 400) {
 					setPropertiesFetched([]);
-					setApiResponseMessage("No properties listed");
+					setApiResponseMessage("No properties have been listed yet");
 				}
 			} catch (error) {
 				clearTimeout(slowLoadingTimer); // Also cancel timeout here
 
 				if (axios.isAxiosError(error)) {
-					if (error.response?.status === 503) {
-						setApiResponseMessage("Cannot Reach Server. Please try again later");
+					if (error.response?.status === 400) {
+						setApiResponseMessage("No properties have been listed yet");
+						setPropertiesFetched([]);
+					} else if (error.response?.status === 404) {
+						setApiResponseMessage("No properties have been listed yet");
+						setPropertiesFetched([]);
+					} else if (error.response?.status === 503) {
+						setApiResponseMessage("Cannot reach server. Please try again later");
 						setPropertiesFetched([]);
 					} else {
 						setApiResponseMessage("An unexpected error occurred. Please try again later");
+						setPropertiesFetched([]);
 					}
 				} else {
 					setApiResponseMessage("Network error. Please check your connection.");
+					setPropertiesFetched([]);
 				}
 
 				console.log("Error fetching properties:", error);
@@ -100,17 +115,31 @@ export default function PropertiesForRent() {
 				`${API_URL}user/properties/filter?type=${filterData.type}&location=${filterData.location}`,
 			);
 			if (request.status === 200) {
-				setPropertiesFetched(request.data.data);
+				const filteredProperties = request.data.data;
+				setPropertiesFetched(filteredProperties);
+
+				// Check if no properties match the filter
+				if (filteredProperties.length === 0) {
+					setApiResponseMessage("No properties match your search criteria");
+				} else {
+					setApiResponseMessage("");
+				}
 			}
 		} catch (error) {
 			if (axios.isAxiosError(error) && error.response) {
 				const { status, data } = error.response;
-				if (status === 400 || status === 404 || status === 503) {
+				if (status === 400 || status === 404) {
 					setPropertiesFetched([]);
-					setApiResponseMessage(data.message);
+					setApiResponseMessage(data.message || "No properties match your search criteria");
+					return;
+				} else if (status === 503) {
+					setPropertiesFetched([]);
+					setApiResponseMessage("Cannot reach server. Please try again later");
 					return;
 				}
 			}
+			setPropertiesFetched([]);
+			setApiResponseMessage("An error occurred while filtering properties");
 			console.log(error);
 		}
 	};
