@@ -9,6 +9,7 @@ import jwt from "jsonwebtoken";
 import UserModel from "../models/user.model.js";
 import OTPModel from "../models/otp.model.js";
 import ReservationsModel from "../models/reservations.model.js";
+import { checkBookingConflict, getEndTime } from "../lib/bookingValidation.js";
 
 //function to add renter(sign up)
 export const addUser = async (request, response, next) => {
@@ -462,21 +463,65 @@ export const updateUserDetails = async (request, response, next) => {
 
 export const sendReservationEmail = async (request, response) => {
 	const { date, time, propertyID, userID } = request.body;
-	const property = await PropertyModel.findOne({ _id: propertyID });
-	const user = await UserModel.findOne({ _id: userID });
-	const propertyOwner = await UserModel.findOne({ _id: property.owner });
-
-	const mailList = [user.email, propertyOwner.email];
 
 	try {
+		// Validate inputs
+		if (!date || !time || !propertyID || !userID) {
+			return response.status(400).json({
+				status: "Failed",
+				message: "Missing required fields: date, time, propertyID, userID",
+			});
+		}
+
+		const property = await PropertyModel.findOne({ _id: propertyID });
+		const user = await UserModel.findOne({ _id: userID });
+		const propertyOwner = await UserModel.findOne({ _id: property.owner });
+
+		if (!property || !user || !propertyOwner) {
+			return response.status(400).json({
+				status: "Failed",
+				message: "Property, user, or owner not found",
+			});
+		}
+
+		// Prevent owners from booking their own properties
+		if (property.owner.toString() === userID.toString()) {
+			return response.status(403).json({
+				status: "Failed",
+				message: "Property owners cannot book their own properties",
+			});
+		}
+
+		// Parse the date and normalize it to start of day
+		const reservationDate = new Date(date);
+		reservationDate.setHours(0, 0, 0, 0);
+
+		// Calculate end time (30-minute slots)
+		const endTime = getEndTime(time);
+
+		// Check for booking conflicts
+		const hasConflict = await checkBookingConflict(propertyID, reservationDate, time, endTime);
+
+		if (hasConflict) {
+			return response.status(409).json({
+				status: "Failed",
+				message: "This time slot is already booked. Please select a different time.",
+			});
+		}
+
+		const mailList = [user.email, propertyOwner.email];
+
 		const reservation = await ReservationsModel.create({
 			madeBy: { clientID: user._id, clientName: user.name },
 			propertyToView: { propertyID: property._id, propertyName: property.name },
 			propertyOwner: { propertyOwnerID: propertyOwner._id, propertyOwnerName: propertyOwner.name },
-			date: date,
+			date: reservationDate,
 			time: time,
+			startTime: time,
+			endTime: endTime,
 			status: "Pending",
 		});
+
 		if (!reservation) {
 			return response.status(400).json({
 				status: "Failed",
@@ -583,6 +628,105 @@ export const updateReservationStatus = async (request, response, next) => {
 		});
 	} catch (error) {
 		next(error);
+	}
+};
+
+export const getAvailableTimeSlots = async (request, response, next) => {
+	try {
+		const { propertyID, date } = request.query;
+
+		if (!propertyID || !date) {
+			return response.status(400).json({
+				status: "Failed",
+				message: "propertyID and date query parameters are required",
+			});
+		}
+
+		// Import the function dynamically to avoid circular imports
+		const { getAvailableSlots } = await import("../lib/bookingValidation.js");
+
+		// Parse and validate the date
+		const selectedDate = new Date(date);
+		if (isNaN(selectedDate.getTime())) {
+			return response.status(400).json({
+				status: "Failed",
+				message: "Invalid date format",
+			});
+		}
+
+		// Get available slots
+		const availableSlots = await getAvailableSlots(propertyID, selectedDate);
+
+		return response.status(200).json({
+			status: "Success",
+			message: "Available time slots retrieved",
+			data: availableSlots,
+		});
+	} catch (error) {
+		console.error("Error getting available slots:", error);
+		return response.status(500).json({
+			status: "Error",
+			message: "Failed to retrieve available slots",
+			error: error.message,
+		});
+	}
+};
+
+export const deleteReservation = async (request, response, next) => {
+	try {
+		const { reservationID } = request.params;
+
+		if (!reservationID) {
+			return response.status(400).json({
+				status: "Failed",
+				message: "Reservation ID is required",
+			});
+		}
+
+		const reservationToDelete = await ReservationsModel.findById(reservationID);
+
+		if (!reservationToDelete) {
+			return response.status(404).json({
+				status: "Failed",
+				message: "Reservation not found",
+			});
+		}
+
+		// Get user and owner details for emails
+		const user = await UserModel.findById(reservationToDelete.madeBy.clientID);
+		const propertyOwner = await UserModel.findById(reservationToDelete.propertyOwner.propertyOwnerID);
+
+		if (!user || !propertyOwner) {
+			return response.status(404).json({
+				status: "Failed",
+				message: "User or property owner not found",
+			});
+		}
+
+		// Delete the reservation
+		await ReservationsModel.findByIdAndDelete(reservationID);
+
+		return response.status(200).json({
+			status: "Success",
+			message: "Reservation deleted successfully",
+			data: {
+				reservation: reservationToDelete,
+				clientEmail: user.email,
+				ownerEmail: propertyOwner.email,
+				clientName: user.name,
+				ownerName: propertyOwner.name,
+				propertyName: reservationToDelete.propertyToView.propertyName,
+				date: reservationToDelete.date,
+				time: reservationToDelete.time,
+			},
+		});
+	} catch (error) {
+		console.error("Error deleting reservation:", error);
+		return response.status(500).json({
+			status: "Error",
+			message: "Failed to delete reservation",
+			error: error.message,
+		});
 	}
 };
 

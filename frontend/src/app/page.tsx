@@ -14,6 +14,7 @@ import { useForm } from "react-hook-form";
 import propertyTypeOptions from "@/propertytypes";
 import { Locations } from "@/lib/cities";
 import { FilterIcon } from "lucide-react";
+import { toast } from "react-toastify";
 
 type FilterInputs = {
 	type?: string;
@@ -79,6 +80,7 @@ export default function PropertiesForRent() {
 
 	const propertyDetails = async (event: React.MouseEvent, _id: string) => {
 		event.preventDefault();
+		toast.info("Loading property details...", { autoClose: 1500 });
 		routerToGoToSpecificPropertyPage.push(`/properties-for-rent/${_id}`);
 	};
 
@@ -116,6 +118,10 @@ export default function PropertiesForRent() {
 	return (
 		<main className="">
 			<NavBar />
+
+			<div className="px-2 mt-5">
+				<h1 className="text-2xl font-bold text-fuchsia-800 text-center mb-3">Available Properties</h1>
+			</div>
 
 			{loading ? (
 				<LoadingSpinner message={loadingMessage} />

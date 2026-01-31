@@ -8,7 +8,6 @@ import { useEffect } from "react";
 
 import Logo from "../../../public/assets/logo.svg";
 import Image from "next/image";
-import Toast from "@/components/toast.component";
 import { toast } from "react-toastify";
 import NavBarDecorative from "@/components/navbardecorative.component";
 
@@ -88,7 +87,6 @@ export default function SendRenterOTP() {
 		<>
 			<NavBarDecorative />
 			<main>
-				<Toast />
 				<form
 					className="fixed w-[90%] left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 lg:max-w-1/2"
 					onSubmit={(event) => handleOTPSubmission(event)}>

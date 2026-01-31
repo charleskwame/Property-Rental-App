@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import Toast from "@/components/toast.component";
 
 export const metadata: Metadata = {
 	title: "Property Rental App (MVP for demonstration)",
@@ -13,7 +14,10 @@ export default function RootLayout({
 }>) {
 	return (
 		<html lang="en" className="bg-custom-white-50">
-			<body>{children}</body>
+			<body>
+				{children}
+				<Toast />
+			</body>
 		</html>
 	);
 }

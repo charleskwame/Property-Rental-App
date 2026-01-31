@@ -1,4 +1,3 @@
-/* eslint-disable no-irregular-whitespace */
 export const otpEmailTemplate = (otpCode: string, userName: string) => {
 	return `
     <!DOCTYPE HTML

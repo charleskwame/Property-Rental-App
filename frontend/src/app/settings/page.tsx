@@ -7,7 +7,6 @@ import Logo from "../../../public/assets/logo.svg";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import NavBarDecorative from "@/components/navbardecorative.component";
-import Toast from "@/components/toast.component";
 import { toast } from "react-toastify";
 
 export default function AccountSettings() {
@@ -63,7 +62,6 @@ export default function AccountSettings() {
 
 	return (
 		<>
-			<Toast />
 			<NavBarDecorative />
 			<main>
 				<form

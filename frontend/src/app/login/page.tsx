@@ -8,7 +8,6 @@ import Logo from "../../../public/assets/logo.svg";
 import Image from "next/image";
 import NavBarDecorative from "@/components/navbardecorative.component";
 import { toast } from "react-toastify";
-import Toast from "@/components/toast.component";
 
 import { useForm } from "react-hook-form";
 
@@ -96,7 +95,6 @@ export default function SignUpRenter() {
 
 	return (
 		<>
-			<Toast />
 			<NavBarDecorative />
 			{openLogIn ? (
 				// sign up form
