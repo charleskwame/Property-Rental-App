@@ -280,6 +280,9 @@ export const sendUserOTP = async (request, response) => {
 	const userToVerify = await UserModel.findOne({ email: email });
 
 	try {
+		// Delete all old OTP codes for this user
+		await OTPModel.deleteMany({ userID: userID });
+
 		const salt = await bcrypt.genSalt(10);
 
 		const hashedOTP = await bcrypt.hash(otp, salt);
@@ -725,6 +728,56 @@ export const deleteReservation = async (request, response, next) => {
 		return response.status(500).json({
 			status: "Error",
 			message: "Failed to delete reservation",
+			error: error.message,
+		});
+	}
+};
+
+// function to delete user account with cascading deletions
+export const deleteUserAccount = async (request, response, next) => {
+	const session = await mongoose.startSession();
+	session.startTransaction();
+	try {
+		const userID = request.user._id;
+
+		// Find the user to delete
+		const user = await UserModel.findById(userID).session(session);
+		if (!user) {
+			await session.abortTransaction();
+			session.endSession();
+			return response.status(404).json({
+				status: "Failed",
+				message: "User not found",
+			});
+		}
+
+		// Delete all reservations made by the user (as a renter)
+		await ReservationsModel.deleteMany({ "madeBy.clientID": userID }).session(session);
+
+		// Delete all reservations for the user's properties (as an owner)
+		await ReservationsModel.deleteMany({ "propertyOwner.propertyOwnerID": userID }).session(session);
+
+		// Delete all properties owned by the user
+		await PropertyModel.deleteMany({ owner: userID }).session(session);
+
+		// Delete the user
+		await UserModel.findByIdAndDelete(userID).session(session);
+
+		await session.commitTransaction();
+		session.endSession();
+
+		return response.status(200).json({
+			status: "Success",
+			message:
+				"Account deleted successfully. All associated reservations and properties have been removed.",
+		});
+	} catch (error) {
+		await session.abortTransaction();
+		session.endSession();
+		console.error("Error deleting user account:", error);
+		return response.status(500).json({
+			status: "Error",
+			message: "Failed to delete account",
 			error: error.message,
 		});
 	}

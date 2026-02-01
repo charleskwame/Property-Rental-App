@@ -105,47 +105,75 @@ export const verificationSuccessTemplate = (userName: string) => {
     </head>
 
     <body class="clean-body u_body"
-        style="margin: 0;padding: 0;-webkit-text-size-adjust: 100%;background-color: #ffffff;color: #000000">
+        style="margin: 0;padding: 0;-webkit-text-size-adjust: 100%;background-color: #f9f9f9;color: #000000">
         <!--[if IE]><div class="ie-container"><![endif]-->
         <!--[if mso]><div class="mso-container"><![endif]-->
         <table role="presentation"
-            style="border-collapse: collapse;table-layout: fixed;border-spacing: 0;mso-table-lspace: 0pt;mso-table-rspace: 0pt;vertical-align: top;min-width: 320px;Margin: 0 auto;background-color: #ffffff;width:100%"
+            style="border-collapse: collapse;table-layout: fixed;border-spacing: 0;mso-table-lspace: 0pt;mso-table-rspace: 0pt;vertical-align: top;min-width: 320px;Margin: 0 auto;background-color: #f9f9f9;width:100%"
             cellpadding="0" cellspacing="0">
             <tbody>
                 <tr style="vertical-align: top">
                     <td style="word-break: break-word;border-collapse: collapse !important;vertical-align: top">
-                        <!--[if (mso)|(IE)]><table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td align="center" style="background-color: #ffffff;"><![endif]-->
 
-
-
-                        <div class="u-row-container" style="padding: 0px;background-color: transparent">
+                        <!-- Header with Brand -->
+                        <div class="u-row-container" style="padding: 20px;background-color: #8a0194">
                             <div class="u-row"
                                 style="margin: 0 auto;min-width: 320px;max-width: 700px;overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;background-color: transparent;">
                                 <div
                                     style="border-collapse: collapse;display: table;width: 100%;height: 100%;background-color: transparent;">
-                                    <!--[if (mso)|(IE)]><table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding: 0px;background-color: transparent;" align="center"><table role="presentation" cellpadding="0" cellspacing="0" border="0" style="width:700px;"><tr style="background-color: transparent;"><![endif]-->
-
-                                    <!--[if (mso)|(IE)]><td align="center" width="700" style="width: 700px;padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;" valign="top"><![endif]-->
                                     <div class="u-col u-col-100"
                                         style="max-width: 320px;min-width: 700px;display: table-cell;vertical-align: top;">
                                         <div
                                             style="height: 100%;width: 100% !important;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;">
-                                            <!--[if (!mso)&(!IE)]><!-->
                                             <div
                                                 style="box-sizing: border-box; height: 100%; padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;">
-                                                <!--<![endif]-->
-
                                                 <table style="font-family:helvetica,sans-serif;" role="presentation"
                                                     cellpadding="0" cellspacing="0" width="100%" border="0">
                                                     <tbody>
                                                         <tr>
                                                             <td style="overflow-wrap:break-word;word-break:break-word;padding:10px;font-family:helvetica,sans-serif;"
-                                                                align="left">
+                                                                align="center">
+                                                                <div style="font-size: 20px; line-height: 140%;  text-align: center; word-wrap: break-word;">
+                                                                    <p dir="ltr"><span
+                                                                            style="color: #ffffff; font-weight: bold; font-size: 24px;">🏠 Rent Easy</span>
+                                                                    </p>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="u-row-container" style="padding: 0px;background-color: transparent">
+                            <div class="u-row"
+                                style="margin: 0 auto;min-width: 320px;max-width: 700px;overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;background-color: #ffffff;">
+                                <div
+                                    style="border-collapse: collapse;display: table;width: 100%;height: 100%;background-color: #ffffff;">
+
+                                    <div class="u-col u-col-100"
+                                        style="max-width: 320px;min-width: 700px;display: table-cell;vertical-align: top;">
+                                        <div
+                                            style="height: 100%;width: 100% !important;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;">
+
+                                            <div
+                                                style="box-sizing: border-box; height: 100%; padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;">
+
+                                                <!-- Success Icon -->
+                                                <table style="font-family:helvetica,sans-serif;" role="presentation"
+                                                    cellpadding="0" cellspacing="0" width="100%" border="0">
+                                                    <tbody>
+                                                        <tr>
+                                                            <td style="overflow-wrap:break-word;word-break:break-word;padding:30px 20px 0px;font-family:helvetica,sans-serif;"
+                                                                align="center">
 
                                                                 <div
-                                                                    style="font-size: 14px; line-height: 140%;  text-align: left; word-wrap: break-word;">
-                                                                    <p dir="ltr"><span>Hello </span><span
-                                                                            style="color: rgb(138, 1, 148); font-weight: bold;">${userName}</span><span>,</span>
+                                                                    style="font-size: 48px; line-height: 140%;  text-align: center; word-wrap: break-word;">
+                                                                    <p dir="ltr"><span>✅</span>
                                                                     </p>
                                                                 </div>
 
@@ -154,17 +182,19 @@ export const verificationSuccessTemplate = (userName: string) => {
                                                     </tbody>
                                                 </table>
 
+                                                <!-- Greeting -->
                                                 <table style="font-family:helvetica,sans-serif;" role="presentation"
                                                     cellpadding="0" cellspacing="0" width="100%" border="0">
                                                     <tbody>
                                                         <tr>
-                                                            <td style="overflow-wrap:break-word;word-break:break-word;padding:10px;font-family:helvetica,sans-serif;"
-                                                                align="left">
+                                                            <td style="overflow-wrap:break-word;word-break:break-word;padding:20px;font-family:helvetica,sans-serif;"
+                                                                align="center">
 
                                                                 <div
-                                                                    style="font-size: 14px; line-height: 140%;  text-align: center; word-wrap: break-word;">
-                                                                    <p dir="ltr"><span>Your email has been successfully
-                                                                            verified.</span></p>
+                                                                    style="font-size: 16px; line-height: 140%;  text-align: center; word-wrap: break-word;">
+                                                                    <p dir="ltr"><span style="color: #333333;">Hello <span
+                                                                            style="color: rgb(138, 1, 148); font-weight: bold;">${userName}</span>,</span>
+                                                                    </p>
                                                                 </div>
 
                                                             </td>
@@ -172,47 +202,74 @@ export const verificationSuccessTemplate = (userName: string) => {
                                                     </tbody>
                                                 </table>
 
-                                                <!--[if (!mso)&(!IE)]><!-->
-                                            </div><!--<![endif]-->
+                                                <!-- Main Message -->
+                                                <table style="font-family:helvetica,sans-serif;" role="presentation"
+                                                    cellpadding="0" cellspacing="0" width="100%" border="0">
+                                                    <tbody>
+                                                        <tr>
+                                                            <td style="overflow-wrap:break-word;word-break:break-word;padding:10px 20px;font-family:helvetica,sans-serif;"
+                                                                align="center">
+
+                                                                <div
+                                                                    style="font-size: 18px; line-height: 140%;  text-align: center; word-wrap: break-word; font-weight: bold;">
+                                                                    <p dir="ltr"><span style="color: #333333;">Your email has been successfully verified!</span></p>
+                                                                </div>
+
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+
+                                                <!-- Description -->
+                                                <table style="font-family:helvetica,sans-serif;" role="presentation"
+                                                    cellpadding="0" cellspacing="0" width="100%" border="0">
+                                                    <tbody>
+                                                        <tr>
+                                                            <td style="overflow-wrap:break-word;word-break:break-word;padding:10px 20px 30px;font-family:helvetica,sans-serif;"
+                                                                align="center">
+
+                                                                <div
+                                                                    style="font-size: 14px; line-height: 140%;  text-align: center; word-wrap: break-word;">
+                                                                    <p dir="ltr"><span style="color: #666666;">Your account is now fully activated. You can start exploring and managing properties.</span></p>
+                                                                </div>
+
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+
+                                            </div>
                                         </div>
                                     </div>
-                                    <!--[if (mso)|(IE)]></td><![endif]-->
-                                    <!--[if (mso)|(IE)]></tr></table></td></tr></table><![endif]-->
+
                                 </div>
                             </div>
                         </div>
 
-
-
-
-
-                        <div class="u-row-container" style="padding: 0px;background-color: transparent">
+                        <!-- Footer -->
+                        <div class="u-row-container" style="padding: 20px;background-color: #f9f9f9">
                             <div class="u-row"
                                 style="margin: 0 auto;min-width: 320px;max-width: 700px;overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;background-color: transparent;">
                                 <div
                                     style="border-collapse: collapse;display: table;width: 100%;height: 100%;background-color: transparent;">
-                                    <!--[if (mso)|(IE)]><table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding: 0px;background-color: transparent;" align="center"><table role="presentation" cellpadding="0" cellspacing="0" border="0" style="width:700px;"><tr style="background-color: transparent;"><![endif]-->
-
-                                    <!--[if (mso)|(IE)]><td align="center" width="700" style="width: 700px;padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;" valign="top"><![endif]-->
                                     <div class="u-col u-col-100"
                                         style="max-width: 320px;min-width: 700px;display: table-cell;vertical-align: top;">
                                         <div
                                             style="height: 100%;width: 100% !important;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;">
-                                            <!--[if (!mso)&(!IE)]><!-->
+
                                             <div
                                                 style="box-sizing: border-box; height: 100%; padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;">
-                                                <!--<![endif]-->
 
                                                 <table style="font-family:helvetica,sans-serif;" role="presentation"
                                                     cellpadding="0" cellspacing="0" width="100%" border="0">
                                                     <tbody>
                                                         <tr>
                                                             <td style="overflow-wrap:break-word;word-break:break-word;padding:10px;font-family:helvetica,sans-serif;"
-                                                                align="left">
+                                                                align="center">
 
                                                                 <div
-                                                                    style="font-size: 14px; line-height: 140%;  text-align: center; word-wrap: break-word;">
-                                                                    <p dir="ltr"><span>©️Rent Easy, 2025</span></p>
+                                                                    style="font-size: 12px; line-height: 140%;  text-align: center; word-wrap: break-word;">
+                                                                    <p dir="ltr"><span style="color: #999999;">© Rent Easy, 2025</span></p>
                                                                 </div>
 
                                                             </td>
@@ -220,17 +277,13 @@ export const verificationSuccessTemplate = (userName: string) => {
                                                     </tbody>
                                                 </table>
 
-                                                <!--[if (!mso)&(!IE)]><!-->
-                                            </div><!--<![endif]-->
+                                            </div>
                                         </div>
                                     </div>
-                                    <!--[if (mso)|(IE)]></td><![endif]-->
-                                    <!--[if (mso)|(IE)]></tr></table></td></tr></table><![endif]-->
+
                                 </div>
                             </div>
                         </div>
-
-
 
                         <!--[if (mso)|(IE)]></td></tr></table><![endif]-->
                     </td>

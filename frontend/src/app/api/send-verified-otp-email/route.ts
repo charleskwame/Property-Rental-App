@@ -19,7 +19,7 @@ export async function POST(request: Request) {
 		const message = {
 			from: "charlestettehnull@gmail.com",
 			to: body.email,
-			subject: "Verify your rent easy email!",
+			subject: "Your Email Has Been Verified Successfully",
 			html: VerificationEmailTemplate,
 			headers: {
 				"X-Entity-Ref-ID": "newmail",

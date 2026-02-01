@@ -70,26 +70,24 @@ export default function SignUpRenter() {
 				},
 			});
 
-			if (request.data.status === "Pending Verification" && request.status === 400) {
-				setIsLoggingIn(false);
-				toast.info("Please verify your email");
-				sessionStorage.setItem("User", JSON.stringify(request.data));
-				route.push("/send-otp");
-			}
-
 			if (request.status === 200) {
 				setIsLoggingIn(false);
 				toast.success("Logged in successfully");
 				sessionStorage.setItem("User", JSON.stringify(request.data));
 				sessionStorage.setItem("UserLoggedIn", JSON.stringify({ loggedin: true }));
 				route.push("/");
-
-				// location.reload();
 			}
+		} catch (error: unknown) {
 			setIsLoggingIn(false);
-		} catch (error) {
-			setIsLoggingIn(false);
-			console.log(error);
+			const err = error as { response?: { data?: { status: string; data?: unknown } } };
+			if (err.response?.data?.status === "Pending Verification") {
+				toast.info("Please verify your email");
+				sessionStorage.setItem("User", JSON.stringify(err.response?.data?.data));
+				route.push("/send-otp");
+			} else {
+				toast.error("Login failed. Please check your credentials.");
+				console.log(error);
+			}
 		}
 	};
 

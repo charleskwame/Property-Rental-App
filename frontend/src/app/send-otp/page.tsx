@@ -15,6 +15,7 @@ export default function SendRenterOTP() {
 	const route = useRouter();
 
 	const [email, setEmail] = useState<string>("");
+	const [isSending, setIsSending] = useState<boolean>(false);
 
 	useEffect(() => {
 		if (sessionStorage.getItem("User") !== null) {
@@ -32,6 +33,7 @@ export default function SendRenterOTP() {
 
 	const handleOTPSubmission = async (event: React.FormEvent) => {
 		event.preventDefault();
+		setIsSending(true);
 		const storedUserData = JSON.parse(`${sessionStorage.getItem("User")}`);
 
 		const token = `Bearer ${storedUserData.data.token}`;
@@ -67,6 +69,7 @@ export default function SendRenterOTP() {
 
 					if (!response.ok) {
 						toast.error("OTP Email Not Sent, Try Again");
+						setIsSending(false);
 
 						return;
 					}
@@ -75,11 +78,13 @@ export default function SendRenterOTP() {
 					route.push("/verify-user");
 				} catch (error) {
 					toast.error("Network Error, OTP Not Sent");
+					setIsSending(false);
 					console.log(error);
 				}
 			}
 		} catch (error) {
 			toast.error("Failed to send OTP");
+			setIsSending(false);
 			console.log(error);
 		}
 	};
@@ -106,8 +111,9 @@ export default function SendRenterOTP() {
 
 						<button
 							type="submit"
-							className="bg-fuchsia-800 w-32 lg:w-56 h-10 rounded-full text-sm text-white font-semibold cursor-pointer mr-1 hover:bg-custom-white-50 hover:border-fuchsia-800 border hover:text-fuchsia-800 transition-all duration-300 ease-in-out">
-							Send OTP
+							disabled={isSending}
+							className="bg-fuchsia-800 w-32 lg:w-56 h-10 rounded-full text-sm text-white font-semibold cursor-pointer mr-1 hover:bg-custom-white-50 hover:border-fuchsia-800 border hover:text-fuchsia-800 transition-all duration-300 ease-in-out disabled:opacity-70 disabled:cursor-not-allowed">
+							{isSending ? "Sending OTP..." : "Send OTP"}
 						</button>
 					</div>
 				</form>

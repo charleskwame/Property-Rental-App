@@ -24,6 +24,7 @@ import {
 	updateReservationStatus,
 	getAvailableTimeSlots,
 	deleteReservation,
+	deleteUserAccount,
 } from "../controllers/user.controller.js";
 
 const UserRouter = Router();
@@ -46,6 +47,7 @@ UserRouter.post("/verify-otp", authenticateUser, verifyOTP);
 //UserRouter.get("/", getUserDetailsForOwner); //make this more secure it returns all owners
 UserRouter.get("/favorites/:userID", authenticateUser, getFavoritedProperties);
 UserRouter.put("/update-details/", authenticateUser, updateUserDetails);
+UserRouter.delete("/delete-account", authenticateUser, deleteUserAccount);
 UserRouter.post("/send-reservation-email", authenticateUser, sendReservationEmail);
 UserRouter.get("/available-time-slots", getAvailableTimeSlots);
 UserRouter.get("/reservation/:ownerID", authenticateUser, getReservationsForOwner);

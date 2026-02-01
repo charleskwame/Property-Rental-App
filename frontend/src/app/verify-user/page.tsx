@@ -12,6 +12,7 @@ import { toast } from "react-toastify";
 export default function VerifyRenter() {
 	const router = useRouter();
 	const [otpDigits, setOtpDigits] = useState<string[]>(["", "", "", "", "", ""]);
+	const [isVerifying, setIsVerifying] = useState<boolean>(false);
 	const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
 	// Redirect if already verified
@@ -67,8 +68,12 @@ export default function VerifyRenter() {
 			return;
 		}
 
+		setIsVerifying(true);
 		const storedUserData = sessionStorage.getItem("User");
-		if (!storedUserData) return;
+		if (!storedUserData) {
+			setIsVerifying(false);
+			return;
+		}
 
 		const parsed = JSON.parse(storedUserData);
 		const token = `Bearer ${parsed.data.token}`;
@@ -106,6 +111,7 @@ export default function VerifyRenter() {
 
 					if (!response.ok) {
 						toast.error("Cannot Verify Email");
+						setIsVerifying(false);
 
 						return;
 					}
@@ -114,6 +120,7 @@ export default function VerifyRenter() {
 					router.push("/");
 				} catch (error) {
 					toast.error("Network Error, Email Not Verified");
+					setIsVerifying(false);
 					console.log(error);
 				}
 
@@ -121,6 +128,7 @@ export default function VerifyRenter() {
 				sessionStorage.setItem("UserLoggedIn", JSON.stringify({ loggedin: true }));
 			}
 		} catch (error) {
+			setIsVerifying(false);
 			toast.error("Verification failed, please try again.");
 			console.error("Verification failed:", error);
 		}
@@ -195,8 +203,9 @@ export default function VerifyRenter() {
 
 					<button
 						type="submit"
-						className="w-full bg-fuchsia-800 py-2.5 rounded text-white transition-all hover:border-fuchsia-800 hover:text-fuchsia-800 hover:bg-white font-semibold border duration-300 ease-in-out cursor-pointer">
-						Verify
+						disabled={isVerifying}
+						className="w-full bg-fuchsia-800 py-2.5 rounded text-white transition-all hover:border-fuchsia-800 hover:text-fuchsia-800 hover:bg-white font-semibold border duration-300 ease-in-out disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer">
+						{isVerifying ? "Verifying OTP..." : "Verify"}
 					</button>
 
 					<p className="text-center mt-2">
