@@ -26,7 +26,7 @@ const PropertySchema = mongoose.Schema({
 		type: String,
 		required: [true, "Description not provided"],
 		minLength: 5,
-		maxLength: 200,
+		maxLength: 2000,
 		trim: true,
 	},
 	images: {
