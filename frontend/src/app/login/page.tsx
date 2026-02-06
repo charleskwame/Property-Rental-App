@@ -10,6 +10,7 @@ import NavBarDecorative from "@/components/navbardecorative.component";
 import { toast } from "react-toastify";
 
 import { useForm } from "react-hook-form";
+import { PASSWORD_PATTERN, getPasswordValidationMessage } from "@/lib/passwordValidation";
 
 type FormInputs = {
 	name?: string;
@@ -152,18 +153,21 @@ export default function SignUpRenter() {
 						<input
 							id="password"
 							className="w-full border bg-fuchsia-500/5 border-gray-500/10 outline-none rounded py-2 text-xs px-3 focus:border-fuchsia-800"
-							type="text"
+							type="password"
 							placeholder="Password"
 							{...register("password", {
 								required: { value: true, message: "Password is required" },
 								pattern: {
-									value: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/,
-									message: "Invalid password format",
+									value: PASSWORD_PATTERN,
+									message: getPasswordValidationMessage(),
 								},
 								minLength: { value: 8, message: "Minimum 8 characters" },
 								maxLength: { value: 30, message: "Maximum 30 characters" },
 							})}
 						/>
+						<p className="text-xs text-gray-400 mt-1">
+							Must contain: uppercase, lowercase, number, and special character (@$!%*?&)
+						</p>
 					</div>
 
 					<div className="mt-1">
@@ -244,13 +248,13 @@ export default function SignUpRenter() {
 						<input
 							id="password"
 							className="w-full border bg-fuchsia-500/5 border-gray-500/10 outline-none rounded py-2 text-xs px-3 focus:border-fuchsia-800"
-							type="text"
+							type="password"
 							placeholder="Password"
 							{...register("password", {
 								required: { value: true, message: "Password is required" },
 								pattern: {
-									value: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/,
-									message: "Invalid password format",
+									value: PASSWORD_PATTERN,
+									message: getPasswordValidationMessage(),
 								},
 								minLength: { value: 8, message: "Minimum 8 characters" },
 								maxLength: { value: 30, message: "Maximum 30 characters" },
