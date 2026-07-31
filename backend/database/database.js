@@ -1,11 +1,10 @@
 import mongoose from "mongoose";
 import { MONGODB_URI, NODE_ENV } from "../config/env.js";
 
-if (!MONGODB_URI) {
-	throw new Error("Database URI not found in config file");
-}
-
 const connectToDatabase = async () => {
+	if (!MONGODB_URI) {
+		throw new Error("Database URI not found in config/environment variables");
+	}
 	// If we're already connected, return the existing connection
 	if (mongoose.connection.readyState === 1) {
 		console.log("Using existing database connection");
