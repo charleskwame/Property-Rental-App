@@ -12,12 +12,8 @@ const app = express();
 // CORS configuration
 app.use(
   cors({
-    origin: [
-      "https://property-rental-app-ebon.vercel.app",
-      "http://localhost:3000",
-      process.env.FRONTEND_URL,
-    ].filter(Boolean),
-    credentials: true,
+    origin: process.env.FRONTEND_URL || "*",
+    credentials: false,
   }),
 );
 
